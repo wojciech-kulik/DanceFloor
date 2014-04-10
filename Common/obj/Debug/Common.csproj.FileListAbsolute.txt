@@ -1,4 +1,0 @@
-C:\Users\Wojciech\Desktop\StepMania\Common\bin\Debug\Common.dll
-C:\Users\Wojciech\Desktop\StepMania\Common\bin\Debug\Common.pdb
-C:\Users\Wojciech\Desktop\StepMania\Common\obj\Debug\Common.dll
-C:\Users\Wojciech\Desktop\StepMania\Common\obj\Debug\Common.pdb

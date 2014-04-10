@@ -1,7 +1,0 @@
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\obj\Debug\ApplicationServices.csprojResolveAssemblyReference.cache
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\bin\Debug\ApplicationServices.dll
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\bin\Debug\ApplicationServices.pdb
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\bin\Debug\Common.dll
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\bin\Debug\Common.pdb
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\obj\Debug\ApplicationServices.dll
-C:\Users\Wojciech\Desktop\StepMania\ApplicationServices\obj\Debug\ApplicationServices.pdb
