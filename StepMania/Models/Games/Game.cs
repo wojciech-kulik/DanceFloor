@@ -10,11 +10,14 @@ using System.Threading.Tasks;
 
 namespace StepMania.Models.Games
 {
-    public class Game : NotificableObject
+    public class Game : NotificableObject, IPlayable
     {
-        public Game()
+        IMusicPlayerService musicPlayerService;
+
+        public Game(IMusicPlayerService musicPlayerService)
         {
             Players = new BindableCollection<Player>();
+            this.musicPlayerService = musicPlayerService;
         }
 
         #region Players
@@ -80,5 +83,22 @@ namespace StepMania.Models.Games
 
             return new HitResult(points, life, hitElement.Type == SeqElemType.Bomb);
         }
+
+        #region IPlayable
+        public void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Stop()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

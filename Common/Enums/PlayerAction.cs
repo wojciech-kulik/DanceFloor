@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IEditableSequence : IReadOnlySequence
+    public enum PlayerAction
     {
-        void AddElement(ISequenceElement element);
-
-        void Clear();
+        Up,
+        Down,
+        Left,
+        Right
     }
 }

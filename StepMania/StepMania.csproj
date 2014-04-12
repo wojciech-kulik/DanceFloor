@@ -64,11 +64,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\Games\Difficulty.cs" />
     <Compile Include="Models\Games\Game.cs" />
+    <Compile Include="Models\Games\HighScore.cs" />
     <Compile Include="Models\Games\HitResult.cs" />
     <Compile Include="Models\Games\Player.cs" />
-    <Compile Include="Models\Games\PlayerAction.cs" />
     <Compile Include="Models\Sequences\Sequence.cs" />
     <Compile Include="Models\Sequences\SequenceElement.cs" />
     <Compile Include="Models\Songs\Song.cs" />

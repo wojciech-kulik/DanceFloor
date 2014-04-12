@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StepMania.Models.Games
+namespace Common
 {
-    public enum PlayerAction
+    public enum Difficulty
     {
-        Up,
-        Down,
-        Left,
-        Right
+        Easy,
+        Medium,
+        Hard
     }
 }

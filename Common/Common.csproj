@@ -39,16 +39,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEditableSequence.cs" />
-    <Compile Include="IPlayable.cs" />
-    <Compile Include="IMusicPlayerService.cs" />
-    <Compile Include="IReadOnlySequence.cs" />
-    <Compile Include="ISequenceElement.cs" />
-    <Compile Include="ISong.cs" />
-    <Compile Include="ISongsService.cs" />
+    <Compile Include="Enums\Difficulty.cs" />
+    <Compile Include="Models\IEditableSequence.cs" />
+    <Compile Include="Models\IHighScore.cs" />
+    <Compile Include="Services\IHighScoresService.cs" />
+    <Compile Include="Models\IPlayable.cs" />
+    <Compile Include="Services\IMusicPlayerService.cs" />
+    <Compile Include="Models\IReadOnlySequence.cs" />
+    <Compile Include="Models\ISequence.cs" />
+    <Compile Include="Services\ISequenceCreationService.cs" />
+    <Compile Include="Models\ISequenceElement.cs" />
+    <Compile Include="Services\ISettingsService.cs" />
+    <Compile Include="Models\ISong.cs" />
+    <Compile Include="Services\ISongsService.cs" />
     <Compile Include="NotificableObject.cs" />
+    <Compile Include="Enums\PlayerAction.cs" />
+    <Compile Include="Enums\PlayerID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeqElemType.cs" />
+    <Compile Include="Enums\SeqElemType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

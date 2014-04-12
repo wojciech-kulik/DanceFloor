@@ -22,6 +22,9 @@ namespace StepMania.Client
 
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
+            container.PerRequest<ISequenceCreationService, SequenceCreationService>();
+            container.PerRequest<IHighScoresService, HighScoresService>();
+            container.PerRequest<ISettingsService, SettingsService>();
         }
 
         protected override object GetInstance(Type service, string key)

@@ -9,6 +9,8 @@ namespace Common
 {
     public interface IReadOnlySequence : IEnumerable<ISequenceElement>
     {
+        Difficulty Difficulty { get; }
+
         bool AreBombsEnabled { get; set; }
 
         ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType);

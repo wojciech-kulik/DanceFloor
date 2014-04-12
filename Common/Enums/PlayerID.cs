@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StepMania.Models.Games
+namespace Common
 {
-    public enum Difficulty
+    public enum PlayerID
     {
-        Easy,
-        Medium,
-        Hard
+        Player1,
+        Player2
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StepMania.Models.Sequences
 {
-    public class Sequence : NotificableObject, IEditableSequence, IReadOnlySequence
+    public class Sequence : NotificableObject, ISequence
     {
         private BindableCollection<ISequenceElement> SequenceElements = new BindableCollection<ISequenceElement>();
 

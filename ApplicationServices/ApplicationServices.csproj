@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HighScoresService.cs" />
     <Compile Include="MusicPlayerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SequenceCreationService.cs" />
+    <Compile Include="SettingsService.cs" />
     <Compile Include="SongsService.cs" />
   </ItemGroup>
   <ItemGroup>
