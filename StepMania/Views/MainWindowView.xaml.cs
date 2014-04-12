@@ -18,11 +18,17 @@ namespace StepMania
     /// <summary>
     /// Interaction logic for MainWindowView.xaml
     /// </summary>
-    public partial class MainWindowView : Window
+    public partial class MainWindowView : NavigationWindow
     {
         public MainWindowView()
         {
             InitializeComponent();
+            Loaded += MainWindowView_Loaded;
+        }
+
+        void MainWindowView_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("Views/MainView.xaml", UriKind.Relative));
         }
     }
 }

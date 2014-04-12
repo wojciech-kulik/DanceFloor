@@ -1,8 +1,7 @@
-﻿<Window x:Class="StepMania.MainWindowView"
+﻿<NavigationWindow x:Class="StepMania.MainWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
-</Window>
+        Title="StepMania" Height="768" Width="1024" MinHeight="768" MinWidth="1024" 
+        WindowState="Maximized" ShowsNavigationUI="False" WindowStartupLocation="CenterScreen">
+    
+</NavigationWindow>
