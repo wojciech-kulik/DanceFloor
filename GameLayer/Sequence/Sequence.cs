@@ -1,13 +1,13 @@
 ﻿using Caliburn.Micro;
 using Common;
-using StepMania.Models.Games;
+using GameLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StepMania.Models.Sequences
+namespace GameLayer
 {
     public class Sequence : NotificableObject, ISequence
     {

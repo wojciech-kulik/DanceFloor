@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StepMania.Helpers;
+using StepMania.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -24,17 +26,35 @@ namespace StepMania.Views
     /// </summary>
     public partial class GameView : UserControl
     {
+        List<Key> supportedKeys = new List<Key>() { Key.Left, Key.Down, Key.Up, Key.Right, Key.W, Key.A, Key.S, Key.D };
+
         public GameView()
         {
             InitializeComponent();
-            Loaded += GameView_Loaded;
+            Loaded += GameView_Loaded;            
+        }
+
+        public void GameView_KeyUp(object sender, KeyEventArgs e)
+        {
+            #if DEBUG_HIT_TIME
+            if (e.Key == Key.Space)
+            {
+                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Resume();
+                return;
+            }
+            #endif
+
+            if (supportedKeys.Contains(e.Key))
+                ((GameViewModel)DataContext).PlayerHit(ControlHelper.KeyToPlayerID(e.Key), ControlHelper.KeyToPlayerAction(e.Key));
         }
 
         void GameView_Loaded(object sender, RoutedEventArgs e)
         {
-            const int LeftArrowX = 65;
+            ((Parent as ContentControl).Parent as Window).PreviewKeyUp += GameView_KeyUp;
+
+            const int LeftArrowX = 0;
             const int DownArrowX = 115;
-            const int UpArrowX = 295;
+            const int UpArrowX = 230;
             const int RightArrowX = 345;
 
             int[] arrows = { LeftArrowX, DownArrowX, UpArrowX, RightArrowX };
@@ -47,7 +67,7 @@ namespace StepMania.Views
             for (int i = 2; i < seconds; i++ )
             {
                 int count = r.Next(1, 3);
-                for (int j = 0; j < count; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     Image img = new Image();
                     img.Width = 65;
@@ -65,9 +85,10 @@ namespace StepMania.Views
                     img.Source = bitmap;                    
 
                     int arrow = r.Next(0, 4);
-                    img.RenderTransform = new RotateTransform(arrowRotate[arrow]);
+                    img.RenderTransform = new RotateTransform(arrowRotate[arrow], 32.5, 32.5);
 
-                    double top = i * pixelsPerSecond + r.Next(0, pixelsPerSecond);                   
+                    double top = i * pixelsPerSecond + r.Next(0, pixelsPerSecond);
+                    img.Tag = top / pixelsPerSecond;
                     Canvas.SetLeft(img, arrows[arrow]);
                     Canvas.SetTop(img, top);
                     p1Notes.Children.Add(img);
@@ -99,7 +120,7 @@ namespace StepMania.Views
                 })).Start();
             #endif
 
-            (Resources.Values.OfType<Storyboard>().First() as Storyboard).Begin();            
+            (Resources.Values.OfType<Storyboard>().First() as Storyboard).Begin();    
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using StepMania.Models.Games;
+﻿using GameLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StepMania.Models.Sequences;
 using Common;
 
-namespace StepMania.Models.Songs
+namespace GameLayer
 {
     public class Song : NotificableObject, ISong
     {

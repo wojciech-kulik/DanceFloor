@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StepMania.Models.Sequences
+namespace GameLayer
 {
     public class SequenceElement : NotificableObject, ISequenceElement
     {

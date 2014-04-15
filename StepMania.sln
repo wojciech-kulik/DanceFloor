@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationServices", "ApplicationServices\ApplicationServices.csproj", "{0C9FB266-01DA-49B5-B52C-384887A7754E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLayer", "GameLayer\GameLayer.csproj", "{E1E66C28-82CA-4373-98CA-4F1D989EF82A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0C9FB266-01DA-49B5-B52C-384887A7754E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C9FB266-01DA-49B5-B52C-384887A7754E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C9FB266-01DA-49B5-B52C-384887A7754E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E66C28-82CA-4373-98CA-4F1D989EF82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E66C28-82CA-4373-98CA-4F1D989EF82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E66C28-82CA-4373-98CA-4F1D989EF82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E66C28-82CA-4373-98CA-4F1D989EF82A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

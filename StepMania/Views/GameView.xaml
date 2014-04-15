@@ -16,10 +16,10 @@
 
     <UserControl.Resources>
         <Storyboard x:Key="p1ArrowsAnimation">
-            <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60000" Duration="00:05:00"  />
+            <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60065" Duration="00:05:00"  />
         </Storyboard>
         <Storyboard x:Key="p2ArrowsAnimation">
-            <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60000" Duration="00:05:00"  />
+            <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60065" Duration="00:05:00"  />
         </Storyboard>
     </UserControl.Resources>
 
