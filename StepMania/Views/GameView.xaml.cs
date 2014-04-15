@@ -13,22 +13,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StepMania
+namespace StepMania.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindowView.xaml
+    /// Interaction logic for GameView.xaml
     /// </summary>
-    public partial class MainWindowView : NavigationWindow
+    public partial class GameView : Page
     {
-        public MainWindowView()
+        public GameView()
         {
             InitializeComponent();
-            Loaded += MainWindowView_Loaded;
+            Loaded += GameView_Loaded;
         }
 
-        void MainWindowView_Loaded(object sender, RoutedEventArgs e)
+        void GameView_Loaded(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Uri("Views/GameView.xaml", UriKind.Relative));
+            p1Health.SetLife(50);
         }
     }
 }

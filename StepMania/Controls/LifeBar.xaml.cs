@@ -13,22 +13,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StepMania
+namespace StepMania.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindowView.xaml
+    /// Interaction logic for LifeBar.xaml
     /// </summary>
-    public partial class MainWindowView : NavigationWindow
+    public partial class LifeBar : UserControl
     {
-        public MainWindowView()
+        public LifeBar()
         {
             InitializeComponent();
-            Loaded += MainWindowView_Loaded;
         }
 
-        void MainWindowView_Loaded(object sender, RoutedEventArgs e)
+
+
+        public void SetLife(int percent)
         {
-            this.NavigationService.Navigate(new Uri("Views/GameView.xaml", UriKind.Relative));
+            bState.Width = ActualWidth * percent / 100;
         }
     }
 }
