@@ -12,24 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Caliburn.Micro;
 
-namespace StepMania
+namespace StepMania.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindowView.xaml
+    /// Interaction logic for HitPanel.xaml
     /// </summary>
-    public partial class MainWindowView : NavigationWindow
+    public partial class HitPanel : UserControl
     {
-        public MainWindowView()
+        public HitPanel()
         {
             InitializeComponent();
-            Loaded += MainWindowView_Loaded;
-        }
-
-        void MainWindowView_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.NavigationService.Navigate(new Uri("Views/GameView.xaml", UriKind.Relative));
         }
     }
 }

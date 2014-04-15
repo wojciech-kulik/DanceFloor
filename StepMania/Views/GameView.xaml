@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ctrls="clr-namespace:StepMania.Controls"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
       FontFamily="Calibri"
@@ -12,15 +13,22 @@
     <Page.Background>
         <ImageBrush ImageSource="..\Images\game_background.jpg" />
     </Page.Background>
+    
+    <Page.Resources>
+        <Storyboard x:Key="p1ArrowsAnimation">
+            <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
+        </Storyboard>
+        <Storyboard x:Key="p2ArrowsAnimation">
+            <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
+        </Storyboard>
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -32,7 +40,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="P1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" Margin="10,0,0,0" Background="#55FFFFFF" Padding="10" />
+            <TextBlock Text="P1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" Margin="10,0,0,0" Background="#55FFFFFF" Padding="10" Foreground="DimGray" />
             <ctrls:LifeBar Grid.Column="1" x:Name="p1Health" Height="30" Margin="10,10,100,10" />
         </Grid>
         <!-- P2 LIFEBAR -->
@@ -41,13 +49,56 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="1" Text="P2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" Margin="0,0,10,0" Background="#55FFFFFF" Padding="10" />
+            <TextBlock Grid.Column="1" Text="P2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" Margin="0,0,10,0" Background="#55FFFFFF" Padding="10" Foreground="DimGray" />
             <ctrls:LifeBar x:Name="p2Health" Height="30" Margin="100,10,10,10" />
         </Grid>
 
-        <!-- P1 HIT PLACE -->
-        <StackPanel Orientation="Horizontal" x:Name="p1HitPlacePanel">
-              
-        </StackPanel>
+        <!-- P1 POINTSBAR -->
+        <ctrls:PointsBar Grid.Row="2" x:Name="p1PointsBar" Height="50" Margin="10,0,0,10" Width="350" HorizontalAlignment="Left" Points="50"/>
+
+        <!-- P2 POINTSBAR -->
+        <ctrls:PointsBar Grid.Row="2" Grid.Column="1" x:Name="p2PointsBar" Height="50" Margin="0,0,10,10" Width="350" HorizontalAlignment="Right" Points="50"/>
+
+        <!-- P1 PLAYBOARD -->
+        <Grid x:Name="p1Playboard" Grid.Row="1" ClipToBounds="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- P1 HITPANEL -->
+            <ctrls:HitPanel HorizontalAlignment="Center" Margin="0,50,0,0"/>
+            
+            <!-- P1 NOTES -->
+            <Canvas Grid.Row="1" x:Name="p1Notes" Width="410" 
+                    VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <Canvas.RenderTransform>
+                    <TranslateTransform>
+                        <TranslateTransform.Y>0</TranslateTransform.Y>
+                    </TranslateTransform>
+                </Canvas.RenderTransform>
+            </Canvas>
+        </Grid>
+
+        <!-- P2 PLAYBOARD -->
+        <Grid x:Name="p2Playboard" Grid.Row="1" Grid.Column="1" ClipToBounds="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- P1 HITPANEL -->
+            <ctrls:HitPanel HorizontalAlignment="Center" Margin="0,50,0,0"/>
+
+            <!-- P1 NOTES -->
+            <Canvas Grid.Row="1" x:Name="p2Notes" Width="410" 
+                    VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <Canvas.RenderTransform>
+                    <TranslateTransform>
+                        <TranslateTransform.Y>0</TranslateTransform.Y>
+                    </TranslateTransform>
+                </Canvas.RenderTransform>
+            </Canvas>
+        </Grid>
     </Grid>
 </Page>

@@ -25,6 +25,8 @@ namespace StepMania.Client
             container.PerRequest<ISequenceCreationService, SequenceCreationService>();
             container.PerRequest<IHighScoresService, HighScoresService>();
             container.PerRequest<ISettingsService, SettingsService>();
+
+            container.PerRequest<GameViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)

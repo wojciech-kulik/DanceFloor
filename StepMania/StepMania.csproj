@@ -64,11 +64,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\HitPanel.xaml.cs">
+      <DependentUpon>HitPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LifeBar.xaml.cs">
       <DependentUpon>LifeBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MenuButton.xaml.cs">
       <DependentUpon>MenuButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PointsBar.xaml.cs">
+      <DependentUpon>PointsBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Games\Game.cs" />
     <Compile Include="Models\Games\HighScore.cs" />
@@ -77,12 +83,19 @@
     <Compile Include="Models\Sequences\Sequence.cs" />
     <Compile Include="Models\Sequences\SequenceElement.cs" />
     <Compile Include="Models\Songs\Song.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Page Include="Controls\HitPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LifeBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MenuButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PointsBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,6 +116,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ViewModels\GameViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\GameView.xaml.cs">
       <DependentUpon>GameView.xaml</DependentUpon>
     </Compile>
@@ -160,6 +175,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\active_arrow.png" />
+    <Resource Include="Images\inactive_arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

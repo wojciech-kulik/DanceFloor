@@ -7,7 +7,10 @@
              d:DesignHeight="70" d:DesignWidth="930" 
              x:Name="self">
     <Grid>     
-        <Border BorderBrush="Black" BorderThickness="1">                     
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="10" Opacity="0.5" Color="Gray" />
+        </Grid.Effect>
+        <Border BorderBrush="Black" BorderThickness="1" SnapsToDevicePixels="True">                     
             <Border HorizontalAlignment="Left" x:Name="bState">                
                 <Rectangle Width="{Binding ActualWidth, ElementName=self}" >
                     <Rectangle.Fill>

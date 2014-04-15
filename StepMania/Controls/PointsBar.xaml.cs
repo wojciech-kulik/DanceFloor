@@ -16,28 +16,27 @@ using System.Windows.Shapes;
 namespace StepMania.Controls
 {
     /// <summary>
-    /// Interaction logic for LifeBar.xaml
+    /// Interaction logic for PointsBar.xaml
     /// </summary>
-    public partial class LifeBar : UserControl
+    public partial class PointsBar : UserControl
     {
-        public LifeBar()
+        public PointsBar()
         {
             InitializeComponent();
-            SizeChanged += LifeBar_SizeChanged;
         }
 
-        void LifeBar_SizeChanged(object sender, SizeChangedEventArgs e)
+
+
+        public string Points
         {
-            SetLife(life);
+            get { return (string)GetValue(PointsProperty); }
+            set { SetValue(PointsProperty, value); }
         }
 
+        // Using a DependencyProperty as the backing store for Points.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PointsProperty =
+            DependencyProperty.Register("Points", typeof(string), typeof(PointsBar), new PropertyMetadata("0"));
 
-        double life = 100.0;
 
-        public void SetLife(double percent)
-        {
-            life = percent;
-            bState.Width = ActualWidth * percent / 100;
-        }
     }
 }
