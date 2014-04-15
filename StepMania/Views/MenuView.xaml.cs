@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace StepMania.Views
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for MenuView.xaml
     /// </summary>
-    public partial class MainView : Page
+    public partial class MenuView : UserControl
     {
-        public MainView()
+        public MenuView()
         {
             InitializeComponent();
             Loaded += MainView_Loaded;

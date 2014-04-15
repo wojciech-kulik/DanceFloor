@@ -20,7 +20,7 @@ namespace StepMania.Views
     /// <summary>
     /// Interaction logic for GameView.xaml
     /// </summary>
-    public partial class GameView : Page
+    public partial class GameView : UserControl
     {
         public GameView()
         {

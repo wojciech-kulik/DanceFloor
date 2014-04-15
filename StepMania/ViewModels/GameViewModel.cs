@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Caliburn.Micro;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel
+    public class GameViewModel : Screen
     {
         IMusicPlayerService _musicPlayerService;
-
-        public GameViewModel()
-        {
-            bool doo = false ;
-        }
 
         public GameViewModel(IMusicPlayerService musicPlayerService)
         {

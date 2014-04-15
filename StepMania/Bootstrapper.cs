@@ -10,7 +10,7 @@ using System.Reflection;
 using Common;
 using ApplicationServices;
 
-namespace StepMania.Client
+namespace StepMania
 {
     public class Bootstrapper : Bootstrapper<MainWindowViewModel>
     {
@@ -19,14 +19,18 @@ namespace StepMania.Client
         protected override void Configure()
         {
             container = new SimpleContainer();
+            container.PerRequest<IWindowManager, WindowManager>();
+            
+            container.PerRequest<MainWindowViewModel>();
+            container.PerRequest<MenuViewModel>();
+            container.PerRequest<GameViewModel>();
 
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
             container.PerRequest<ISequenceCreationService, SequenceCreationService>();
             container.PerRequest<IHighScoresService, HighScoresService>();
             container.PerRequest<ISettingsService, SettingsService>();
-
-            container.PerRequest<GameViewModel>();
+            
         }
 
         protected override object GetInstance(Type service, string key)

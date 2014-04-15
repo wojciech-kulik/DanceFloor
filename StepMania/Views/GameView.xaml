@@ -1,27 +1,27 @@
-﻿<Page x:Class="StepMania.Views.GameView"
+﻿<UserControl x:Class="StepMania.Views.GameView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ctrls="clr-namespace:StepMania.Controls"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:cal="calio"
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
-      FontFamily="Calibri"
-	Title="GameView">
+      FontFamily="Calibri">
 
-    <Page.Background>
+    <UserControl.Background>
         <ImageBrush ImageSource="..\Images\game_background.jpg" />
-    </Page.Background>
-    
-    <Page.Resources>
+    </UserControl.Background>
+
+    <UserControl.Resources>
         <Storyboard x:Key="p1ArrowsAnimation">
             <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
         </Storyboard>
         <Storyboard x:Key="p2ArrowsAnimation">
             <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
         </Storyboard>
-    </Page.Resources>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -101,4 +101,4 @@
             </Canvas>
         </Grid>
     </Grid>
-</Page>
+</UserControl>
