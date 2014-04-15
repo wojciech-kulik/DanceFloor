@@ -19,21 +19,57 @@
             </TextBlock.Effect>
         </TextBlock>
 
-        <Border MaxWidth="850" Margin="0,50,0,0" Padding="150,0,150,0" Height="700" CornerRadius="10">
+        <Border MaxWidth="750" Margin="0,50,0,0" Padding="150,0,150,0" Height="700" CornerRadius="10">
             <StackPanel VerticalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="ctrls:MenuButton">
-                        <Setter Property="Height" Value="70" />
+                        <Setter Property="Height" Value="60" />
                         <Setter Property="Margin" Value="0,0,0,50" />
-                        <Setter Property="FontSize" Value="40" />
+                        <Setter Property="FontSize" Value="35" />
+                        <Setter Property="SnapsToDevicePixels" Value="True" />
                     </Style>
                 </StackPanel.Resources>
 
-                <ctrls:MenuButton ButtonBackground="#EA2E43C9" Text="Graj" />
-                <ctrls:MenuButton ButtonBackground="#EA28A83F" Text="Najlepsze wyniki" />
-                <ctrls:MenuButton ButtonBackground="#EAA244E4" Text="Opcje" />
-                <ctrls:MenuButton ButtonBackground="#EACCDC2B" Text="Stwórz utwór" />
-                <ctrls:MenuButton ButtonBackground="#EAD36C3C" Text="Wyjdź" MouseLeftButtonUp="btnExit_Click" Margin="0" />
+                <ctrls:MenuButton Text="Graj" >
+                    <ctrls:MenuButton.ButtonBackground>
+                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                            <GradientStop Color="#FF1F1F83" Offset="1"/>
+                            <GradientStop Color="#FF2844F7"/>
+                        </LinearGradientBrush>
+                    </ctrls:MenuButton.ButtonBackground>
+                </ctrls:MenuButton>
+                <ctrls:MenuButton Text="Najlepsze wyniki" >
+                    <ctrls:MenuButton.ButtonBackground>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF136C0A" Offset="0.996"/>
+                            <GradientStop Color="#FF22B813"/>
+                        </LinearGradientBrush>
+                    </ctrls:MenuButton.ButtonBackground>
+                </ctrls:MenuButton>
+                <ctrls:MenuButton Text="Opcje">
+                    <ctrls:MenuButton.ButtonBackground>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF55227A" Offset="1"/>
+                            <GradientStop Color="#FFA244E4"/>
+                        </LinearGradientBrush>
+                    </ctrls:MenuButton.ButtonBackground>
+                </ctrls:MenuButton>
+                <ctrls:MenuButton Text="Stwórz utwór">
+                    <ctrls:MenuButton.ButtonBackground>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF87911E" Offset="1"/>
+                            <GradientStop Color="#FFCCDC2B"/>
+                        </LinearGradientBrush>
+                    </ctrls:MenuButton.ButtonBackground>
+                </ctrls:MenuButton>
+                <ctrls:MenuButton Text="Wyjdź" MouseLeftButtonUp="btnExit_Click" Margin="0" >
+                    <ctrls:MenuButton.ButtonBackground>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF934C2B" Offset="1"/>
+                            <GradientStop Color="#FFD36C3C"/>
+                        </LinearGradientBrush>
+                    </ctrls:MenuButton.ButtonBackground>
+                </ctrls:MenuButton>
             </StackPanel>
         </Border>
     </Grid>
