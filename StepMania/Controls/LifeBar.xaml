@@ -8,15 +8,15 @@
              x:Name="self">
     <Grid>     
         <Grid.Effect>
-            <DropShadowEffect BlurRadius="10" Opacity="0.5" Color="Gray" />
+            <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="Gray" />
         </Grid.Effect>
         <Border BorderBrush="Black" BorderThickness="1" SnapsToDevicePixels="True">                     
-            <Border HorizontalAlignment="Left" x:Name="bState">                
+            <Border HorizontalAlignment="Left" x:Name="bState" Width="900">                
                 <Rectangle Width="{Binding ActualWidth, ElementName=self}" >
                     <Rectangle.Fill>
                         <LinearGradientBrush EndPoint="1.0,0" MappingMode="RelativeToBoundingBox" StartPoint="0.0,0">
-                            <GradientStop Color="Red" Offset="0"/>
-                            <GradientStop Color="#FF00FF46" Offset="0.65"/>
+                            <GradientStop Color="#FFFF2E00" Offset="0"/>
+                            <GradientStop Color="#FFADFF5A" Offset="0.448"/>
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>

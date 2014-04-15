@@ -16,10 +16,10 @@
 
     <UserControl.Resources>
         <Storyboard x:Key="p1ArrowsAnimation">
-            <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
+            <DoubleAnimation Storyboard.TargetName="p1Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60000" Duration="00:05:00"  />
         </Storyboard>
         <Storyboard x:Key="p2ArrowsAnimation">
-            <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="0" To="-60000" Duration="00:05:00"  />
+            <DoubleAnimation Storyboard.TargetName="p2Notes" Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="-65" To="-60000" Duration="00:05:00"  />
         </Storyboard>
     </UserControl.Resources>
 
@@ -73,9 +73,7 @@
             <Canvas Grid.Row="1" x:Name="p1Notes" Width="410" 
                     VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                 <Canvas.RenderTransform>
-                    <TranslateTransform>
-                        <TranslateTransform.Y>0</TranslateTransform.Y>
-                    </TranslateTransform>
+                    <TranslateTransform />
                 </Canvas.RenderTransform>
             </Canvas>
         </Grid>
@@ -94,9 +92,7 @@
             <Canvas Grid.Row="1" x:Name="p2Notes" Width="410" 
                     VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                 <Canvas.RenderTransform>
-                    <TranslateTransform>
-                        <TranslateTransform.Y>0</TranslateTransform.Y>
-                    </TranslateTransform>
+                    <TranslateTransform />
                 </Canvas.RenderTransform>
             </Canvas>
         </Grid>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -60,18 +62,44 @@ namespace StepMania.Views
                         bitmap.EndInit();
                     }
 
-                    img.Source = bitmap;
+                    img.Source = bitmap;                    
 
                     int arrow = r.Next(0, 4);
                     img.RenderTransform = new RotateTransform(arrowRotate[arrow]);
 
-                    p1Notes.Children.Add(img);
+                    double top = i * pixelsPerSecond + r.Next(0, pixelsPerSecond);                   
                     Canvas.SetLeft(img, arrows[arrow]);
-                    Canvas.SetTop(img, i * pixelsPerSecond + r.Next(0, pixelsPerSecond));                    
+                    Canvas.SetTop(img, top);
+                    p1Notes.Children.Add(img);
+                    
+                    #if DEBUG_TIMING
+                    TextBlock tb = new TextBlock();
+                    tb.FontSize = 20;
+                    tb.Text = String.Format("{0:N2}", top / pixelsPerSecond);
+                    tb.Foreground = new SolidColorBrush(Colors.Black);
+                    Canvas.SetLeft(tb, arrows[arrow]);
+                    Canvas.SetTop(tb, top);
+                    p1Notes.Children.Add(tb);
+                    #endif                    
                 }
             }
 
-            (Resources.Values.OfType<Storyboard>().First() as Storyboard).Begin();
+            #if DEBUG_TIMING
+            new Thread(new ThreadStart(() =>
+                {
+                    while (true)
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            var time = (Resources.Values.OfType<Storyboard>().First() as Storyboard).GetCurrentTime();
+                            this.p1PointsBar.Points = time.TotalSeconds.ToString("N2");
+                        }));
+                        Thread.Sleep(50);
+                    }
+                })).Start();
+            #endif
+
+            (Resources.Values.OfType<Storyboard>().First() as Storyboard).Begin();            
         }
     }
 }
