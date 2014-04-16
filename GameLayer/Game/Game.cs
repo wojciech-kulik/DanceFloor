@@ -9,21 +9,28 @@ using System.Threading.Tasks;
 
 namespace GameLayer
 {
-    public class Game : NotificableObject, IPlayable
+    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>
     {
         IMusicPlayerService musicPlayerService;
+        IEventAggregator _eventAggregator;
 
-        public Game(IMusicPlayerService musicPlayerService)
+        public Game(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
         {
-            Players = new BindableCollection<Player>();
+            Players = new BindableCollection<IPlayer>();
             this.musicPlayerService = musicPlayerService;
+
+            _eventAggregator = eventAggregator;
+            eventAggregator.Subscribe(this);
+
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
         }
 
         #region Players
 
-        private BindableCollection<Player> _players;
+        private BindableCollection<IPlayer> _players;
 
-        public BindableCollection<Player> Players
+        public BindableCollection<IPlayer> Players
         {
             get
             {
@@ -52,9 +59,9 @@ namespace GameLayer
 
         #region Song
 
-        private Song _song;
+        private ISong _song;
 
-        public Song Song
+        public ISong Song
         {
             get
             {
@@ -81,6 +88,19 @@ namespace GameLayer
             int life = 0;
 
             return new HitResult(points, life, hitElement.Type == SeqElemType.Bomb);
+        }
+
+        public void Handle(GameKeyEvent message)
+        {
+            Players[0].Points += 10;
+            _eventAggregator.Publish(new PlayerHitEvent() 
+            { 
+                PlayerID = Common.PlayerID.Player1, 
+                IsBomb = false,
+                Life = 100 - new Random().Next(0, 50), 
+                Points = Players[0].Points,
+                SequenceElement = null
+            }); 
         }
 
         #region IPlayable

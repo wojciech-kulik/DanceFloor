@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IReadOnlySequence : IEnumerable<ISequenceElement>
+    public interface IReadOnlySequence : IBaseModel, IEnumerable<ISequenceElement>
     {
         Difficulty Difficulty { get; }
 

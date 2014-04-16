@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IHighScore : IBaseModel
+    public interface IPlayer : IBaseModel
     {
-        ISong Song { get; set; }
+        PlayerID PlayerID { get; set; }
 
-        string Player { get; set; }
+        int Points { get; set; }
 
-        DateTime Date { get; set; }
+        int Life { get; set; }
 
         Difficulty Difficulty { get; set; }
 
-        int Points { get; set; }
+        bool IsGameOver { get; set; }
     }
 }

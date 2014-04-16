@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationServices
 {
-    public class SequenceCreationService : ISequenceCreationService
+    public class SequenceCreationService : NotificableObject, ISequenceCreationService
     {
         Dictionary<Difficulty, ISequence> sequences = new Dictionary<Difficulty,ISequence>();
         IMusicPlayerService musicPlayerService;

@@ -30,9 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,9 +49,13 @@
   <ItemGroup>
     <Compile Include="Enums\Difficulty.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
+    <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
+    <Compile Include="Models\IBaseModel.cs" />
     <Compile Include="Models\IEditableSequence.cs" />
+    <Compile Include="Models\IGame.cs" />
     <Compile Include="Models\IHighScore.cs" />
+    <Compile Include="Models\IPlayer.cs" />
     <Compile Include="Services\IHighScoresService.cs" />
     <Compile Include="Models\IPlayable.cs" />
     <Compile Include="Services\IMusicPlayerService.cs" />

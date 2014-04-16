@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface ISong
+    public interface ISong : IBaseModel
     {
         string Title { get; set; }
 
@@ -17,5 +17,7 @@ namespace Common
         DateTime CreateDate { get; set; }
 
         string BackgroundPath { get; set; }
+
+        ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType);
     }
 }

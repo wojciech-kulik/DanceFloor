@@ -7,8 +7,28 @@ using System.Threading.Tasks;
 
 namespace GameLayer
 {
-    public class Player : NotificableObject
+    public class Player : NotificableObject, IPlayer
     {
+        #region PlayerID
+        private PlayerID _playerID;
+
+        public PlayerID PlayerID
+        {
+            get
+            {
+                return _playerID;
+            }
+            set
+            {
+                if (_playerID != value)
+                {
+                    _playerID = value;
+                    NotifyPropertyChanged("PlayerID");
+                }
+            }
+        }
+        #endregion
+
         #region Points
 
         private int _point;

@@ -13,16 +13,16 @@ using System.Windows.Media.Animation;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<GameKeyEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>
     {
         GameView _view;
         Storyboard _animation;
-        IMusicPlayerService _musicPlayerService;
+        IGame _game;
 
-        public GameViewModel(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
+        public GameViewModel(IEventAggregator eventAggregator, IGame game)
             : base(eventAggregator)
         {
-            _musicPlayerService = musicPlayerService;
+            _game = game;
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -31,35 +31,30 @@ namespace StepMania.ViewModels
             _animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
         }
 
+        /*
         TimeSpan GetSongCurrentTime()
         {
             return _animation.GetCurrentTime();
         }
 
-        void PlayerHit( PlayerID playerId, PlayerAction playerAction)
-        {            
-            string isHit;
+        string isHit;
 
-            var currentTime = GetSongCurrentTime();
-            var note = _view.p1Notes.Children.OfType<Image>().ToList().FirstOrDefault(n => Math.Abs(((double)n.Tag) - currentTime.TotalSeconds) < 0.2);
+        var currentTime = GetSongCurrentTime();
+        var note = _view.p1Notes.Children.OfType<Image>().ToList().FirstOrDefault(n => Math.Abs(((double)n.Tag) - currentTime.TotalSeconds) < 0.2);
 
-            if (note != null)
-                isHit = "TAK";
-            else
-                isHit = "NIE";
-            if (note != null)
-                isHit += " " + (((double)note.Tag) - currentTime.TotalSeconds).ToString("N2");
-            _view.p1PointsBar.Points = isHit;
+        if (note != null)
+            isHit = "TAK";
+        else
+            isHit = "NIE";
+        if (note != null)
+            isHit += " " + (((double)note.Tag) - currentTime.TotalSeconds).ToString("N2");
+        _view.p1PointsBar.Points = isHit;*/
 
-
-            #if DEBUG_HIT_TIME
-            _animation.Pause();
-            #endif
-        }
-
-        public void Handle(GameKeyEvent message)
+        public void Handle(PlayerHitEvent message)
         {
-            PlayerHit(message.PlayerId, message.PlayerAction);
+            _view.p1PointsBar.Points = message.Points.ToString();
+            _view.p1Health.SetLife(message.Life);
+            //TODO: do smth with hit seq elem
         }
     }
 }

@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using System.Reflection;
 using Common;
 using ApplicationServices;
+using GameLayer;
 
 namespace StepMania
 {
@@ -25,6 +26,8 @@ namespace StepMania
             container.PerRequest<MainWindowViewModel>();
             container.PerRequest<MenuViewModel>();
             container.PerRequest<GameViewModel>();
+
+            container.PerRequest<IGame, Game>();
 
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();

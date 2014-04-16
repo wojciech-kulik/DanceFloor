@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface ISequenceElement
+    public interface ISequenceElement : IBaseModel
     {
         TimeSpan Time { get; set; }
 
