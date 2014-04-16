@@ -20,6 +20,7 @@ namespace StepMania
         {
             container = new SimpleContainer();
             container.PerRequest<IWindowManager, WindowManager>();
+            container.Singleton<IEventAggregator, EventAggregator>();
             
             container.PerRequest<MainWindowViewModel>();
             container.PerRequest<MenuViewModel>();

@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\Difficulty.cs" />
-    <Compile Include="GameKeyEventHandler.cs" />
+    <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Models\IEditableSequence.cs" />
     <Compile Include="Models\IHighScore.cs" />

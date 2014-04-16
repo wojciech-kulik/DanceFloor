@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace StepMania.ViewModels
 {
-    public class MenuViewModel : Screen
+    public class MenuViewModel : BaseViewModel
     {
-        public MenuViewModel()
+        public MenuViewModel(IEventAggregator eventAggregator)
+            : base(eventAggregator)
         {
 
         }

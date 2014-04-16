@@ -13,28 +13,16 @@ using System.Windows.Media.Animation;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : Screen
+    public class GameViewModel : BaseViewModel, IHandle<GameKeyEvent>
     {
         GameView _view;
         Storyboard _animation;
         IMusicPlayerService _musicPlayerService;
-        ISettingsService _settingsService;
 
-        public GameViewModel(IMusicPlayerService musicPlayerService, ISettingsService settingsService)
+        public GameViewModel(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
+            : base(eventAggregator)
         {
             _musicPlayerService = musicPlayerService;
-            _settingsService = settingsService;
-        }
-
-        protected override void OnActivate()
-        {
-            _settingsService.GameKeyPressed += PlayerHit;
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            //to avoid memory leak we have to detach event to allow GameViewModel be disposed by GarbageCollector
-            _settingsService.GameKeyPressed -= PlayerHit;
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -48,7 +36,7 @@ namespace StepMania.ViewModels
             return _animation.GetCurrentTime();
         }
 
-        void PlayerHit(object sender, PlayerID playerId, PlayerAction playerAction)
+        void PlayerHit( PlayerID playerId, PlayerAction playerAction)
         {            
             string isHit;
 
@@ -67,6 +55,11 @@ namespace StepMania.ViewModels
             #if DEBUG_HIT_TIME
             _animation.Pause();
             #endif
+        }
+
+        public void Handle(GameKeyEvent message)
+        {
+            PlayerHit(message.PlayerId, message.PlayerAction);
         }
     }
 }

@@ -9,8 +9,6 @@ namespace Common
 {
     public interface ISettingsService
     {
-        event GameKeyEventHandler GameKeyPressed;
-
         //you need to attach it to your PreviewKeyUp event in application
         void HandleKeyUp(object sender, KeyEventArgs e);
 

@@ -6,5 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public delegate void GameKeyEventHandler(object sender, PlayerID playerId, PlayerAction playerAction);
+    public class GameKeyEvent
+    {
+        public PlayerID PlayerId { get; set; }
+        public PlayerAction PlayerAction { get; set; }
+    }
 }
