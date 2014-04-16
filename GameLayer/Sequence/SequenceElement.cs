@@ -50,26 +50,5 @@ namespace GameLayer
             }
         }
         #endregion
-
-        #region Value
-
-        private int _value;
-
-        public int Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                if (_value != value)
-                {
-                    _value = value;
-                    NotifyPropertyChanged("Value");
-                }
-            }
-        }
-        #endregion
     }
 }

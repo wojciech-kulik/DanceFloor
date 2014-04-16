@@ -11,7 +11,5 @@ namespace Common
         TimeSpan Time { get; set; }
 
         SeqElemType Type { get; set; }
-
-        int Value { get; set; }
     }
 }

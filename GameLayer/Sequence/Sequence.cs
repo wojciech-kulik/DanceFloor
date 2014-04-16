@@ -37,12 +37,12 @@ namespace GameLayer
         #region IReadOnlySequence
         public IEnumerator<ISequenceElement> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return SequenceElements.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return SequenceElements.GetEnumerator();
         }
 
         #region AreBombsEnabled
@@ -80,6 +80,9 @@ namespace GameLayer
 
         public ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType)
         {
+            if (time.TotalSeconds <= SequenceElements.First().Time.TotalSeconds)
+                return SequenceElements.First();
+
             //SequenceElements uporządkowany rosnąco wg Time
             for(int i = 0; i < SequenceElements.Count - 1; i++)
             {
