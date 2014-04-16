@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\HighScore.cs" />
-    <Compile Include="Game\HitResult.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Sequence\Sequence.cs" />
     <Compile Include="Sequence\SequenceElement.cs" />

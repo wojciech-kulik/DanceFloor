@@ -4,6 +4,7 @@ using GameLayer;
 using StepMania.Constants;
 using StepMania.DebugHelpers;
 using StepMania.Views;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
@@ -13,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>
     {
         GameView _view;
         Storyboard _animation;
@@ -23,6 +24,7 @@ namespace StepMania.ViewModels
             : base(eventAggregator)
         {
             _game = game;
+            game.GetSongCurrentTime = () => _animation.GetCurrentTime();
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -37,7 +39,7 @@ namespace StepMania.ViewModels
             Storyboard.SetTargetProperty(doubleAnim, new System.Windows.PropertyPath("RenderTransform.(TranslateTransform.Y)"));*/
 
             LoadSong(DebugSongHelper.GenerateSong());
-            StartAnimation();
+            StartGame();
         }
 
         public void LoadSong(ISong song)
@@ -46,42 +48,34 @@ namespace StepMania.ViewModels
             _view.p1Notes.Children.Clear();
 
             _animation.Children.First().Duration = song.Duration;
-            (_animation.Children.First() as DoubleAnimation).From = -GameConstants.ArrowWidthHeight;
-            (_animation.Children.First() as DoubleAnimation).To = -(GameConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameConstants.ArrowWidthHeight);
+            (_animation.Children.First() as DoubleAnimation).From = -GameUIConstants.ArrowWidthHeight;
+            (_animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameUIConstants.ArrowWidthHeight);
 
             foreach(var seqElem in song.Sequences[Difficulty.Easy])
             {
-                //create bitmap
-                var bitmap = new BitmapImage();
-                using (var stream = File.OpenRead("..\\..\\Images\\active_arrow.png")) //TODO: load from resources
-                {
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.StreamSource = stream;
-                    bitmap.EndInit();
-                }
-
                 //load and prepare image
-                Image img = new Image() { Width = GameConstants.ArrowWidthHeight, Height = GameConstants.ArrowWidthHeight, Source = bitmap, Tag = seqElem };
-                double top = seqElem.Time.TotalSeconds * GameConstants.PixelsPerSecond;
+                var bitmap = new BitmapImage(new Uri("pack://application:,,,/StepMania;component/Images/active_arrow.png"));
+                Image img = new Image() { Width = GameUIConstants.ArrowWidthHeight, Height = GameUIConstants.ArrowWidthHeight, Source = bitmap, Tag = seqElem };
+
+                double top = seqElem.Time.TotalSeconds * GameUIConstants.PixelsPerSecond;
                 Canvas.SetTop(img, top);
 
                 switch(seqElem.Type)
                 {
                     case SeqElemType.LeftArrow:
-                        img.RenderTransform = new RotateTransform(90, GameConstants.ArrowWidthHeight / 2.0, GameConstants.ArrowWidthHeight / 2.0);
-                        Canvas.SetLeft(img, GameConstants.LeftArrowX);
+                        img.RenderTransform = new RotateTransform(90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        Canvas.SetLeft(img, GameUIConstants.LeftArrowX);
                         break;
                     case SeqElemType.DownArrow:
-                        Canvas.SetLeft(img, GameConstants.DownArrowX);
+                        Canvas.SetLeft(img, GameUIConstants.DownArrowX);
                         break;
                     case SeqElemType.UpArrow:
-                        img.RenderTransform = new RotateTransform(180, GameConstants.ArrowWidthHeight / 2.0, GameConstants.ArrowWidthHeight / 2.0);
-                        Canvas.SetLeft(img, GameConstants.UpArrowX);
+                        img.RenderTransform = new RotateTransform(180, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        Canvas.SetLeft(img, GameUIConstants.UpArrowX);
                         break;
                     case SeqElemType.RightArrow:
-                        img.RenderTransform = new RotateTransform(-90, GameConstants.ArrowWidthHeight / 2.0, GameConstants.ArrowWidthHeight / 2.0);
-                        Canvas.SetLeft(img, GameConstants.RightArrowX);
+                        img.RenderTransform = new RotateTransform(-90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        Canvas.SetLeft(img, GameUIConstants.RightArrowX);
                         break;
                 }                
 
@@ -94,17 +88,49 @@ namespace StepMania.ViewModels
             DebugSongHelper.ShowCurrentTimeInsteadPoints(_animation, _view);  
         }
 
-        public void StartAnimation()
+        public void StartGame()
         {
             _animation.Begin(); 
         }
 
+        public void PauseGame()
+        {
+            _animation.Pause();
+        }
+
+        public void StopGame()
+        {
+            _animation.Stop();
+        }
+
         public void Handle(PlayerHitEvent message)
         {
-            _view.p1PointsBar.Points = message.Points.ToString();
-            _view.p1Health.SetLife(message.Life);
+            var notesPanel = message.PlayerID == PlayerID.Player1 ? _view.p1Notes     : _view.p2Notes;
+            var pointsBar  = message.PlayerID == PlayerID.Player1 ? _view.p1PointsBar : _view.p2PointsBar;
+            var healthBar  = message.PlayerID == PlayerID.Player1 ? _view.p1Health    : _view.p2Health;
+
+            //set player status
+            pointsBar.Points = message.Points.ToString();
+            healthBar.SetLife(message.Life);
             DebugSongHelper.ShowHitTimeDifferenceInsteadPoints(_view, _animation);
-            //TODO: do smth with hit seq elem
+
+            //remove hit element
+            var toRemove = notesPanel.Children.OfType<Image>().FirstOrDefault(img => img.Tag == message.SequenceElement);
+            if (toRemove != null)
+                notesPanel.Children.Remove(toRemove);
+
+            //TODO: animate elem before remove
+        }
+
+        public void Handle(PlayerMissedEvent message)
+        {
+            var pointsBar = message.PlayerID == PlayerID.Player1 ? _view.p1PointsBar : _view.p2PointsBar;
+            var healthBar = message.PlayerID == PlayerID.Player1 ? _view.p1Health    : _view.p2Health;
+
+            pointsBar.Points = message.Points.ToString();
+            healthBar.SetLife(message.Life);
+
+            //todo: play miss sound
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Common
 {
     public interface IGame : IPlayable
     {
+        Func<TimeSpan> GetSongCurrentTime { get; set; }
+
         BindableCollection<IPlayer> Players { get; set; }
 
         bool Multiplayer { get; }

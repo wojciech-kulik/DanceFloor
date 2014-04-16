@@ -78,27 +78,17 @@ namespace GameLayer
             SequenceElements.Clear();
         }
 
-        public ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType)
+        public ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit)
         {
-            if (time.TotalSeconds <= SequenceElements.First().Time.TotalSeconds)
-                return SequenceElements.First();
+            var notHitElements = SequenceElements.Except(alreadyHit);
+            if (notHitElements.Count() == 0)
+                return null;
 
-            //SequenceElements uporządkowany rosnąco wg Time
-            for(int i = 0; i < SequenceElements.Count - 1; i++)
-            {
-                int timeToCurrent = (int)SequenceElements[i].Time.TotalMilliseconds - (int)time.TotalMilliseconds;
-                int timeToNext = (int)SequenceElements[i+1].Time.TotalMilliseconds - (int)time.TotalMilliseconds;
+            var inRangeElements = notHitElements.Where(e => e.Type == elementType && Math.Abs(e.Time.TotalSeconds - time.TotalSeconds) <= GameConstants.WorstHitTime);
+            if (inRangeElements.Count() == 0)
+                return null;
 
-                //jezeli to ostatnia iteracja lub
-                //jezeli najbliższym elementem jest jeden z dwoch aktualnie sprawdzanych
-                if (i + 1 == SequenceElements.Count - 1 || timeToCurrent <= 0 && timeToNext >= 0)
-                {
-                    return Math.Abs(timeToCurrent) < Math.Abs(timeToNext) ? SequenceElements[i] : SequenceElements[i+1];
-                }
-            }
-
-            return null;
-        }
-        
+            return inRangeElements.OrderBy(e => e.Time.TotalSeconds).First();
+        }        
     }
 }

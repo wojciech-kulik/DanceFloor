@@ -11,6 +11,8 @@ namespace GameLayer
 {
     public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>
     {
+        List<ISequenceElement> alreadyHit = new List<ISequenceElement>();
+
         IMusicPlayerService musicPlayerService;
         IEventAggregator _eventAggregator;
 
@@ -22,9 +24,12 @@ namespace GameLayer
             _eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
 
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = 100, Points = 0 });
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = 100, Points = 0 });
         }
+
+        //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
+        public Func<TimeSpan> GetSongCurrentTime { get; set; }
 
         #region Players
 
@@ -78,29 +83,71 @@ namespace GameLayer
         }
         #endregion
 
-        private HitResult GetPoints(Player player, TimeSpan hitTime, PlayerAction playerAction)
+        private void SetLifePoints(IPlayer player, int deltaLifePoints)
         {
-            SeqElemType type = SeqElemType.DownArrow; //TODO: map from player Action
-            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type);
+            player.Life = Math.Max(0, player.Life + deltaLifePoints);
+            if (player.Life == 0)
+                player.IsGameOver = true;
+        }
 
-            //TODO: calculate points and life
-            int points = 0; 
-            int life = 0;
+        //returns null if nothing hit
+        private ISequenceElement SetPoints(IPlayer player, TimeSpan hitTime, PlayerAction playerAction)
+        {
+            SeqElemType type = GameHelper.PlayerActionToSeqElemType(playerAction);
+            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, alreadyHit);
 
-            return new HitResult(points, life, hitElement.Type == SeqElemType.Bomb);
+            if (hitElement == null)
+            {
+                SetLifePoints(player, -GameConstants.MissLifePoints);
+                return null;
+            }             
+
+            double diff = Math.Abs(hitElement.Time.TotalSeconds - hitTime.TotalSeconds);
+
+            if (!hitElement.IsBomb)
+            {
+                if (diff <= GameConstants.BestHitTime)
+                    player.Points += GameConstants.BestHitPoints;
+                else if (diff <= GameConstants.MediumHitTime)
+                    player.Points += GameConstants.MediumHitPoints;
+                else if (diff <= GameConstants.WorstHitTime)
+                    player.Points += GameConstants.WorstHitPoints; 
+            }
+            else
+            {
+                SetLifePoints(player, -GameConstants.BombLifePoints);
+            }
+
+            alreadyHit.Add(hitElement);
+            return hitElement;
         }
 
         public void Handle(GameKeyEvent message)
         {
-            Players[0].Points += 10;
-            _eventAggregator.Publish(new PlayerHitEvent() 
-            { 
-                PlayerID = Common.PlayerID.Player1, 
-                IsBomb = false,
-                Life = 100 - new Random().Next(0, 50), 
-                Points = Players[0].Points,
-                SequenceElement = null
-            }); 
+            IPlayer player = Players.First(p => p.PlayerID == message.PlayerId);
+            ISequenceElement hitElem = SetPoints(player, GetSongCurrentTime(), message.PlayerAction);
+
+            if (hitElem != null)
+            {
+                _eventAggregator.Publish(new PlayerHitEvent()
+                {
+                    PlayerID = player.PlayerID,                    
+                    Life = player.Life,
+                    Points = player.Points,
+                    IsBomb = hitElem.IsBomb,
+                    SequenceElement = hitElem
+                });
+            }
+            else
+            {
+                _eventAggregator.Publish(new PlayerMissedEvent()
+                {
+                    PlayerID = player.PlayerID,
+                    Points = player.Points,
+                    Life = player.Life,
+                    PlayerAction = message.PlayerAction
+                });
+            }
         }
 
         #region IPlayable

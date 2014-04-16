@@ -143,9 +143,9 @@ namespace GameLayer
         }
         #endregion
 
-        public ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType)
+        public ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit)
         {
-            return Sequences[difficulty].GetClosestTo(time, elementType);
+            return Sequences[difficulty].GetClosestTo(time, elementType, alreadyHit);
         }
     }
 }

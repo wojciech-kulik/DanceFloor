@@ -20,7 +20,7 @@ namespace Common
 
         TimeSpan Duration { get; set; }
 
-        ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType);
+        ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit);
 
         Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }
     }

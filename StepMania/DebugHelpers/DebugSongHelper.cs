@@ -28,7 +28,7 @@ namespace StepMania.DebugHelpers
             sequence.Difficulty = Difficulty.Easy;
 
             Song result = new Song();
-            result.Duration = new TimeSpan(0, 0, 300);
+            result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);
 
             for (int i = 2; i < seconds; i++)

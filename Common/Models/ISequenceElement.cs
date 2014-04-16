@@ -11,5 +11,7 @@ namespace Common
         TimeSpan Time { get; set; }
 
         SeqElemType Type { get; set; }
+
+        bool IsBomb { get; set; }
     }
 }

@@ -8,10 +8,9 @@ namespace Common
 {
     public enum SeqElemType
     {
-        LeftArrow,
-        RightArrow,
-        DownArrow,
         UpArrow,
-        Bomb
+        DownArrow,
+        LeftArrow,
+        RightArrow
     }
 }

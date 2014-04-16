@@ -13,6 +13,6 @@ namespace Common
 
         bool AreBombsEnabled { get; set; }
 
-        ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType);
+        ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit);
     }
 }

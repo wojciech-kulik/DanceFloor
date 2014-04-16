@@ -50,5 +50,26 @@ namespace GameLayer
             }
         }
         #endregion
+
+        #region IsBomb
+
+        private bool _isBomb;
+
+        public bool IsBomb
+        {
+            get
+            {
+                return _isBomb;
+            }
+            set
+            {
+                if (_isBomb != value)
+                {
+                    _isBomb = value;
+                    NotifyPropertyChanged("IsBomb");
+                }
+            }
+        }
+        #endregion
     }
 }

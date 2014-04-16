@@ -47,10 +47,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\GameConstants.cs" />
     <Compile Include="Enums\Difficulty.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
+    <Compile Include="Events\PlayerMissedEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
+    <Compile Include="Helpers\GameHelper.cs" />
     <Compile Include="Models\IBaseModel.cs" />
     <Compile Include="Models\IEditableSequence.cs" />
     <Compile Include="Models\IGame.cs" />
