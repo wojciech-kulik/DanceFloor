@@ -15,7 +15,7 @@ namespace GameLayer
     {
         List<ISequenceElement> _alreadyHit = new List<ISequenceElement>();
         IEventAggregator _eventAggregator;
-        Timer missedTimer = new Timer(250);
+        Timer _missedTimer = new Timer(250);
 
         public Game(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
         {
@@ -23,9 +23,9 @@ namespace GameLayer
             MusicPlayerService = musicPlayerService;
 
             _eventAggregator = eventAggregator;
-            eventAggregator.Subscribe(this);            
+            eventAggregator.Subscribe(this);
 
-            missedTimer.Elapsed += lookForMissedNotes_Tick;            
+            _missedTimer.Elapsed += lookForMissedNotes_Tick;            
         }
 
         //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
@@ -77,8 +77,8 @@ namespace GameLayer
             set
             {
                 if (_song != value)
-                {
-                    MusicPlayerService.FilePath = value.FilePath;
+                {     
+                    MusicPlayerService.FilePath = value != null ? value.FilePath : null;
                     _song = value;
                     NotifyPropertyChanged("Song");
                 }
@@ -128,6 +128,7 @@ namespace GameLayer
         }
 
         //returns null if nothing hit
+        //synchronized with UI (if animation time attached to GetSongCurrentTime)
         private ISequenceElement SetPoints(IPlayer player, TimeSpan hitTime, PlayerAction playerAction)
         {           
             SeqElemType type = GameHelper.PlayerActionToSeqElemType(playerAction);
@@ -135,14 +136,14 @@ namespace GameLayer
 
             if (hitElement == null)
             {
-                SetLifePoints(player, -GameConstants.MissLifePoints);
+                SetLifePoints(player, -GameConstants.WrongMomentOrActionLifePoints);
                 return null;
-            }             
-
-            double diff = Math.Abs(hitElement.Time.TotalSeconds - hitTime.TotalSeconds);
+            }                
 
             if (!hitElement.IsBomb)
             {
+                double diff = Math.Abs(hitElement.Time.TotalSeconds - hitTime.TotalSeconds);
+
                 if (diff <= GameConstants.BestHitTime)
                     player.Points += GameConstants.BestHitPoints;
                 else if (diff <= GameConstants.MediumHitTime)
@@ -236,7 +237,7 @@ namespace GameLayer
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
 
             MusicPlayerService.Start();
-            missedTimer.Start();
+            _missedTimer.Start();
             IsRunning = true;
         }
 
@@ -245,22 +246,22 @@ namespace GameLayer
             if (IsRunning)
                 return;
 
-            MusicPlayerService.Resume();            
-            missedTimer.Start();
+            MusicPlayerService.Resume();
+            _missedTimer.Start();
             IsRunning = true;
         }
 
         public void Pause()
         {
             MusicPlayerService.Pause();
-            missedTimer.Stop();
+            _missedTimer.Stop();
             IsRunning = false;
         }
 
         public void Stop()
         {
             MusicPlayerService.Stop();
-            missedTimer.Stop();
+            _missedTimer.Stop();
             IsRunning = false;
         }
         #endregion

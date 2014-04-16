@@ -135,8 +135,6 @@ namespace StepMania.ViewModels
             var toRemove = notesPanel.Children.OfType<Image>().FirstOrDefault(img => img.Tag == message.SequenceElement);
             if (toRemove != null)
                 notesPanel.Children.Remove(toRemove);
-
-            //TODO: animate elem before remove
         }
 
         public void Handle(PlayerMissedEvent message)

@@ -18,7 +18,7 @@ namespace ApplicationServices
         {
             get
             {
-                return _soundPlayer.Position;
+                return _mediaPlayer.Position;
             }
         }
         #endregion
@@ -29,7 +29,7 @@ namespace ApplicationServices
         {
             get
             {
-                return _soundPlayer.NaturalDuration.TimeSpan;
+                return _mediaPlayer.NaturalDuration.TimeSpan;
             }
         }
         #endregion
@@ -48,11 +48,14 @@ namespace ApplicationServices
             {
                 if (_filePath != value)
                 {
-                    if (!File.Exists(value))
+                    if (!String.IsNullOrWhiteSpace(value))
                     {
-                        throw new ArgumentException("Podany plik muzyczny nie istnieje:\n" + FilePath);
-                    }                    
-                    _soundPlayer.Open(new Uri(value));
+                        if (!File.Exists(value))
+                        {
+                            throw new ArgumentException("Podany plik muzyczny nie istnieje:\n" + FilePath);
+                        }
+                        _mediaPlayer.Open(new Uri(value));
+                    }
 
                     _filePath = value;
                     NotifyPropertyChanged("FilePath");
@@ -82,30 +85,30 @@ namespace ApplicationServices
         }
         #endregion
 
-        private MediaPlayer _soundPlayer = new MediaPlayer();
+        private MediaPlayer _mediaPlayer = new MediaPlayer();
 
         public void Start()
         {
-            _soundPlayer.Play();
+            _mediaPlayer.Play();
             IsRunning = true;
         }
 
         public void Resume()
         {
-            _soundPlayer.Play();
+            _mediaPlayer.Play();
             IsRunning = true;
         }
 
         public void Pause()
         {
-            _soundPlayer.Pause();
+            _mediaPlayer.Pause();
             IsRunning = false;
         }
 
         public void Stop()
         {
-            _soundPlayer.Stop();
-            _soundPlayer.Close();
+            _mediaPlayer.Stop();
+            _mediaPlayer.Close();
             IsRunning = false;
         }
     }
