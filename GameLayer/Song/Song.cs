@@ -122,6 +122,27 @@ namespace GameLayer
         }
         #endregion
 
+        #region Duration
+
+        private TimeSpan _duration;
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                return _duration;
+            }
+            set
+            {
+                if (_duration != value)
+                {
+                    _duration = value;
+                    NotifyPropertyChanged("Duration");
+                }
+            }
+        }
+        #endregion
+
         public ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType)
         {
             return Sequences[difficulty].GetClosestTo(time, elementType);

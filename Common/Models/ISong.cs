@@ -18,6 +18,8 @@ namespace Common
 
         string BackgroundPath { get; set; }
 
+        TimeSpan Duration { get; set; }
+
         ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType);
 
         Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }

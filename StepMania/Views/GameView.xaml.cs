@@ -1,14 +1,9 @@
-﻿//#define DEBUG_HIT_TIME
-
-using System;
-using System.IO;
+﻿using StepMania.DebugHelpers;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 
 namespace StepMania.Views
 {
@@ -21,14 +16,9 @@ namespace StepMania.Views
         {
             InitializeComponent();
 
-            #if DEBUG_HIT_TIME
-            Loaded += GameView_Loaded;            
-            Unloaded += GameView_Unloaded;
-            PreviewKeyUp += GameView_KeyUp;
-            #endif
+            DebugSongHelper.ConfigureGameViewForStartStopAnimation(this, GameView_KeyUp, GameView_Loaded, GameView_Unloaded);
         }
 
-        #if DEBUG_HIT_TIME
         public void GameView_KeyUp(object sender, KeyEventArgs e)
         {   
             if (e.Key == Key.Space)
@@ -46,6 +36,5 @@ namespace StepMania.Views
         {
             ((Parent as ContentControl).Parent as Window).PreviewKeyUp += GameView_KeyUp;       
         }
-        #endif
     }
 }
