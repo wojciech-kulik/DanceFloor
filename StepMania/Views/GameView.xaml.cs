@@ -1,23 +1,14 @@
-﻿using StepMania.Helpers;
-using StepMania.ViewModels;
+﻿//#define DEBUG_HIT_TIME
+
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace StepMania.Views
 {
@@ -26,31 +17,36 @@ namespace StepMania.Views
     /// </summary>
     public partial class GameView : UserControl
     {
-        List<Key> supportedKeys = new List<Key>() { Key.Left, Key.Down, Key.Up, Key.Right, Key.W, Key.A, Key.S, Key.D };
-
         public GameView()
         {
             InitializeComponent();
-            Loaded += GameView_Loaded;            
-        }
+            Loaded += GameView_Loaded;
 
-        public void GameView_KeyUp(object sender, KeyEventArgs e)
-        {
             #if DEBUG_HIT_TIME
-            if (e.Key == Key.Space)
-            {
-                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Resume();
-                return;
-            }
+            Unloaded += GameView_Unloaded;
             #endif
-
-            if (supportedKeys.Contains(e.Key))
-                ((GameViewModel)DataContext).PlayerHit(ControlHelper.KeyToPlayerID(e.Key), ControlHelper.KeyToPlayerAction(e.Key));
         }
+
+        #if DEBUG_HIT_TIME
+        public void GameView_KeyUp(object sender, KeyEventArgs e)
+        {   
+            if (e.Key == Key.Space)
+                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Resume();
+            else
+                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Pause();
+        }       
+
+        void GameView_Unloaded(object sender, RoutedEventArgs e)
+        {      
+            ((Parent as ContentControl).Parent as Window).PreviewKeyUp -= GameView_KeyUp;       
+        }
+        #endif
 
         void GameView_Loaded(object sender, RoutedEventArgs e)
         {
-            ((Parent as ContentControl).Parent as Window).PreviewKeyUp += GameView_KeyUp;
+            #if DEBUG_HIT_TIME
+            ((Parent as ContentControl).Parent as Window).PreviewKeyUp += GameView_KeyUp;       
+            #endif
 
             const int LeftArrowX = 0;
             const int DownArrowX = 115;

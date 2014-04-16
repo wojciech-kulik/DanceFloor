@@ -18,15 +18,27 @@ namespace StepMania.ViewModels
         GameView _view;
         Storyboard _animation;
         IMusicPlayerService _musicPlayerService;
+        ISettingsService _settingsService;
 
-        public GameViewModel(IMusicPlayerService musicPlayerService)
+        public GameViewModel(IMusicPlayerService musicPlayerService, ISettingsService settingsService)
         {
             _musicPlayerService = musicPlayerService;
+            _settingsService = settingsService;
+        }
+
+        protected override void OnActivate()
+        {
+            _settingsService.GameKeyPressed += PlayerHit;
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            //to avoid memory leak we have to detach event to allow GameViewModel be disposed by GarbageCollector
+            _settingsService.GameKeyPressed -= PlayerHit;
         }
 
         protected override void OnViewAttached(object view, object context)
         {
-            base.OnViewAttached(view, context);
             _view = view as GameView;
             _animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
         }
@@ -36,7 +48,7 @@ namespace StepMania.ViewModels
             return _animation.GetCurrentTime();
         }
 
-        public void PlayerHit(PlayerID playerId, PlayerAction playerAction)
+        void PlayerHit(object sender, PlayerID playerId, PlayerAction playerAction)
         {            
             string isHit;
 

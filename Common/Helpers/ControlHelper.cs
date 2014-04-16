@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace StepMania.Helpers
+namespace Common
 {
     public class ControlHelper
     {

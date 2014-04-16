@@ -76,7 +76,6 @@
     <Compile Include="Controls\PointsBar.xaml.cs">
       <DependentUpon>PointsBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\ControlHelper.cs" />
     <Page Include="Controls\HitPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\active_arrow.png" />

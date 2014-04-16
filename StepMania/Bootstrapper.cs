@@ -29,7 +29,7 @@ namespace StepMania
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
             container.PerRequest<ISequenceCreationService, SequenceCreationService>();
             container.PerRequest<IHighScoresService, HighScoresService>();
-            container.PerRequest<ISettingsService, SettingsService>();
+            container.Singleton<ISettingsService, SettingsService>();
             
         }
 
