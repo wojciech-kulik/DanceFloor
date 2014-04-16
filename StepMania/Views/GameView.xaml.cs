@@ -1,4 +1,5 @@
 ﻿using StepMania.DebugHelpers;
+using StepMania.ViewModels;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,9 +23,9 @@ namespace StepMania.Views
         public void GameView_KeyUp(object sender, KeyEventArgs e)
         {   
             if (e.Key == Key.Space)
-                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Resume();
-            else
-                (Resources.Values.OfType<Storyboard>().First() as Storyboard).Pause();
+                (DataContext as GameViewModel).ResumeGame();
+            else if (e.Key == Key.Back)
+                (DataContext as GameViewModel).PauseGame();
         }       
 
         void GameView_Unloaded(object sender, RoutedEventArgs e)

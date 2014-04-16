@@ -1,9 +1,12 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace ApplicationServices
 {
@@ -11,62 +14,48 @@ namespace ApplicationServices
     {
         #region CurrentTime
 
-        private TimeSpan _currentTime;
-
         public TimeSpan CurrentTime
         {
             get
             {
-                return _currentTime;
-            }
-            protected set
-            {
-                if (_currentTime != value)
-                {
-                    _currentTime = value;
-                    NotifyPropertyChanged("CurrentTime");
-                }
+                return _soundPlayer.Position;
             }
         }
         #endregion
 
         #region Duration
 
-        private TimeSpan _duration;
-
         public TimeSpan Duration
         {
             get
             {
-                return _duration;
-            }
-            protected set
-            {
-                if (_duration != value)
-                {
-                    _duration = value;
-                    NotifyPropertyChanged("Duration");
-                }
+                return _soundPlayer.NaturalDuration.TimeSpan;
             }
         }
         #endregion
 
-        #region Song
+        #region FilePath
 
-        private ISong _song;
+        private string _filePath;
 
-        public ISong Song
+        public string FilePath
         {
             get
             {
-                return _song;
+                return _filePath;
             }
-            protected set
+            set
             {
-                if (_song != value)
+                if (_filePath != value)
                 {
-                    _song = value;
-                    NotifyPropertyChanged("Song");
+                    if (!File.Exists(value))
+                    {
+                        throw new ArgumentException("Podany plik muzyczny nie istnieje:\n" + FilePath);
+                    }                    
+                    _soundPlayer.Open(new Uri(value));
+
+                    _filePath = value;
+                    NotifyPropertyChanged("FilePath");
                 }
             }
         }
@@ -93,27 +82,30 @@ namespace ApplicationServices
         }
         #endregion
 
+        private MediaPlayer _soundPlayer = new MediaPlayer();
+
         public void Start()
         {
-            //TODO: implement
+            _soundPlayer.Play();
             IsRunning = true;
         }
 
         public void Resume()
         {
-            //TODO: implement
+            _soundPlayer.Play();
             IsRunning = true;
         }
 
         public void Pause()
         {
-            //TODO: Implement
+            _soundPlayer.Pause();
             IsRunning = false;
         }
 
         public void Stop()
         {
-            //TODO: implement
+            _soundPlayer.Stop();
+            _soundPlayer.Close();
             IsRunning = false;
         }
     }

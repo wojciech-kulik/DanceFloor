@@ -11,18 +11,16 @@ using System.Diagnostics;
 
 namespace GameLayer
 {
-    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>
+    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>, IHandle<GameActionEvent>
     {
-        List<ISequenceElement> alreadyHit = new List<ISequenceElement>();
-
-        IMusicPlayerService _musicPlayerService;
+        List<ISequenceElement> _alreadyHit = new List<ISequenceElement>();
         IEventAggregator _eventAggregator;
         Timer missedTimer = new Timer(250);
 
         public Game(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
         {
             Players = new BindableCollection<IPlayer>();
-            _musicPlayerService = musicPlayerService;
+            MusicPlayerService = musicPlayerService;
 
             _eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);            
@@ -32,6 +30,8 @@ namespace GameLayer
 
         //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
         public Func<TimeSpan> GetSongCurrentTime { get; set; }
+
+        public IMusicPlayerService MusicPlayerService { get; private set; }
 
         #region Players
 
@@ -78,6 +78,7 @@ namespace GameLayer
             {
                 if (_song != value)
                 {
+                    MusicPlayerService.FilePath = value.FilePath;
                     _song = value;
                     NotifyPropertyChanged("Song");
                 }
@@ -94,20 +95,21 @@ namespace GameLayer
         {
             var currenTime = GetSongCurrentTime().TotalSeconds;
 
+            //this collection is beeing modified and we access it from thread, so we should make a copy first
+            var copyOfAlreadyHit = _alreadyHit.ToList(); 
             var missed = Song.Sequences[player.Difficulty]
-                .Except(alreadyHit)
+                .Except(copyOfAlreadyHit)
                 .Where(e => e.Time.TotalSeconds - currenTime < -GameConstants.WorstHitTime)
                 .ToList();
 
             if (missed.Count == 0)
                 return;
 
-            alreadyHit.AddRange(missed.ToList());
+            _alreadyHit.AddRange(missed.ToList());
             SetLifePoints(player, -GameConstants.MissLifePoints * missed.Count);
 
             foreach(var missedElem in missed)
             {
-                Debug.WriteLine("Life: " + player.Life.ToString());
                 _eventAggregator.Publish(new PlayerMissedEvent()
                 {
                     PlayerID = player.PlayerID,
@@ -129,7 +131,7 @@ namespace GameLayer
         private ISequenceElement SetPoints(IPlayer player, TimeSpan hitTime, PlayerAction playerAction)
         {           
             SeqElemType type = GameHelper.PlayerActionToSeqElemType(playerAction);
-            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, alreadyHit);
+            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, _alreadyHit);
 
             if (hitElement == null)
             {
@@ -153,7 +155,7 @@ namespace GameLayer
                 SetLifePoints(player, -GameConstants.BombLifePoints);
             }
 
-            alreadyHit.Add(hitElement);
+            _alreadyHit.Add(hitElement);
             return hitElement;
         }
 
@@ -188,6 +190,22 @@ namespace GameLayer
             }
         }
 
+        public void Handle(GameActionEvent message)
+        {
+            switch (message.GameAction)
+            {
+                case GameAction.Pause:
+                    Pause();
+                    break;
+                case GameAction.Resume:
+                    Resume();
+                    break;
+                case GameAction.Stop:
+                    Stop();
+                    break;
+            }
+        }
+
         #region IPlayable
 
         #region IsRunning
@@ -217,24 +235,31 @@ namespace GameLayer
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
 
+            MusicPlayerService.Start();
             missedTimer.Start();
             IsRunning = true;
         }
 
         public void Resume()
         {
+            if (IsRunning)
+                return;
+
+            MusicPlayerService.Resume();            
             missedTimer.Start();
             IsRunning = true;
         }
 
         public void Pause()
         {
+            MusicPlayerService.Pause();
             missedTimer.Stop();
             IsRunning = false;
         }
 
         public void Stop()
         {
+            MusicPlayerService.Stop();
             missedTimer.Stop();
             IsRunning = false;
         }

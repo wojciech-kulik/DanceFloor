@@ -28,6 +28,7 @@ namespace StepMania.DebugHelpers
             sequence.Difficulty = Difficulty.Easy;
 
             Song result = new Song();
+            result.FilePath = @"E:\Muzyka\Billy Talent III\Billy Talent - Diamond on a Landmine.mp3";
             result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);
 
@@ -48,21 +49,21 @@ namespace StepMania.DebugHelpers
         {
             #if DEBUG_TIMING            
 
-            TextBlock tb = new TextBlock() { FontSize = 20, Text = String.Format("{0:N2}", top / GameConstants.PixelsPerSecond) };
+            TextBlock tb = new TextBlock() { FontSize = 20, Text = String.Format("{0:N2}", top / GameUIConstants.PixelsPerSecond) };
             Canvas.SetTop(tb, top);
             switch (elemType)
             {
                 case SeqElemType.LeftArrow:
-                    Canvas.SetLeft(tb, GameConstants.LeftArrowX);
+                    Canvas.SetLeft(tb, GameUIConstants.LeftArrowX);
                     break;
                 case SeqElemType.DownArrow:
-                    Canvas.SetLeft(tb, GameConstants.DownArrowX);
+                    Canvas.SetLeft(tb, GameUIConstants.DownArrowX);
                     break;
                 case SeqElemType.UpArrow:
-                    Canvas.SetLeft(tb, GameConstants.UpArrowX);
+                    Canvas.SetLeft(tb, GameUIConstants.UpArrowX);
                     break;
                 case SeqElemType.RightArrow:
-                    Canvas.SetLeft(tb, GameConstants.RightArrowX);
+                    Canvas.SetLeft(tb, GameUIConstants.RightArrowX);
                     break;
             }
             view.p1Notes.Children.Add(tb);
@@ -70,7 +71,7 @@ namespace StepMania.DebugHelpers
             #endif
         }
 
-        public static void ShowCurrentTimeInsteadPoints(Storyboard animation, GameView view)
+        public static void ShowCurrentTimeInsteadPoints(Storyboard animation, IMusicPlayerService musciPlayerService, GameView view)
         {
             #if DEBUG_TIMING
 
@@ -83,8 +84,8 @@ namespace StepMania.DebugHelpers
 
                         Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                         {
-                            var time = animation.GetCurrentTime();
-                            view.p1PointsBar.Points = time.TotalSeconds.ToString("N2");
+                            var time = musciPlayerService.CurrentTime;
+                            view.p1PointsBar.Points = "S: " + time.TotalSeconds.ToString("N2") + " | A: " + animation.GetCurrentTime().TotalSeconds.ToString("N2");
                         }));
                         Thread.Sleep(50);
                     }

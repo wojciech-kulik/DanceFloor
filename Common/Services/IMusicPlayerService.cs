@@ -12,6 +12,6 @@ namespace Common
 
         TimeSpan Duration { get; }
 
-        ISong Song { get; }
+        string FilePath { get; set; }
     }
 }

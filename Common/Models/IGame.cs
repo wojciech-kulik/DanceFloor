@@ -17,5 +17,7 @@ namespace Common
         bool Multiplayer { get; }
 
         ISong Song { get; set; }
+
+        IMusicPlayerService MusicPlayerService { get; }
     }
 }
