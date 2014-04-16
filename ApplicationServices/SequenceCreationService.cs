@@ -43,19 +43,50 @@ namespace ApplicationServices
         #endregion
     
         #region IPlayable
+
+        #region IsRunning
+
+        private bool _isRunning;
+
+        public bool IsRunning
+        {
+            get
+            {
+                return _isRunning;
+            }
+            protected set
+            {
+                if (_isRunning != value)
+                {
+                    _isRunning = value;
+                    NotifyPropertyChanged("IsRunning");
+                }
+            }
+        }
+        #endregion
+
         public void Start()
         {
- 	        throw new NotImplementedException();
+            //TODO: implement
+            IsRunning = true;
+        }
+
+        public void Resume()
+        {
+            //TODO: implement
+            IsRunning = true;
         }
 
         public void Pause()
         {
- 	        throw new NotImplementedException();
+            //TODO: Implement
+            IsRunning = false;
         }
 
         public void Stop()
         {
- 	        throw new NotImplementedException();
+            //TODO: implement
+            IsRunning = false;
         }
         #endregion
     }

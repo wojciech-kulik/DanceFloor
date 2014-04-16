@@ -17,5 +17,7 @@ namespace Common
         public static readonly double BestHitTime = 0.05;
         public static readonly double MediumHitTime = 0.13;
         public static readonly double WorstHitTime = 0.2;
+
+        public static readonly int FullLife = 100;
     }
 }

@@ -32,12 +32,6 @@ namespace StepMania.ViewModels
             _view = view as GameView;
             _animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
 
-            /*var doubleAnim = new DoubleAnimation(-GameConstants.ArrowWidthHeight, -(GameConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameConstants.ArrowWidthHeight), song.Duration);
-            _animation = new Storyboard();
-            _animation.Children.Add(doubleAnim);
-            Storyboard.SetTarget(doubleAnim, _view.p1Notes);
-            Storyboard.SetTargetProperty(doubleAnim, new System.Windows.PropertyPath("RenderTransform.(TranslateTransform.Y)"));*/
-
             LoadSong(DebugSongHelper.GenerateSong());
             StartGame();
         }
@@ -90,17 +84,26 @@ namespace StepMania.ViewModels
 
         public void StartGame()
         {
-            _animation.Begin(); 
+            _animation.Begin();
+            _game.Start();
+        }
+
+        public void ResumeGame()
+        {
+            _animation.Resume();
+            _game.Resume();
         }
 
         public void PauseGame()
         {
             _animation.Pause();
+            _game.Pause();
         }
 
         public void StopGame()
         {
             _animation.Stop();
+            _game.Stop();
         }
 
         public void Handle(PlayerHitEvent message)

@@ -10,8 +10,12 @@ namespace Common
     {
         void Start();
 
+        void Resume();
+
         void Pause();
 
         void Stop();
+
+        bool IsRunning { get; }
     }
 }

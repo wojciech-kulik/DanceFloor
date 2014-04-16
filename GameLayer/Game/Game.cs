@@ -15,23 +15,19 @@ namespace GameLayer
     {
         List<ISequenceElement> alreadyHit = new List<ISequenceElement>();
 
-        IMusicPlayerService musicPlayerService;
+        IMusicPlayerService _musicPlayerService;
         IEventAggregator _eventAggregator;
+        Timer missedTimer = new Timer(250);
 
         public Game(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
         {
             Players = new BindableCollection<IPlayer>();
-            this.musicPlayerService = musicPlayerService;
+            _musicPlayerService = musicPlayerService;
 
             _eventAggregator = eventAggregator;
-            eventAggregator.Subscribe(this);
+            eventAggregator.Subscribe(this);            
 
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = 100, Points = 0 });
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = 100, Points = 0 });
-
-            Timer timer = new Timer(250);
-            timer.Elapsed += lookForMissedNotes_Tick;
-            timer.Start();
+            missedTimer.Elapsed += lookForMissedNotes_Tick;            
         }
 
         //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
@@ -163,6 +159,9 @@ namespace GameLayer
 
         public void Handle(GameKeyEvent message)
         {
+            if (!IsRunning)
+                return;
+
             IPlayer player = Players.First(p => p.PlayerID == message.PlayerId);
             ISequenceElement hitElem = SetPoints(player, GetSongCurrentTime(), message.PlayerAction);
 
@@ -190,19 +189,54 @@ namespace GameLayer
         }
 
         #region IPlayable
+
+        #region IsRunning
+
+        private bool _isRunning;
+
+        public bool IsRunning
+        {
+            get
+            {
+                return _isRunning;
+            }
+            protected set
+            {
+                if (_isRunning != value)
+                {
+                    _isRunning = value;
+                    NotifyPropertyChanged("IsRunning");
+                }
+            }
+        }
+        #endregion
+
         public void Start()
         {
-            throw new NotImplementedException();
+            Players.Clear();
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
+
+            missedTimer.Start();
+            IsRunning = true;
+        }
+
+        public void Resume()
+        {
+            missedTimer.Start();
+            IsRunning = true;
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            missedTimer.Stop();
+            IsRunning = false;
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            missedTimer.Stop();
+            IsRunning = false;
         }
         #endregion
     }

@@ -72,19 +72,49 @@ namespace ApplicationServices
         }
         #endregion
 
+        #region IsRunning
+
+        private bool _isRunning;
+
+        public bool IsRunning
+        {
+            get
+            {
+                return _isRunning;
+            }
+            protected set
+            {
+                if (_isRunning != value)
+                {
+                    _isRunning = value;
+                    NotifyPropertyChanged("IsRunning");
+                }
+            }
+        }
+        #endregion
+
         public void Start()
         {
             //TODO: implement
+            IsRunning = true;
+        }
+
+        public void Resume()
+        {
+            //TODO: implement
+            IsRunning = true;
         }
 
         public void Pause()
         {
             //TODO: Implement
+            IsRunning = false;
         }
 
         public void Stop()
         {
             //TODO: implement
+            IsRunning = false;
         }
     }
 }
