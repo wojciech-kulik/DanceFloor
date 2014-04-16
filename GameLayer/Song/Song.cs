@@ -15,7 +15,7 @@ namespace GameLayer
             Sequences = new Dictionary<Difficulty, IReadOnlySequence>();
         }
 
-        Dictionary<Difficulty, IReadOnlySequence> Sequences;
+        public Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }
 
         #region Title
 

@@ -24,6 +24,30 @@ namespace GameLayer
 
             Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
             Players.Add(new Player() { Difficulty = Difficulty.Easy, IsGameOver = false, Life = 100, Points = 0 });
+
+            GenerateTestSong();
+        }
+
+        void GenerateTestSong()
+        {
+            const int Seconds = 300;       
+            Random r = new Random();
+
+            Sequence sequence = new Sequence();
+            sequence.Difficulty = Difficulty.Easy;
+
+            Song = new Song();
+            Song.Sequences.Add(Difficulty.Easy, sequence);
+
+            for (int i = 2; i < Seconds; i++)
+            {
+                int count = r.Next(1, 3);
+                for (int j = 0; j < count; j++)
+                {
+                    SeqElemType elemType = (SeqElemType)r.Next(0, 4);
+                    sequence.AddElement(new SequenceElement() { Type = elemType, Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });
+                }
+            }
         }
 
         #region Players
