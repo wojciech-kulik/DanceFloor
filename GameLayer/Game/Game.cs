@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace GameLayer
 {
@@ -26,6 +28,10 @@ namespace GameLayer
 
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = 100, Points = 0 });
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = 100, Points = 0 });
+
+            Timer timer = new Timer(250);
+            timer.Elapsed += lookForMissedNotes_Tick;
+            timer.Start();
         }
 
         //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
@@ -83,6 +89,39 @@ namespace GameLayer
         }
         #endregion
 
+        private void lookForMissedNotes_Tick(object sender, ElapsedEventArgs e)
+        {
+            LookForMissedNotes(Players.First());
+        }
+
+        private void LookForMissedNotes(IPlayer player)
+        {
+            var currenTime = GetSongCurrentTime().TotalSeconds;
+
+            var missed = Song.Sequences[player.Difficulty]
+                .Except(alreadyHit)
+                .Where(e => e.Time.TotalSeconds - currenTime < -GameConstants.WorstHitTime)
+                .ToList();
+
+            if (missed.Count == 0)
+                return;
+
+            alreadyHit.AddRange(missed.ToList());
+            SetLifePoints(player, -GameConstants.MissLifePoints * missed.Count);
+
+            foreach(var missedElem in missed)
+            {
+                Debug.WriteLine("Life: " + player.Life.ToString());
+                _eventAggregator.Publish(new PlayerMissedEvent()
+                {
+                    PlayerID = player.PlayerID,
+                    Points = player.Points,
+                    Life = player.Life,
+                    Reason = MissReason.NotHit
+                });
+            }   
+        }
+
         private void SetLifePoints(IPlayer player, int deltaLifePoints)
         {
             player.Life = Math.Max(0, player.Life + deltaLifePoints);
@@ -92,7 +131,7 @@ namespace GameLayer
 
         //returns null if nothing hit
         private ISequenceElement SetPoints(IPlayer player, TimeSpan hitTime, PlayerAction playerAction)
-        {
+        {           
             SeqElemType type = GameHelper.PlayerActionToSeqElemType(playerAction);
             ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, alreadyHit);
 
@@ -145,7 +184,7 @@ namespace GameLayer
                     PlayerID = player.PlayerID,
                     Points = player.Points,
                     Life = player.Life,
-                    PlayerAction = message.PlayerAction
+                    Reason = MissReason.WrongMomentOrAction
                 });
             }
         }

@@ -14,6 +14,6 @@ namespace Common
 
         public int Life { get; set; }
 
-        public PlayerAction PlayerAction { get; set; }
+        public MissReason Reason { get; set; }
     }
 }

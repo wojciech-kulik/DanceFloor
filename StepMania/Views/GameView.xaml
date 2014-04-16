@@ -54,10 +54,10 @@
         </Grid>
 
         <!-- P1 POINTSBAR -->
-        <ctrls:PointsBar Grid.Row="2" x:Name="p1PointsBar" Height="50" Margin="10,0,0,10" Width="350" HorizontalAlignment="Left" Points="50"/>
+        <ctrls:PointsBar Grid.Row="2" x:Name="p1PointsBar" Height="50" Margin="10,0,0,10" Width="350" HorizontalAlignment="Left"/>
 
         <!-- P2 POINTSBAR -->
-        <ctrls:PointsBar Grid.Row="2" Grid.Column="1" x:Name="p2PointsBar" Height="50" Margin="0,0,10,10" Width="350" HorizontalAlignment="Right" Points="50"/>
+        <ctrls:PointsBar Grid.Row="2" Grid.Column="1" x:Name="p2PointsBar" Height="50" Margin="0,0,10,10" Width="350" HorizontalAlignment="Right"/>
 
         <!-- P1 PLAYBOARD -->
         <Grid x:Name="p1Playboard" Grid.Row="1" ClipToBounds="True">

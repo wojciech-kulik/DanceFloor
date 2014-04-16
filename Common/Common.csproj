@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Constants\GameConstants.cs" />
     <Compile Include="Enums\Difficulty.cs" />
+    <Compile Include="Enums\MissReason.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Events\PlayerMissedEvent.cs" />

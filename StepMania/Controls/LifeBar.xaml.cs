@@ -36,6 +36,7 @@ namespace StepMania.Controls
 
         public void SetLife(double percent)
         {
+            percent = Math.Max(0, percent);
             life = percent;
             bState.Width = ActualWidth * percent / 100;
         }
