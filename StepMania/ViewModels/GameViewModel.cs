@@ -26,20 +26,17 @@ namespace StepMania.ViewModels
         }
 
         protected override void OnViewAttached(object view, object context)
-        {
-            Song song = DebugSongHelper.GenerateSong();
-
+        {           
             _view = view as GameView;
             _animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
 
             /*var doubleAnim = new DoubleAnimation(-GameConstants.ArrowWidthHeight, -(GameConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameConstants.ArrowWidthHeight), song.Duration);
             _animation = new Storyboard();
             _animation.Children.Add(doubleAnim);
-
             Storyboard.SetTarget(doubleAnim, _view.p1Notes);
             Storyboard.SetTargetProperty(doubleAnim, new System.Windows.PropertyPath("RenderTransform.(TranslateTransform.Y)"));*/
 
-            LoadSong(song);
+            LoadSong(DebugSongHelper.GenerateSong());
             StartAnimation();
         }
 
@@ -47,6 +44,10 @@ namespace StepMania.ViewModels
         {
             _game.Song = song;
             _view.p1Notes.Children.Clear();
+
+            _animation.Children.First().Duration = song.Duration;
+            (_animation.Children.First() as DoubleAnimation).From = -GameConstants.ArrowWidthHeight;
+            (_animation.Children.First() as DoubleAnimation).To = -(GameConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameConstants.ArrowWidthHeight);
 
             foreach(var seqElem in song.Sequences[Difficulty.Easy])
             {
