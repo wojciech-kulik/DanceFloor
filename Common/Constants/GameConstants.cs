@@ -9,20 +9,20 @@ namespace Common
     public class GameConstants
     {
         //Hit Points
-        public static readonly int BestHitPoints = 20;
-        public static readonly int MediumHitPoints = 10;
-        public static readonly int WorstHitPoints = 5;
+        public const int BestHitPoints = 20;
+        public const int MediumHitPoints = 10;
+        public const int WorstHitPoints = 5;
 
         //Hit Times
-        public static readonly double BestHitTime = 0.05;
-        public static readonly double MediumHitTime = 0.13;
-        public static readonly double WorstHitTime = 0.2;
+        public const double BestHitTime = 0.05;
+        public const double MediumHitTime = 0.13;
+        public const double WorstHitTime = 0.2;
 
         //Life Points
-        public static readonly int BombLifePoints = 20;
-        public static readonly int MissLifePoints = 8;
-        public static readonly int WrongMomentOrActionLifePoints = 4;
+        public const int BombLifePoints = 20;
+        public const int MissLifePoints = 8;
+        public const int WrongMomentOrActionLifePoints = 4;
 
-        public static readonly int FullLife = 100;
+        public const int FullLife = 100;
     }
 }

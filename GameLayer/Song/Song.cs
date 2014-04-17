@@ -38,6 +38,27 @@ namespace GameLayer
         }
         #endregion
 
+        #region Artist
+
+        private string _artist;
+
+        public string Artist
+        {
+            get
+            {
+                return _artist;
+            }
+            set
+            {
+                if (_artist != value)
+                {
+                    _artist = value;
+                    NotifyPropertyChanged("Artist");
+                }
+            }
+        }
+        #endregion
+
         #region FilePath
 
         private string _filePath;

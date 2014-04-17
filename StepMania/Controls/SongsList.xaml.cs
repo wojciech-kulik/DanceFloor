@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameLayer;
+using StepMania.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,13 +30,7 @@ namespace StepMania.Controls
         public SongsList()
         {
             InitializeComponent();
-            DataContext = this;
-
-            Items = new List<string>() { "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas", "adsas" };
         }
-
-        public List<string> Items { get; set; }
-
 
         public void SongsList_HandleKeyUp(object sender, KeyEventArgs e)
         {
@@ -59,17 +55,22 @@ namespace StepMania.Controls
             {
                 const int SleepTime = 5;
                 const int PixelSpeed = 4;
-                const int FullMoveLength = 250;
+                const int FullMoveLength = GameUIConstants.SongItemWidth;
 
                 TranslateTransform transform = null;
                 runInUI(() => transform = (moveablePanel.RenderTransform as TranslateTransform));
+
+                int offset;
 
                 while (holdKey.HasValue)
                 {
                     runInUI(() => 
                     {
                         if (holdKey.HasValue)
-                            transform.X += holdKey.Value == Key.Right ? -PixelSpeed : PixelSpeed;
+                        {
+                            offset = holdKey.Value == Key.Right ? -PixelSpeed : PixelSpeed;
+                            transform.X = Math.Min(0, transform.X + offset);
+                        }                            
                     });
                     Thread.Sleep(SleepTime);
                 }
@@ -94,5 +95,20 @@ namespace StepMania.Controls
             }));
             animation.Start();
         }
+
+
+
+
+        public System.Collections.IEnumerable ItemsSource
+        {
+            get { return (System.Collections.IEnumerable)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register("ItemsSource", typeof(System.Collections.IEnumerable), typeof(SongsList), new PropertyMetadata(null));
+
+
     }
 }

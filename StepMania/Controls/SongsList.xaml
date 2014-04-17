@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d"              
+             mc:Ignorable="d" x:Name="self"
              d:DesignHeight="1080" d:DesignWidth="1920">
     <Grid>
         <Canvas x:Name="moveablePanel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
@@ -11,7 +11,7 @@
                 <TranslateTransform />
             </Canvas.RenderTransform>
 
-            <ItemsControl ItemsSource="{Binding Items}">
+            <ItemsControl ItemsSource="{Binding ItemsSource, ElementName=self}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"/>
@@ -20,10 +20,10 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel VerticalAlignment="Center" Width="250">
-                            <TextBlock Text="Shakira" Margin="48,0,0,0" TextWrapping="Wrap" Foreground="White" FontFamily="Calibri" FontSize="25" />
-                            <TextBlock Text="ASdsada dsasdsadsasad" Margin="48,0,0,0" TextWrapping="Wrap" Foreground="White" FontFamily="Calibri" FontSize="20" />
+                            <TextBlock Text="{Binding Artist}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" Foreground="White" FontFamily="Calibri" FontSize="25" />
+                            <TextBlock Text="{Binding Title}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" Foreground="White" FontFamily="Calibri" FontSize="20" />
                             <Border BorderBrush="White" BorderThickness="2" Width="150" Height="150" SnapsToDevicePixels="True">
-                                <Image Source="../Images/game_background.jpg" VerticalAlignment="Top" Stretch="Fill" />
+                                <Image Source="{Binding BackgroundPath}" VerticalAlignment="Top" Stretch="Fill" />
                             </Border>
                         </StackPanel>
                     </DataTemplate>

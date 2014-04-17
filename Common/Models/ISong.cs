@@ -10,6 +10,8 @@ namespace Common
     {
         string Title { get; set; }
 
+        string Artist { get; set; }
+
         string FilePath { get; set; }
 
         string Author { get; set; }

@@ -16,7 +16,7 @@
                 <DropShadowEffect Color="Yellow" BlurRadius="10" Opacity="0.5" />
             </TextBlock.Effect>
         </TextBlock>
-        
-        <ctrls:SongsList VerticalAlignment="Center" x:Name="songsList" HorizontalAlignment="Center" Margin="-250,-200,0,0" />
+
+        <ctrls:SongsList VerticalAlignment="Center" x:Name="songsList" HorizontalAlignment="Center" Margin="-250,-200,0,0" ItemsSource="{Binding Songs}" />
     </Grid>
 </UserControl>
