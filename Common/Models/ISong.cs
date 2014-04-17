@@ -20,10 +20,16 @@ namespace Common
 
         string BackgroundPath { get; set; }
 
-        TimeSpan Duration { get; set; }
+        TimeSpan Duration { get; set; }        
+
+        Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }
+
+
 
         ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit);
 
-        Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }
+        void LoadFromFile(string path);
+
+        void SaveToFile(string path);
     }
 }

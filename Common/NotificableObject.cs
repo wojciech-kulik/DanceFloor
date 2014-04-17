@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+    [Serializable]
     public class NotificableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
         #region INotifyPropertyChanged Members

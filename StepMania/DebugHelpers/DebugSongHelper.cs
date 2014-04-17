@@ -8,6 +8,7 @@ using StepMania.ViewModels;
 using StepMania.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,7 +31,6 @@ namespace StepMania.DebugHelpers
 
             Song result = new Song();
             result.FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3";
-            //result.FilePath = @"E:\Muzyka\Billy Talent III\Billy Talent - Diamond on a Landmine.mp3";
             //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);

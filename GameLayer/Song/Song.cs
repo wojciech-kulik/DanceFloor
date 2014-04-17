@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace GameLayer
 {
+    [Serializable]
     public class Song : NotificableObject, ISong
     {
         public Song()
@@ -167,6 +170,37 @@ namespace GameLayer
         public ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit)
         {
             return Sequences[difficulty].GetClosestTo(time, elementType, alreadyHit);
+        }
+
+        public void LoadFromFile(string path)
+        {
+            if (!File.Exists(path))
+                throw new ArgumentException("Nieprawidłowa ścieżka do pliku: \n" + path);
+
+            Song song;
+            using (var stream = File.OpenRead(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                song = (Song)formatter.Deserialize(stream);
+            }
+
+            Sequences = song.Sequences;
+            Title = song.Title;
+            Artist = song.Artist;
+            FilePath = song.FilePath;
+            Author = song.Author;
+            CreateDate = song.CreateDate;
+            BackgroundPath = song.BackgroundPath;
+            Duration = song.Duration;
+        }
+
+        public void SaveToFile(string path)
+        {
+            using (var stream = File.Create(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, this);
+            }
         }
     }
 }

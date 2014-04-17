@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameLayer
 {
+    [Serializable]
     public class Sequence : NotificableObject, ISequence
     {
         private BindableCollection<ISequenceElement> SequenceElements = new BindableCollection<ISequenceElement>();

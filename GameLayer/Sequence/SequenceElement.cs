@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameLayer
 {
+    [Serializable]
     public class SequenceElement : NotificableObject, ISequenceElement
     {
         #region Time
