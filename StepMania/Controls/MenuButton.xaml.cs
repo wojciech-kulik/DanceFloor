@@ -25,12 +25,6 @@ namespace StepMania.Controls
             InitializeComponent();            
         }
 
-        private void self_Loaded(object sender, RoutedEventArgs e)
-        {
-            scaleObj.CenterX = ActualWidth / 2.0;
-            scaleObj.CenterY = ActualHeight / 2.0;
-        }
-
 
 
         public string Text

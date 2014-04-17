@@ -3,5 +3,5 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="StepMania" Height="768" Width="1024" MinHeight="700" MinWidth="1024" 
         WindowState="Maximized" WindowStartupLocation="CenterScreen">
-    <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" />
+    <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" Cursor="None" />
 </Window>

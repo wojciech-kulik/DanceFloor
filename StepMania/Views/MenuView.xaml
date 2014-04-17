@@ -20,56 +20,22 @@
 
         <!-- MENU -->
         <Border MaxWidth="650" Margin="0,50,0,0" Padding="150,0,150,0" Height="700" CornerRadius="10">
-            <StackPanel VerticalAlignment="Center">
+            <StackPanel VerticalAlignment="Center" x:Name="menuPanel">
                 <StackPanel.Resources>
                     <Style TargetType="ctrls:MenuButton">
                         <Setter Property="Height" Value="55" />
                         <Setter Property="Margin" Value="0,0,0,40" />
                         <Setter Property="FontSize" Value="35" />
                         <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="ButtonBackground" Value="#DE2BAC47" />
                     </Style>
                 </StackPanel.Resources>
-                
-                <ctrls:MenuButton Text="Graj" cal:Message.Attach="[Event MouseLeftButtonUp]=[PlayGame]" >
-                    <ctrls:MenuButton.ButtonBackground>
-                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                            <GradientStop Color="#FF1F1F83" Offset="1"/>
-                            <GradientStop Color="#FF2844F7"/>
-                        </LinearGradientBrush>
-                    </ctrls:MenuButton.ButtonBackground>
-                </ctrls:MenuButton>
-                <ctrls:MenuButton Text="Najlepsze wyniki" >
-                    <ctrls:MenuButton.ButtonBackground>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF136C0A" Offset="0.996"/>
-                            <GradientStop Color="#FF22B813"/>
-                        </LinearGradientBrush>
-                    </ctrls:MenuButton.ButtonBackground>
-                </ctrls:MenuButton>
-                <ctrls:MenuButton Text="Opcje">
-                    <ctrls:MenuButton.ButtonBackground>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF55227A" Offset="1"/>
-                            <GradientStop Color="#FFA244E4"/>
-                        </LinearGradientBrush>
-                    </ctrls:MenuButton.ButtonBackground>
-                </ctrls:MenuButton>
-                <ctrls:MenuButton Text="Stwórz utwór">
-                    <ctrls:MenuButton.ButtonBackground>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF87911E" Offset="1"/>
-                            <GradientStop Color="#FFCCDC2B"/>
-                        </LinearGradientBrush>
-                    </ctrls:MenuButton.ButtonBackground>
-                </ctrls:MenuButton>
-                <ctrls:MenuButton Text="Wyjdź" cal:Message.Attach="[Event MouseLeftButtonUp]=[CloseGame]" Margin="0" >
-                    <ctrls:MenuButton.ButtonBackground>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF934C2B" Offset="1"/>
-                            <GradientStop Color="#FFD36C3C"/>
-                        </LinearGradientBrush>
-                    </ctrls:MenuButton.ButtonBackground>
-                </ctrls:MenuButton>
+
+                <ctrls:MenuButton Text="Graj" />
+                <ctrls:MenuButton Text="Najlepsze wyniki" />
+                <ctrls:MenuButton Text="Opcje" />
+                <ctrls:MenuButton Text="Stwórz utwór" />
+                <ctrls:MenuButton Text="Wyjdź" Margin="0" />
             </StackPanel>
         </Border>
     </Grid>
