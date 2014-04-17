@@ -23,24 +23,6 @@ namespace StepMania.Views
         public MenuView()
         {
             InitializeComponent();
-            Loaded += MainView_Loaded;
-        }
-
-        void MainView_Loaded(object sender, RoutedEventArgs e)
-        {
-            var window = Window.GetWindow(this);
-            window.KeyDown += Window_KeyDown;
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape)
-                Application.Current.MainWindow.Close();
-        }
-
-        private void btnExit_Click(object sender, MouseButtonEventArgs e)
-        {
-            Application.Current.MainWindow.Close();
         }
     }
 }

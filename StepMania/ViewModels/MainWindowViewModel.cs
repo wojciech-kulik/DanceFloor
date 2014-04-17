@@ -21,14 +21,18 @@ namespace StepMania.ViewModels
 
         protected override void OnActivate()
         {            
-            ActivateItem(IoC.Get<GameViewModel>());
-            //ActivateItem(IoC.Get<MenuViewModel>());
+            ActivateItem(IoC.Get<MenuViewModel>());
         }
 
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
             (view as Window).PreviewKeyUp += _settingsService.HandleKeyUp;
+        }
+
+        public void PlayGame()
+        {
+            ActivateItem(IoC.Get<SongsListViewModel>());
         }
     }
 }

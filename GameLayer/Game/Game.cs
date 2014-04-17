@@ -29,10 +29,10 @@ namespace GameLayer
             _missedTimer.Elapsed += lookForMissedNotes_Tick;
 
             Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
+            //Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
         }
 
-        //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
+        //NEEDS TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
         public Func<TimeSpan> GetSongCurrentTime { get; set; }
 
         public IMusicPlayerService MusicPlayerService { get; private set; }

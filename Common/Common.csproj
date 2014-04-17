@@ -53,6 +53,7 @@
     <Compile Include="Enums\MissReason.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\GameActionEvent.cs" />
+    <Compile Include="Events\KeyPressedEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Events\PlayerMissedEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />

@@ -77,6 +77,13 @@
     <Compile Include="Controls\PointsBar.xaml.cs">
       <DependentUpon>PointsBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SongsList.xaml.cs">
+      <DependentUpon>SongsList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\SongsListViewModel.cs" />
+    <Compile Include="Views\SongsListView.xaml.cs">
+      <DependentUpon>SongsListView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\HitPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -90,6 +97,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PointsBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SongsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -125,6 +136,10 @@
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SongsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -184,6 +199,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\active_arrow_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\abstract-glowing-waves-2332.png" />
+    <Resource Include="Images\blue-abstract-background-1520.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

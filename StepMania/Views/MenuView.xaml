@@ -4,34 +4,33 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ctrls="clr-namespace:StepMania.Controls"
+      xmlns:cal="http://www.caliburnproject.org"
       mc:Ignorable="d" 
-      d:DesignHeight="1080" d:DesignWidth="1920"
-	  KeyDown="Window_KeyDown">
+      d:DesignHeight="1080" d:DesignWidth="1920">
 
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="../Images/background.jpg" />
         </Grid.Background>
-        <TextBlock  Text="StepMania" Foreground="White" FontSize="80" 
-                       Margin="50,10,0,0">
+        <TextBlock Text="StepMania" Foreground="White" FontSize="80" Margin="50,10,0,0">
             <TextBlock.Effect>
                 <DropShadowEffect />
             </TextBlock.Effect>
         </TextBlock>
 
         <!-- MENU -->
-        <Border MaxWidth="750" Margin="0,50,0,0" Padding="150,0,150,0" Height="700" CornerRadius="10">
+        <Border MaxWidth="650" Margin="0,50,0,0" Padding="150,0,150,0" Height="700" CornerRadius="10">
             <StackPanel VerticalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="ctrls:MenuButton">
-                        <Setter Property="Height" Value="60" />
-                        <Setter Property="Margin" Value="0,0,0,50" />
+                        <Setter Property="Height" Value="55" />
+                        <Setter Property="Margin" Value="0,0,0,40" />
                         <Setter Property="FontSize" Value="35" />
                         <Setter Property="SnapsToDevicePixels" Value="True" />
                     </Style>
                 </StackPanel.Resources>
-
-                <ctrls:MenuButton Text="Graj" >
+                
+                <ctrls:MenuButton Text="Graj" cal:Message.Attach="[Event MouseLeftButtonUp]=[PlayGame]" >
                     <ctrls:MenuButton.ButtonBackground>
                         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                             <GradientStop Color="#FF1F1F83" Offset="1"/>
@@ -63,7 +62,7 @@
                         </LinearGradientBrush>
                     </ctrls:MenuButton.ButtonBackground>
                 </ctrls:MenuButton>
-                <ctrls:MenuButton Text="Wyjdź" MouseLeftButtonUp="btnExit_Click" Margin="0" >
+                <ctrls:MenuButton Text="Wyjdź" cal:Message.Attach="[Event MouseLeftButtonUp]=[CloseGame]" Margin="0" >
                     <ctrls:MenuButton.ButtonBackground>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF934C2B" Offset="1"/>

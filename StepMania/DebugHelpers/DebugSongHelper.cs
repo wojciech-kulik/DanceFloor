@@ -4,6 +4,7 @@
 using Common;
 using GameLayer;
 using StepMania.Constants;
+using StepMania.ViewModels;
 using StepMania.Views;
 using System;
 using System.Collections.Generic;
@@ -109,12 +110,13 @@ namespace StepMania.DebugHelpers
             #endif
         }
 
-        public static void ConfigureGameViewForStartStopAnimation(GameView view, KeyEventHandler previewKeyUp, RoutedEventHandler loaded, RoutedEventHandler unloaded)
+        public static void HandleKeyPressed(GameViewModel model, KeyPressedEvent e)
         {
             #if DEBUG_HIT_TIME || DEBUG_TIMING
-            view.PreviewKeyUp += previewKeyUp;
-            view.Loaded += loaded;
-            view.Unloaded += unloaded;
+            if (e.Key == Key.Space)
+                model.ResumeGame();
+            else if (e.Key == Key.Back)
+                model.PauseGame();
             #endif
         }
     }

@@ -8,14 +8,16 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>, IHandle<KeyPressedEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -221,6 +223,20 @@ namespace StepMania.ViewModels
                     StopGame();
                     break;
             }
+        }
+
+        public void Handle(KeyPressedEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            if (message.Key == Key.Escape)
+            {
+                StopGame();
+                (Application.Current.MainWindow.DataContext as MainWindowViewModel).ActivateItem(IoC.Get<SongsListViewModel>());
+            }
+
+            DebugSongHelper.HandleKeyPressed(this, message);
         }
     }
 }
