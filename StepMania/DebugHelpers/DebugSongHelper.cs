@@ -29,7 +29,8 @@ namespace StepMania.DebugHelpers
             sequence.Difficulty = Difficulty.Easy;
 
             Song result = new Song();
-            result.FilePath = @"E:\Muzyka\Billy Talent III\Billy Talent - Diamond on a Landmine.mp3";
+            result.FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3";
+            //result.FilePath = @"E:\Muzyka\Billy Talent III\Billy Talent - Diamond on a Landmine.mp3";
             //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);

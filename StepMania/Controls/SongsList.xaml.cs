@@ -61,6 +61,8 @@ namespace StepMania.Controls
                 runInUI(() => transform = (moveablePanel.RenderTransform as TranslateTransform));
 
                 int offset;
+                int max_offset = 0;
+                runInUI(() => max_offset = ((moveablePanel.Children[0] as ItemsControl).Items.Count - 1) * FullMoveLength);
 
                 while (holdKey.HasValue)
                 {
@@ -69,7 +71,7 @@ namespace StepMania.Controls
                         if (holdKey.HasValue)
                         {
                             offset = holdKey.Value == Key.Right ? -PixelSpeed : PixelSpeed;
-                            transform.X = Math.Min(0, transform.X + offset);
+                            transform.X = Math.Max(-max_offset, Math.Min(0, transform.X + offset));
                         }                            
                     });
                     Thread.Sleep(SleepTime);
@@ -79,7 +81,7 @@ namespace StepMania.Controls
                 int diff = 0;
                 runInUI(() => diff = (int)transform.X % FullMoveLength);
 
-                //align to proper place
+                //animate to proper place
                 while (Math.Abs(diff) > PixelSpeed)
                 {
                     runInUI(() => 

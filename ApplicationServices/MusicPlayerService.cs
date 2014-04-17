@@ -54,7 +54,7 @@ namespace ApplicationServices
                         {
                             throw new ArgumentException("Podany plik muzyczny nie istnieje:\n" + FilePath);
                         }
-                        _mediaPlayer.Open(new Uri(value));
+                        _mediaPlayer.Open(new Uri(value, UriKind.Relative));
                     }
 
                     _filePath = value;
