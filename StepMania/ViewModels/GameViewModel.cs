@@ -34,11 +34,7 @@ namespace StepMania.ViewModels
             _p1Animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
             _p2Animation = _view.Resources.Values.OfType<Storyboard>().Skip(1).First() as Storyboard;
 
-            var song = DebugSongHelper.GenerateSong(270);
-            LoadSong(song, PlayerID.Player1);
-            if (_game.Multiplayer)
-                LoadSong(song, PlayerID.Player2);
-            DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
+            PrepareUI();
             StartGame();
         }
 
@@ -103,22 +99,34 @@ namespace StepMania.ViewModels
             }            
         }
 
-        bool IsRunning { get; set; }
-        public void StartGame()
+        public void PrepareUI()
         {
-            if (!_game.Multiplayer)
+            var song = DebugSongHelper.GenerateSong(270);
+            LoadSong(song, PlayerID.Player1);                
+            DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
+
+            _view.mainGrid.ColumnDefinitions.Clear();
+            _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            if (_game.Multiplayer)
             {
-                _view.p2Playboard.Visibility = System.Windows.Visibility.Hidden;
-                _view.p2LifePanel.Visibility = System.Windows.Visibility.Hidden;
-                _view.p2PointsBar.Visibility = System.Windows.Visibility.Hidden;
+                LoadSong(song, PlayerID.Player2);
+                _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+
+                _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;
+                _view.p2LifePanel.Visibility = System.Windows.Visibility.Visible;
+                _view.p2PointsBar.Visibility = System.Windows.Visibility.Visible;                
             }
             else
             {
-                _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;
-                _view.p2LifePanel.Visibility = System.Windows.Visibility.Visible;
-                _view.p2PointsBar.Visibility = System.Windows.Visibility.Visible;
+                _view.p2Playboard.Visibility = System.Windows.Visibility.Hidden;
+                _view.p2LifePanel.Visibility = System.Windows.Visibility.Hidden;
+                _view.p2PointsBar.Visibility = System.Windows.Visibility.Hidden;   
             }
+        }
 
+        bool IsRunning { get; set; }
+        public void StartGame()
+        {           
             _p1Animation.Begin();
             if (_game.Multiplayer)
                 _p2Animation.Begin();
