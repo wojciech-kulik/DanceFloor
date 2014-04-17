@@ -80,8 +80,8 @@ namespace GameLayer
 
         public ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit)
         {
-            var notHitElements = SequenceElements.Except(alreadyHit);
-            if (notHitElements.Count() == 0)
+            var notHitElements = SequenceElements.Except(alreadyHit).ToList(); //need to make a copy, because alreadyHit can be modified
+            if (notHitElements.Count == 0)
                 return null;
 
             var inRangeElements = notHitElements.Where(e => e.Type == elementType && Math.Abs(e.Time.TotalSeconds - time.TotalSeconds) <= GameConstants.WorstHitTime);

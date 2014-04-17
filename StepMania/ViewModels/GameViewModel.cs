@@ -18,43 +18,65 @@ namespace StepMania.ViewModels
     public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>
     {
         GameView _view;
-        Storyboard _animation;
+        Storyboard _p1Animation, _p2Animation;
         IGame _game;
 
         public GameViewModel(IEventAggregator eventAggregator, IGame game)
             : base(eventAggregator)
         {
             _game = game;
-            game.GetSongCurrentTime = () => _animation.GetCurrentTime();
+            game.GetSongCurrentTime = () => _p1Animation.GetCurrentTime();
         }
 
         protected override void OnViewAttached(object view, object context)
         {           
             _view = view as GameView;
-            _animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
+            _p1Animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
+            _p2Animation = _view.Resources.Values.OfType<Storyboard>().Skip(1).First() as Storyboard;
 
-            LoadSong(DebugSongHelper.GenerateSong(270));
+            var song = DebugSongHelper.GenerateSong(270);
+            LoadSong(song, PlayerID.Player1);
+            if (_game.Multiplayer)
+                LoadSong(song, PlayerID.Player2);
+            DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
             StartGame();
         }
 
-        public void LoadSong(ISong song)
+        public void LoadSong(ISong song, PlayerID playerId)
         {
+            var notes = playerId == PlayerID.Player1 ? _view.p1Notes.Children : _view.p2Notes.Children;
+            var animation = playerId == PlayerID.Player1 ? _p1Animation : _p2Animation;
+
             _game.Song = song;
-            _view.p1Notes.Children.Clear();
+            notes.Clear();
 
-            _animation.Children.First().Duration = song.Duration;
-            (_animation.Children.First() as DoubleAnimation).From = -GameUIConstants.ArrowWidthHeight;
-            (_animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameUIConstants.ArrowWidthHeight);
+            //set background
+            if (song.BackgroundPath != null)
+            {
+                _view.Background = new ImageBrush(new BitmapImage(new Uri(song.BackgroundPath)));
+            }
+            else
+            {
+                _view.Background = new ImageBrush(new BitmapImage(new Uri(GameUIConstants.DefaultGameBackground)));
+            }
 
+            //set animation
+            animation.Children.First().Duration = song.Duration;
+            (animation.Children.First() as DoubleAnimation).From = -GameUIConstants.ArrowWidthHeight;
+            (animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameUIConstants.ArrowWidthHeight);
+
+            //create arrows for each sequence element
             foreach(var seqElem in song.Sequences[Difficulty.Easy])
             {
                 //load and prepare image
-                var bitmap = new BitmapImage(new Uri("pack://application:,,,/StepMania;component/Images/active_arrow.png"));
+                var bitmap = new BitmapImage(new Uri(playerId == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage));
                 Image img = new Image() { Width = GameUIConstants.ArrowWidthHeight, Height = GameUIConstants.ArrowWidthHeight, Source = bitmap, Tag = seqElem };
 
+                //set top position of arrow according to time
                 double top = seqElem.Time.TotalSeconds * GameUIConstants.PixelsPerSecond;
                 Canvas.SetTop(img, top);
 
+                //rotate arrow and set in proper place
                 switch(seqElem.Type)
                 {
                     case SeqElemType.LeftArrow:
@@ -75,18 +97,31 @@ namespace StepMania.ViewModels
                 }                
 
                 //add image to the canvas
-                _view.p1Notes.Children.Add(img);
+                notes.Add(img);
 
-                DebugSongHelper.AddTimeToNotes(_view, seqElem.Type, top);                
-            }
-
-            DebugSongHelper.ShowCurrentTimeInsteadPoints(_animation, _game.MusicPlayerService, _view);  
+                DebugSongHelper.AddTimeToNotes(notes, seqElem.Type, top);                
+            }            
         }
 
         bool IsRunning { get; set; }
         public void StartGame()
         {
-            _animation.Begin();
+            if (!_game.Multiplayer)
+            {
+                _view.p2Playboard.Visibility = System.Windows.Visibility.Hidden;
+                _view.p2LifePanel.Visibility = System.Windows.Visibility.Hidden;
+                _view.p2PointsBar.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else
+            {
+                _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;
+                _view.p2LifePanel.Visibility = System.Windows.Visibility.Visible;
+                _view.p2PointsBar.Visibility = System.Windows.Visibility.Visible;
+            }
+
+            _p1Animation.Begin();
+            if (_game.Multiplayer)
+                _p2Animation.Begin();
             _game.Start();            
             IsRunning = true;
         }
@@ -97,22 +132,32 @@ namespace StepMania.ViewModels
             TimeSpan currentTime;
             while ((currentTime = _game.MusicPlayerService.CurrentTime).TotalSeconds == 0) ; //TODO: possible deadloop, but shouldn't happen
 
-            _animation.Resume();
-            _animation.Seek(currentTime); //synchronize animation with music (difference will be about <= 0.05s, which is enough)
+            _p1Animation.Resume();
+            _p1Animation.Seek(currentTime); //synchronize animation with music (difference will be about <= 0.05s, which is enough)
+            if (_game.Multiplayer)
+            {
+                _p2Animation.Resume();
+                _p2Animation.Seek(currentTime);
+            }
+
             _game.Resume();                        
             IsRunning = true;
         }
 
         public void PauseGame()
         {
-            _animation.Pause();
+            _p1Animation.Pause();
+            if (_game.Multiplayer)
+                _p2Animation.Pause();
             _game.Pause();
             IsRunning = false;
         }
 
         public void StopGame()
         {
-            _animation.Stop();
+            _p1Animation.Stop();
+            if (_game.Multiplayer)
+                _p2Animation.Stop();
             _game.Stop();
             IsRunning = false;
         }
@@ -129,7 +174,7 @@ namespace StepMania.ViewModels
             //set player status
             pointsBar.Points = message.Points.ToString();
             healthBar.SetLife(message.Life);
-            DebugSongHelper.ShowHitTimeDifferenceInsteadPoints(_view, _animation);
+            DebugSongHelper.ShowHitTimeDifferenceInsteadPoints(_view, _p1Animation);
 
             //remove hit element
             var toRemove = notesPanel.Children.OfType<Image>().FirstOrDefault(img => img.Tag == message.SequenceElement);

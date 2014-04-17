@@ -13,7 +13,8 @@ namespace GameLayer
 {
     public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>, IHandle<GameActionEvent>
     {
-        List<ISequenceElement> _alreadyHit = new List<ISequenceElement>();
+        List<ISequenceElement> _p1AlreadyHit = new List<ISequenceElement>();
+        List<ISequenceElement> _p2AlreadyHit = new List<ISequenceElement>();
         IEventAggregator _eventAggregator;
         Timer _missedTimer = new Timer(250);
 
@@ -25,7 +26,10 @@ namespace GameLayer
             _eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
 
-            _missedTimer.Elapsed += lookForMissedNotes_Tick;            
+            _missedTimer.Elapsed += lookForMissedNotes_Tick;
+
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
+            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
         }
 
         //NEED TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
@@ -88,15 +92,17 @@ namespace GameLayer
 
         private void lookForMissedNotes_Tick(object sender, ElapsedEventArgs e)
         {
-            LookForMissedNotes(Players.First());
+            foreach(var p in Players)
+                LookForMissedNotes(p);
         }
 
         private void LookForMissedNotes(IPlayer player)
         {
-            var currenTime = GetSongCurrentTime().TotalSeconds;
-
+            var currenTime = GetSongCurrentTime().TotalSeconds;            
+            var alreadyHit = player.PlayerID == PlayerID.Player1 ? _p1AlreadyHit : _p2AlreadyHit;
             //this collection is beeing modified and we access it from thread, so we should make a copy first
-            var copyOfAlreadyHit = _alreadyHit.ToList(); 
+            var copyOfAlreadyHit = alreadyHit.ToList();
+            
             var missed = Song.Sequences[player.Difficulty]
                 .Except(copyOfAlreadyHit)
                 .Where(e => e.Time.TotalSeconds - currenTime < -GameConstants.WorstHitTime)
@@ -105,7 +111,7 @@ namespace GameLayer
             if (missed.Count == 0)
                 return;
 
-            _alreadyHit.AddRange(missed.ToList());
+            alreadyHit.AddRange(missed);
             SetLifePoints(player, -GameConstants.MissLifePoints * missed.Count);
 
             foreach(var missedElem in missed)
@@ -130,9 +136,11 @@ namespace GameLayer
         //returns null if nothing hit
         //synchronized with UI (if animation time attached to GetSongCurrentTime)
         private ISequenceElement SetPoints(IPlayer player, TimeSpan hitTime, PlayerAction playerAction)
-        {           
+        {
+            var alreadyHit = player.PlayerID == PlayerID.Player1 ? _p1AlreadyHit : _p2AlreadyHit;
+
             SeqElemType type = GameHelper.PlayerActionToSeqElemType(playerAction);
-            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, _alreadyHit);
+            ISequenceElement hitElement = Song.GetClosestTo(player.Difficulty, hitTime, type, alreadyHit);
 
             if (hitElement == null)
             {
@@ -156,7 +164,7 @@ namespace GameLayer
                 SetLifePoints(player, -GameConstants.BombLifePoints);
             }
 
-            _alreadyHit.Add(hitElement);
+            alreadyHit.Add(hitElement);
             return hitElement;
         }
 
@@ -165,9 +173,11 @@ namespace GameLayer
             if (!IsRunning)
                 return;
 
-            IPlayer player = Players.First(p => p.PlayerID == message.PlayerId);
-            ISequenceElement hitElem = SetPoints(player, GetSongCurrentTime(), message.PlayerAction);
+            IPlayer player = Players.FirstOrDefault(p => p.PlayerID == message.PlayerId);
+            if (player == null)
+                return;
 
+            ISequenceElement hitElem = SetPoints(player, GetSongCurrentTime(), message.PlayerAction);
             if (hitElem != null)
             {
                 _eventAggregator.Publish(new PlayerHitEvent()
@@ -232,10 +242,6 @@ namespace GameLayer
 
         public void Start()
         {
-            Players.Clear();
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
-
             MusicPlayerService.Start();
             _missedTimer.Start();
             IsRunning = true;

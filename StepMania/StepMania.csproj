@@ -179,8 +179,11 @@
     <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\active_arrow.png" />
+    <Resource Include="Images\active_arrow_purple.png" />
     <Resource Include="Images\inactive_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\active_arrow_blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

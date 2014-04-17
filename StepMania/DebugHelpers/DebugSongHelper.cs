@@ -29,6 +29,7 @@ namespace StepMania.DebugHelpers
 
             Song result = new Song();
             result.FilePath = @"E:\Muzyka\Billy Talent III\Billy Talent - Diamond on a Landmine.mp3";
+            //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);
 
@@ -45,7 +46,7 @@ namespace StepMania.DebugHelpers
             return result;
         }
 
-        public static void AddTimeToNotes(GameView view, SeqElemType elemType, double top)
+        public static void AddTimeToNotes(UIElementCollection notes, SeqElemType elemType, double top)
         {
             #if DEBUG_TIMING            
 
@@ -66,7 +67,7 @@ namespace StepMania.DebugHelpers
                     Canvas.SetLeft(tb, GameUIConstants.RightArrowX);
                     break;
             }
-            view.p1Notes.Children.Add(tb);
+            notes.Add(tb);
 
             #endif
         }

@@ -33,8 +33,7 @@ namespace StepMania
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
             container.PerRequest<ISequenceCreationService, SequenceCreationService>();
             container.PerRequest<IHighScoresService, HighScoresService>();
-            container.Singleton<ISettingsService, SettingsService>();
-            
+            container.Singleton<ISettingsService, SettingsService>();            
         }
 
         protected override object GetInstance(Type service, string key)
