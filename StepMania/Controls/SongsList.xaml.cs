@@ -1,4 +1,5 @@
-﻿using GameLayer;
+﻿using Common;
+using GameLayer;
 using StepMania.Constants;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,15 @@ namespace StepMania.Controls
         public SongsList()
         {
             InitializeComponent();
+            Loaded += SongsList_Loaded;
+        }
+
+        void SongsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ItemsSource != null && SelectedSong == null)
+            {
+                SelectedSong = ItemsSource.OfType<ISong>().FirstOrDefault();
+            }
         }
 
         public void SongsList_HandleKeyUp(object sender, KeyEventArgs e)
@@ -94,10 +104,40 @@ namespace StepMania.Controls
 
                 //last alignment
                 runInUI(() => transform.X += (moveablePanel.RenderTransform as TranslateTransform).X % FullMoveLength);
+
+                runInUI(() => 
+                    {
+                        int index = (int)Math.Abs((moveablePanel.RenderTransform as TranslateTransform).X / GameUIConstants.SongItemWidth);
+                        SelectedSong = ItemsSource.OfType<ISong>().Skip(index).First(); 
+                    });
             }));
             animation.Start();
         }
 
+
+
+
+        public static void OnSetSelectedSong(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var songsList = (d as SongsList);
+            int index = songsList.ItemsSource.OfType<ISong>().ToList().FindIndex(s => s.FilePath == ((ISong)e.NewValue).FilePath);
+            (songsList.moveablePanel.RenderTransform as TranslateTransform).X = -GameUIConstants.SongItemWidth * index;  
+        }
+
+
+        public ISong SelectedSong
+        {
+            get { return (ISong)GetValue(SelectedSongProperty); }
+            set { SetValue(SelectedSongProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectedSong.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedSongProperty =
+            DependencyProperty.Register("SelectedSong", typeof(ISong), typeof(SongsList), new PropertyMetadata(null, OnSetSelectedSong));
+
+
+
+        
 
 
 

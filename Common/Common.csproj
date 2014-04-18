@@ -54,8 +54,8 @@
     <Compile Include="Enums\NavDestination.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\GameActionEvent.cs" />
-    <Compile Include="Events\KeyPressedEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
+    <Compile Include="Events\NavigationExEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Events\PlayerMissedEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />

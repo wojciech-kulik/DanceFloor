@@ -17,6 +17,7 @@
             </TextBlock.Effect>
         </TextBlock>
 
-        <ctrls:SongsList VerticalAlignment="Center" x:Name="songsList" HorizontalAlignment="Center" Margin="-250,-200,0,0" ItemsSource="{Binding Songs}" />
+        <ctrls:SongsList VerticalAlignment="Center" x:Name="songsList" HorizontalAlignment="Center" Margin="-250,-200,0,0" 
+                         ItemsSource="{Binding Songs}" SelectedSong="{Binding SelectedSong, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

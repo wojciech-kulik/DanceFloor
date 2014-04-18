@@ -9,10 +9,5 @@ namespace Common
     public class NavigationEvent
     {
         public NavDestination NavDestination { get; set; }
-    }
-
-    public class NavigationExEvent : NavigationEvent
-    {
-        public Action<object> PageSettings { get; set; }
-    }
+    }    
 }

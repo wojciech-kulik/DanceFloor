@@ -2,37 +2,32 @@
 using Common;
 using System.Windows.Input;
 using GameLayer;
+using StepMania.Views;
 
 namespace StepMania.ViewModels
 {
-    public class SongsListViewModel : BaseViewModel, IHandle<KeyPressedEvent>
+    public class SongsListViewModel : BaseViewModel, IHandle<GameKeyEvent>
     {
-        public SongsListViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
-        {
-            Songs = new BindableCollection<ISong>();
+        #region SelectedSong
 
-            for (int i = 0; i < 20; i++)
+        private ISong _selectedSong;
+
+        public ISong SelectedSong
+        {
+            get
             {
-                var song = new Song() { Title = "Sdsadsadsadsas sda sadsa a", Artist = "Shakira", BackgroundPath = "../Images/game_background.jpg" };
-                Songs.Add(song);
+                return _selectedSong;
+            }
+            set
+            {
+                if (_selectedSong != value)
+                {
+                    _selectedSong = value;
+                    NotifyOfPropertyChange(() => SelectedSong);
+                }
             }
         }
-
-        public void Handle(KeyPressedEvent message)
-        {
-            if (!IsActive)
-                return;
-
-            if (message.Key == Key.Escape)
-            {
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
-            }
-            else if (message.Key == Key.Return)
-            {
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.Game });
-            }
-        }
+        #endregion
 
         #region Songs
 
@@ -54,5 +49,26 @@ namespace StepMania.ViewModels
             }
         }
         #endregion
+
+        public SongsListViewModel(IEventAggregator eventAggregator, ISongsService songsService)
+            : base(eventAggregator)
+        {
+            Songs = new BindableCollection<ISong>(songsService.GetAllSongs());
+        }
+
+        public void Handle(GameKeyEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            if (message.PlayerAction == PlayerAction.Back)
+            {
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            }
+            else if (message.PlayerAction == PlayerAction.Enter)
+            {
+                _eventAggregator.Publish(new NavigationExEvent() { NavDestination = NavDestination.GameMode, PageSettings = (vm) => (vm as GameModeViewModel).Game.Song = SelectedSong });
+            }
+        }   
     }
 }

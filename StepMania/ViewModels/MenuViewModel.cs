@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace StepMania.ViewModels
 {
-    public class MenuViewModel : BaseViewModel, IHandle<KeyPressedEvent>
+    public class MenuViewModel : BaseViewModel, IHandle<GameKeyEvent>
     {
         MenuView _view;
         int _activeButton = 0;
@@ -58,12 +58,12 @@ namespace StepMania.ViewModels
             (button.ButtonBackground as LinearGradientBrush).GradientStops[1].Color = new Color() { A = 0xDD, R = 0xFF, G = 0xFF, B = 0xFF };
         }
 
-        public void Handle(KeyPressedEvent message)
+        public void Handle(GameKeyEvent message)
         {
             if (!IsActive)
                 return;
             
-            if (message.Key == Key.Return)
+            if (message.PlayerAction == PlayerAction.Enter)
             {
                 switch(_activeButton)
                 {
@@ -75,18 +75,18 @@ namespace StepMania.ViewModels
                         break;
                 }
             }
-            else if (message.Key == Key.Escape)
+            else if (message.PlayerAction == PlayerAction.Back)
             {
                 CloseGame();
             }
-            else if (message.Key == Key.Down)
+            else if (message.PlayerAction == PlayerAction.Down)
             {
                 _activeButton++;
                 if (_activeButton >= _buttonsCount)
                     _activeButton = 0;
                 ActivateButton(_activeButton);
             }
-            else if (message.Key == Key.Up)
+            else if (message.PlayerAction == PlayerAction.Up)
             {
                 _activeButton--;
                 if (_activeButton < 0)

@@ -80,7 +80,14 @@
     <Compile Include="Controls\SongsList.xaml.cs">
       <DependentUpon>SongsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\GameModeToVisibility.cs" />
+    <Compile Include="Converters\GameModeToBtnBackgroundConverter.cs" />
+    <Compile Include="Converters\DifficultyToBtnBackgroundConverter.cs" />
+    <Compile Include="ViewModels\GameModeViewModel.cs" />
     <Compile Include="ViewModels\SongsListViewModel.cs" />
+    <Compile Include="Views\GameModeView.xaml.cs">
+      <DependentUpon>GameModeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SongsListView.xaml.cs">
       <DependentUpon>SongsListView.xaml</DependentUpon>
     </Compile>
@@ -101,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SongsList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GameModeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -190,7 +201,6 @@
     <Resource Include="Images\game_background.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>

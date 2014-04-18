@@ -10,7 +10,8 @@ namespace Common
     {
         MainMenu,
         SongsList,
-        Game,
+        GameMode,
+        Game,        
         CloseGame
     }
 }

@@ -111,13 +111,19 @@ namespace StepMania.DebugHelpers
             #endif
         }
 
-        public static void HandleKeyPressed(GameViewModel model, KeyPressedEvent e)
+        public static bool HandleKeyPressed(GameViewModel model, GameKeyEvent e)
         {
             #if DEBUG_HIT_TIME || DEBUG_TIMING
-            if (e.Key == Key.Space)
+            if (e.PlayerAction == PlayerAction.Back)
+                return false;
+            else if (e.PlayerAction == PlayerAction.Enter)
                 model.ResumeGame();
-            else if (e.Key == Key.Back)
+            else
                 model.PauseGame();
+
+            return true;
+            #else
+                return false;
             #endif
         }
     }

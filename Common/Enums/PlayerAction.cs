@@ -11,6 +11,10 @@ namespace Common
         Up,
         Down,
         Left,
-        Right
+        Right,
+
+        //for navigation:
+        Back,
+        Enter
     }
 }

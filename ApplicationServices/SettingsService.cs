@@ -12,7 +12,9 @@ namespace ApplicationServices
 {
     public class SettingsService : ISettingsService
     {
-        List<Key> gameKeys = new List<Key>() { Key.Left, Key.Down, Key.Up, Key.Right, Key.W, Key.A, Key.S, Key.D };
+        List<Key> gameKeys = new List<Key>() { Key.Left, Key.Down, Key.Up, Key.Right, 
+                                               Key.W, Key.A, Key.S, Key.D,
+                                               Key.Escape, Key.Enter };
 
         IEventAggregator _eventAggregator;
 
@@ -23,7 +25,7 @@ namespace ApplicationServices
 
         //you need to attach this to your PreviewKeyUp event in application        
         public void HandleKeyUp(object sender, KeyEventArgs e)
-        {
+        {           
             if (gameKeys.Contains(e.Key))
             {
                 _eventAggregator.Publish(new GameKeyEvent
@@ -32,11 +34,6 @@ namespace ApplicationServices
                     PlayerAction = ControlHelper.KeyToPlayerAction(e.Key)
                 });
             }
-
-            _eventAggregator.Publish(new KeyPressedEvent
-            {
-                Key = e.Key
-            });
         }
 
         public IDictionary<PlayerAction, string> GetControlSettings(PlayerID player)

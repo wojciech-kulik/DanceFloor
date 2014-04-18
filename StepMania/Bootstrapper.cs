@@ -27,6 +27,7 @@ namespace StepMania
             container.PerRequest<MenuViewModel>();
             container.PerRequest<GameViewModel>();
             container.PerRequest<SongsListViewModel>();
+            container.PerRequest<GameModeViewModel>();
 
             container.PerRequest<IGame, Game>();
 

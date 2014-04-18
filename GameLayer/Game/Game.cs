@@ -20,7 +20,6 @@ namespace GameLayer
 
         public Game(IEventAggregator eventAggregator, IMusicPlayerService musicPlayerService)
         {
-            Players = new BindableCollection<IPlayer>();
             MusicPlayerService = musicPlayerService;
 
             _eventAggregator = eventAggregator;
@@ -28,8 +27,8 @@ namespace GameLayer
 
             _missedTimer.Elapsed += lookForMissedNotes_Tick;
 
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player1, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
-            Players.Add(new Player() { Difficulty = Difficulty.Easy, PlayerID = PlayerID.Player2, IsGameOver = false, Life = GameConstants.FullLife, Points = 0 });
+            Player1 = new Player() { PlayerID = PlayerID.Player1 };
+            Player2 = new Player() { PlayerID = PlayerID.Player2 };
         }
 
         //NEEDS TO BE SET BY VIEWMODEL (for example you can get this from animation.GetCurrentTime())
@@ -37,33 +36,65 @@ namespace GameLayer
 
         public IMusicPlayerService MusicPlayerService { get; private set; }
 
-        #region Players
+        #region Player1
 
-        private BindableCollection<IPlayer> _players;
+        private IPlayer _player1;
 
-        public BindableCollection<IPlayer> Players
+        public IPlayer Player1
         {
             get
             {
-                return _players;
+                return _player1;
             }
             set
             {
-                if (_players != value)
+                if (_player1 != value)
                 {
-                    _players = value;
-                    NotifyPropertyChanged("Players");
+                    _player1 = value;
+                    NotifyPropertyChanged("Player1");
                 }
             }
         }
         #endregion
 
-        #region Multiplayer
-        public bool Multiplayer
+        #region Player2
+
+        private IPlayer _player2;
+
+        public IPlayer Player2
         {
             get
             {
-                return Players.Count > 1;
+                return _player2;
+            }
+            set
+            {
+                if (_player2 != value)
+                {
+                    _player2 = value;
+                    NotifyPropertyChanged("Player2");
+                }
+            }
+        }
+        #endregion
+
+        #region IsMultiplayer
+
+        private bool _isMultiplayer;
+
+        public bool IsMultiplayer
+        {
+            get
+            {
+                return _isMultiplayer;
+            }
+            set
+            {
+                if (_isMultiplayer != value)
+                {
+                    _isMultiplayer = value;
+                    NotifyPropertyChanged("IsMultiplayer");
+                }
             }
         }
         #endregion
@@ -92,8 +123,9 @@ namespace GameLayer
 
         private void lookForMissedNotes_Tick(object sender, ElapsedEventArgs e)
         {
-            foreach(var p in Players)
-                LookForMissedNotes(p);
+            LookForMissedNotes(Player1);
+            if (IsMultiplayer)
+                LookForMissedNotes(Player2);
         }
 
         private void LookForMissedNotes(IPlayer player)
@@ -173,8 +205,10 @@ namespace GameLayer
             if (!IsRunning)
                 return;
 
-            IPlayer player = Players.FirstOrDefault(p => p.PlayerID == message.PlayerId);
-            if (player == null)
+            IPlayer player = message.PlayerId == PlayerID.Player1 ? Player1 : Player2;
+            if  (player == null || 
+                (player.PlayerID == PlayerID.Player2 && !IsMultiplayer) || 
+                 message.PlayerAction == PlayerAction.Enter || message.PlayerAction == PlayerAction.Back)
                 return;
 
             ISequenceElement hitElem = SetPoints(player, GetSongCurrentTime(), message.PlayerAction);

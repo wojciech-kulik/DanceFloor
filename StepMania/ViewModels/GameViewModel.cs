@@ -17,39 +17,61 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>, IHandle<KeyPressedEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>, IHandle<GameKeyEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
-        IGame _game;
 
-        public GameViewModel(IEventAggregator eventAggregator, IGame game)
+        #region Game
+
+        private IGame _game;
+
+        public IGame Game
+        {
+            get
+            {
+                return _game;
+            }
+            set
+            {
+                if (_game != value)
+                {
+                    _game = value;
+
+                    if (_game != null)
+                    {
+                        _game.GetSongCurrentTime = () => _p1Animation.GetCurrentTime();
+                    }
+
+                    NotifyOfPropertyChange(() => Game);
+                }
+            }
+        }
+        #endregion
+
+        public GameViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
-            _game = game;
-            game.GetSongCurrentTime = () => _p1Animation.GetCurrentTime();
-        }
+        }        
 
         protected override void OnViewAttached(object view, object context)
         {           
             _view = view as GameView;
             _p1Animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
             _p2Animation = _view.Resources.Values.OfType<Storyboard>().Skip(1).First() as Storyboard;
-
             PrepareUI();
-            StartGame();
         }
 
-        public void LoadSong(ISong song, PlayerID playerId)
+        public void LoadSong(ISong song, IPlayer player)
         {
-            var notes = playerId == PlayerID.Player1 ? _view.p1Notes.Children : _view.p2Notes.Children;
-            var animation = playerId == PlayerID.Player1 ? _p1Animation : _p2Animation;
+            var notes = player.PlayerID == PlayerID.Player1 ? _view.p1Notes.Children : _view.p2Notes.Children;
+            var animation = player.PlayerID == PlayerID.Player1 ? _p1Animation : _p2Animation;
 
             _game.Song = song;
             notes.Clear();
 
             //set background
-            if (song.BackgroundPath != null)
+            if (song.BackgroundPath != null && File.Exists(song.BackgroundPath))
             {
                 _view.Background = new ImageBrush(new BitmapImage(new Uri(song.BackgroundPath)));
             }
@@ -64,10 +86,10 @@ namespace StepMania.ViewModels
             (animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameUIConstants.ArrowWidthHeight);
 
             //create arrows for each sequence element
-            foreach(var seqElem in song.Sequences[Difficulty.Easy])
+            foreach(var seqElem in song.Sequences[player.Difficulty])
             {
                 //load and prepare image
-                var bitmap = new BitmapImage(new Uri(playerId == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage));
+                var bitmap = new BitmapImage(new Uri(player.PlayerID == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage));
                 Image img = new Image() { Width = GameUIConstants.ArrowWidthHeight, Height = GameUIConstants.ArrowWidthHeight, Source = bitmap, Tag = seqElem };
 
                 //set top position of arrow according to time
@@ -104,14 +126,17 @@ namespace StepMania.ViewModels
         public void PrepareUI()
         {
             var song = DebugSongHelper.GenerateSong(270);
-            LoadSong(song, PlayerID.Player1);                
+            Game.Song.Duration = song.Duration;
+            Game.Song.Sequences = song.Sequences;
+
+            LoadSong(Game.Song, Game.Player1);                
             DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
 
             _view.mainGrid.ColumnDefinitions.Clear();
             _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            if (_game.Multiplayer)
+            if (_game.IsMultiplayer)
             {
-                LoadSong(song, PlayerID.Player2);
+                LoadSong(song, Game.Player2);
                 _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                 _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;
@@ -128,9 +153,11 @@ namespace StepMania.ViewModels
 
         bool IsRunning { get; set; }
         public void StartGame()
-        {           
+        {
+            PrepareUI();
+
             _p1Animation.Begin();
-            if (_game.Multiplayer)
+            if (_game.IsMultiplayer)
                 _p2Animation.Begin();
             _game.Start();            
             IsRunning = true;
@@ -144,7 +171,7 @@ namespace StepMania.ViewModels
 
             _p1Animation.Resume();
             _p1Animation.Seek(currentTime); //synchronize animation with music (difference will be about <= 0.05s, which is enough)
-            if (_game.Multiplayer)
+            if (_game.IsMultiplayer)
             {
                 _p2Animation.Resume();
                 _p2Animation.Seek(currentTime);
@@ -157,7 +184,7 @@ namespace StepMania.ViewModels
         public void PauseGame()
         {
             _p1Animation.Pause();
-            if (_game.Multiplayer)
+            if (_game.IsMultiplayer)
                 _p2Animation.Pause();
             _game.Pause();
             IsRunning = false;
@@ -166,7 +193,7 @@ namespace StepMania.ViewModels
         public void StopGame()
         {
             _p1Animation.Stop();
-            if (_game.Multiplayer)
+            if (_game.IsMultiplayer)
                 _p2Animation.Stop();
             _game.Stop();
             IsRunning = false;
@@ -225,18 +252,23 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(KeyPressedEvent message)
+        public void Handle(GameKeyEvent message)
         {
             if (!IsActive)
                 return;
 
-            if (message.Key == Key.Escape)
+            if (DebugSongHelper.HandleKeyPressed(this, message))
+                return;
+
+            if (message.PlayerAction == PlayerAction.Back)
             {
                 StopGame();
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.SongsList });
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
             }
-
-            DebugSongHelper.HandleKeyPressed(this, message);
+            else if (message.PlayerAction == PlayerAction.Enter) 
+            {
+                StartGame();
+            }
         }
     }
 }

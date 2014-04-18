@@ -12,9 +12,11 @@ namespace Common
     {
         Func<TimeSpan> GetSongCurrentTime { get; set; }
 
-        BindableCollection<IPlayer> Players { get; set; }
+        IPlayer Player1 { get; }
 
-        bool Multiplayer { get; }
+        IPlayer Player2 { get; }
+
+        bool IsMultiplayer { get; set; }
 
         ISong Song { get; set; }
 

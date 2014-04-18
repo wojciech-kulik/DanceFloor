@@ -9,6 +9,13 @@ namespace GameLayer
 {
     public class Player : NotificableObject, IPlayer
     {
+        public Player()
+        {
+            IsGameOver = false;
+            Life = GameConstants.FullLife;
+            Points = 0;
+        }
+
         #region PlayerID
         private PlayerID _playerID;
 

@@ -26,6 +26,10 @@ namespace Common
                 case Key.Right:
                 case Key.D:
                     return PlayerAction.Right;
+                case Key.Escape:
+                    return PlayerAction.Back;
+                case Key.Enter:
+                    return PlayerAction.Enter;
                 default:
                     throw new InvalidOperationException("Unsupported key");
             }
@@ -35,6 +39,8 @@ namespace Common
         {
             switch (key)
             {
+                case Key.Enter:
+                case Key.Escape:
                 case Key.Up:
                 case Key.Down:
                 case Key.Left:
