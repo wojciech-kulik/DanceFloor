@@ -59,6 +59,10 @@ namespace StepMania.ViewModels
             _view = view as GameView;
             _p1Animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
             _p2Animation = _view.Resources.Values.OfType<Storyboard>().Skip(1).First() as Storyboard;
+
+            var song = DebugSongHelper.GenerateSong(270);
+            Game.Song.Duration = song.Duration;
+            Game.Song.Sequences = song.Sequences;
             PrepareUI();
         }
 
@@ -124,11 +128,7 @@ namespace StepMania.ViewModels
         }
 
         public void PrepareUI()
-        {
-            var song = DebugSongHelper.GenerateSong(270);
-            Game.Song.Duration = song.Duration;
-            Game.Song.Sequences = song.Sequences;
-
+        {            
             LoadSong(Game.Song, Game.Player1);                
             DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
 
@@ -136,7 +136,7 @@ namespace StepMania.ViewModels
             _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
             if (_game.IsMultiplayer)
             {
-                LoadSong(song, Game.Player2);
+                LoadSong(Game.Song, Game.Player2);
                 _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                 _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;

@@ -66,9 +66,15 @@ namespace StepMania.ViewModels
                     NotifyOfPropertyChange(() => Game);
                     break;
                 case PlayerAction.Up:
-                    player.Difficulty = (Difficulty)(((int)player.Difficulty - 1) % 3);
+                {
+                    int newVal = (int)player.Difficulty - 1;
+                    if (newVal < 0)
+                        player.Difficulty = Difficulty.Hard;
+                    else
+                        player.Difficulty = (Difficulty)newVal;
                     NotifyOfPropertyChange(() => Game);
                     break;
+                }
             }
         }
     }
