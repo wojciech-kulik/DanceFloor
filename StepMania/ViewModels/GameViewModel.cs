@@ -233,7 +233,7 @@ namespace StepMania.ViewModels
             if (message.Key == Key.Escape)
             {
                 StopGame();
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).ActivateItem(IoC.Get<SongsListViewModel>());
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.SongsList });
             }
 
             DebugSongHelper.HandleKeyPressed(this, message);

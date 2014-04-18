@@ -68,7 +68,7 @@ namespace StepMania.ViewModels
                 switch(_activeButton)
                 {
                     case 0:
-                        (Application.Current.MainWindow.DataContext as MainWindowViewModel).ActivateItem(IoC.Get<SongsListViewModel>());
+                        _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.SongsList });
                         break;
                     case 4:
                         CloseGame();
@@ -95,9 +95,9 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void CloseGame()
+        private void CloseGame()
         {
-            Application.Current.MainWindow.Close();
+            _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.CloseGame });
         }
     }
 }

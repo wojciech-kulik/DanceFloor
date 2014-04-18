@@ -1,12 +1,6 @@
 ﻿using Caliburn.Micro;
 using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows;
 using GameLayer;
 
 namespace StepMania.ViewModels
@@ -32,11 +26,11 @@ namespace StepMania.ViewModels
 
             if (message.Key == Key.Escape)
             {
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).ActivateItem(IoC.Get<MenuViewModel>());
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
             }
             else if (message.Key == Key.Return)
             {
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).ActivateItem(IoC.Get<GameViewModel>());
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.Game });
             }
         }
 
