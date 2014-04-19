@@ -15,10 +15,10 @@
             </Border.Style>
             
             <Border.Effect>
-                <DropShadowEffect Color="Yellow" Opacity="0.3" BlurRadius="50" ShadowDepth="7" Direction="270"  />
+                <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="50" ShadowDepth="7" Direction="270"  />
             </Border.Effect>
 
-            <TextBlock Text="{Binding Text, ElementName=self}" FontFamily="Calibri" Foreground="White" FontSize="{Binding FontSize, ElementName=self}" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="TextBlock" Text="{Binding Text, ElementName=self}" FontFamily="Calibri" Foreground="White" FontSize="{Binding FontSize, ElementName=self}" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="1" />
                 </TextBlock.Effect>

@@ -21,7 +21,7 @@ namespace StepMania.Converters
             if ((p == "single" && !game.IsMultiplayer) || (p == "multi" && game.IsMultiplayer))
                 return GameUIConstants.GameModeSelectedBtnGradient;
             else
-                return GameUIConstants.GameModeBtnGradient;
+                return GameUIConstants.GameModeInactiveBtnGradient;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

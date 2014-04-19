@@ -45,28 +45,6 @@ namespace GameLayer
         {
             return SequenceElements.GetEnumerator();
         }
-
-        #region AreBombsEnabled
-
-        private bool _areBombsEnabled;
-
-        public bool AreBombsEnabled
-        {
-            get
-            {
-                return _areBombsEnabled;
-            }
-            set
-            {
-                if (_areBombsEnabled != value)
-                {
-                    _areBombsEnabled = value;
-                    NotifyPropertyChanged("AreBombsEnabled");
-                }
-            }
-        }
-        #endregion
-
         #endregion
 
         public void AddElement(ISequenceElement element)

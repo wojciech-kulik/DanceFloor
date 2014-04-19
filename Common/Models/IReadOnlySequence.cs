@@ -11,8 +11,6 @@ namespace Common
     {
         Difficulty Difficulty { get; }
 
-        bool AreBombsEnabled { get; set; }
-
         ISequenceElement GetClosestTo(TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit);
     }
 }

@@ -51,9 +51,9 @@
                     <ctrls:MenuButton x:Name="btn1Player" Text="Jeden gracz" ButtonBackground="{Binding Game, Converter={StaticResource GameModeToBtnBackgroundConverter}, ConverterParameter=single}" />
 
                     <StackPanel x:Name="p1DifficultyPanel">
-                        <ctrls:MenuButton Text="Łatwy" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='easy'}" Margin="0,100,0,0" />
-                        <ctrls:MenuButton Text="Średni" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='medium'}" Margin="0,30,0,0"  />
-                        <ctrls:MenuButton Text="Trudny" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='hard'}" Margin="0,30,0,0"  />
+                        <ctrls:MenuButton x:Name="p1Easy" Text="Łatwy" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='easy'}" Margin="0,100,0,0" />
+                        <ctrls:MenuButton x:Name="p1Medium" Text="Średni" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='medium'}" Margin="0,30,0,0"  />
+                        <ctrls:MenuButton x:Name="p1Hard" Text="Trudny" ButtonBackground="{Binding Game.Player1, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='hard'}" Margin="0,30,0,0"  />
                     </StackPanel>
                 </StackPanel>
                 
@@ -63,9 +63,9 @@
                                       Visibility="{Binding IsMultiplayer, Converter={StaticResource GameModeToVisibility}}"/>
 
                     <StackPanel x:Name="p2DifficultyPanel" Visibility="{Binding Game.IsMultiplayer, Converter={StaticResource GameModeToVisibility}}">
-                        <ctrls:MenuButton Text="Łatwy" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='easy'}" Margin="0,100,0,0" />
-                        <ctrls:MenuButton Text="Średni" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='medium'}" Margin="0,30,0,0"  />
-                        <ctrls:MenuButton Text="Trudny" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='hard'}" Margin="0,30,0,0"  />
+                        <ctrls:MenuButton x:Name="p2Easy" Text="Łatwy" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='easy'}" Margin="0,100,0,0" />
+                        <ctrls:MenuButton x:Name="p2Medium" Text="Średni" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='medium'}" Margin="0,30,0,0"  />
+                        <ctrls:MenuButton x:Name="p2Hard" Text="Trudny" ButtonBackground="{Binding Game.Player2, Converter={StaticResource DifficultyToBtnBackgroundConverter}, ConverterParameter='hard'}" Margin="0,30,0,0"  />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

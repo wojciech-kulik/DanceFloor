@@ -25,11 +25,14 @@ namespace StepMania.Constants
         public const string DefaultGameBackground = ResourceImagesPath + "game_background.jpg";
 
         public const int SongItemWidth = 250;
-        public const double SongsListMovePixelsPerFrame = 10;
+        public const double SongsListMovePixelsPerFrame = 10; 
 
-        public static readonly LinearGradientBrush GameModeBtnGradient = 
+        public static readonly LinearGradientBrush GameModeSelectedBtnGradient = 
             new LinearGradientBrush(new Color() { A = 0xFF, R = 0xF5, G = 0xBF, B = 0x2F }, new Color() { A = 0xFF, R = 0xAA, G = 0x7F, B = 0x0C }, 90.0);
-        public static readonly LinearGradientBrush GameModeSelectedBtnGradient =
-            new LinearGradientBrush(Colors.White, new Color() { A = 0xFF, R = 0x85, G = 0x85, B = 0x85 }, 90.0);
+        public static readonly LinearGradientBrush GameModeBtnGradient =
+            new LinearGradientBrush(new Color() { A = 0xFF, R = 0xD1, G = 0x7A, B = 0x22 }, new Color() { A = 0xFF, R = 0x9C, G = 0x50, B = 0x1B }, 90.0);
+        public static readonly LinearGradientBrush GameModeInactiveBtnGradient =
+            new LinearGradientBrush(new Color() { A = 0xFF, R = 0x3E, G = 0x3E, B = 0x3E }, new Color() { A = 0xFF, R = 0x32, G = 0x32, B = 0x32 }, 90.0);
+        public static readonly SolidColorBrush GameModeInactiveBtnForeground = new SolidColorBrush(Colors.Gray);
     }
 }

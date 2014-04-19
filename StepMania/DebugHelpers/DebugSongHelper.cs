@@ -39,29 +39,38 @@ namespace StepMania.DebugHelpers
 
         public static Song GenerateSong(int seconds = 300, Difficulty difficulty = Difficulty.Easy)
         {    
-            Random r = new Random();
-
-            Sequence sequence = new Sequence();
-            sequence.Difficulty = Difficulty.Easy;
-
             Song result = new Song();
             result.FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3";
             result.CoverPath = @"..\..\Images\game_background.jpg";
             //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
-            result.Sequences.Add(difficulty, sequence);
 
-            for (int i = 2; i < seconds; i++)
+            var r = new Random();
+            for (int i = 0; i <= 2; i++)
+                if (r.Next(0, 100) < 50)
+                    GenerateSequence(r, result, (Difficulty)i);
+
+            if (result.Sequences.Keys.Count == 0)
+                GenerateSequence(r, result, Difficulty.Easy);
+
+            return result;
+        }
+
+        public static void GenerateSequence(Random randomGenerator, ISong song, Difficulty difficulty)
+        {
+            var r = randomGenerator;
+            Sequence sequence = new Sequence() { Difficulty = difficulty };
+            song.Sequences.Add(difficulty, sequence);
+
+            for (int i = 2; i < song.Duration.TotalSeconds; i++)
             {
                 int count = r.Next(1, 3);
                 for (int j = 0; j < count; j++)
                 {
-                    SeqElemType elemType = (SeqElemType)r.Next(0, 4);                    
-                    sequence.AddElement(new SequenceElement() { Type = elemType, IsBomb = r.Next(0, 100) < 10 , Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });
+                    SeqElemType elemType = (SeqElemType)r.Next(0, 4);
+                    sequence.AddElement(new SequenceElement() { Type = elemType, IsBomb = r.Next(0, 100) < 10, Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });
                 }
             }
-
-            return result;
         }
 
         public static void AddTimeToNotes(UIElementCollection notes, SeqElemType elemType, double top)
