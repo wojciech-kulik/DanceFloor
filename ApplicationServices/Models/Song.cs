@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Common;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
 
 namespace ApplicationServices
 {
@@ -145,6 +146,27 @@ namespace ApplicationServices
         }
         #endregion
 
+        #region CoverPath
+
+        private string _coverPath;
+
+        public string CoverPath
+        {
+            get
+            {
+                return _coverPath;
+            }
+            set
+            {
+                if (_coverPath != value)
+                {
+                    _coverPath = value;
+                    NotifyPropertyChanged("CoverPath");
+                }
+            }
+        }
+        #endregion
+
         #region Duration
 
         private TimeSpan _duration;
@@ -192,31 +214,93 @@ namespace ApplicationServices
             return Sequences[difficulty].GetClosestTo(time, elementType, alreadyHit);
         }
 
-        public void LoadFromFile(string path)
+        private string _fileName;
+        public void LoadSequences()
         {
-            if (!File.Exists(path))
-                throw new ArgumentException("Nieprawidłowa ścieżka do pliku: \n" + path);
-
-            Song song;
-            using (var stream = File.OpenRead(path))
+            using (var stream = File.OpenRead(_fileName + "\\" + GameConstants.SongObjectFileName))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                song = (Song)formatter.Deserialize(stream);
+                Sequences = (formatter.Deserialize(stream) as ISong).Sequences;
             }
-
-            Sequences = song.Sequences;
-            Title = song.Title;
-            Artist = song.Artist;
-            FilePath = song.FilePath;
-            Author = song.Author;
-            CreateDate = song.CreateDate;
-            BackgroundPath = song.BackgroundPath;
-            Duration = song.Duration;
         }
 
-        public void SaveToFile(string path)
+        public void UnloadSequences()
         {
-            using (var stream = File.Create(path))
+            if (Sequences == null)
+                return;
+
+            Sequences.Clear();
+        }
+
+        public void LoadFromFile(string fileName, bool loadeSequences = false)
+        {
+            if (!File.Exists(fileName + "\\" + GameConstants.SongObjectFileName))
+                throw new ArgumentException("Podany utwór nie istnieje.");
+
+            _fileName = fileName;
+            
+            ISong song;
+            using (var stream = File.OpenRead(fileName + "\\" + GameConstants.SongObjectFileName))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                song = (ISong)formatter.Deserialize(stream);
+            }
+
+            if (loadeSequences)
+                Sequences = song.Sequences;
+            Title = song.Title;
+            Artist = song.Artist;
+            FilePath = Environment.CurrentDirectory + "\\" + song.FilePath;
+            Author = song.Author;
+            CreateDate = song.CreateDate;
+            BackgroundPath = Environment.CurrentDirectory + "\\" + song.BackgroundPath;
+            CoverPath = Environment.CurrentDirectory + "\\" + song.CoverPath;
+            Duration = song.Duration;
+
+            if (!File.Exists(BackgroundPath))
+                BackgroundPath = "../Images/game_background.jpg";
+
+            if (!File.Exists(CoverPath))
+                CoverPath = "../Images/cover.png";
+        }
+
+        public void SaveToFile()
+        {
+            if (String.IsNullOrWhiteSpace(Title) || String.IsNullOrWhiteSpace(Artist))
+                throw new InvalidOperationException("Tytuł lub artysta nie został uzupełniony.");
+
+            if (!File.Exists(FilePath))
+                throw new InvalidOperationException("Podany utwór nie istnieje.");
+
+
+            //create dir
+            string dir = GameConstants.SongsDir + Artist + " - " + Title + "\\";
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);     
+
+            //copy music file
+            string songPath = dir + GameConstants.SongFileName + Path.GetExtension(FilePath);
+            File.Copy(FilePath, songPath);
+            FilePath = songPath;
+
+            //copy cover
+            if (!String.IsNullOrWhiteSpace(CoverPath))
+            {
+                string coverPath = dir + GameConstants.CoverFileName + Path.GetExtension(CoverPath);
+                File.Copy(CoverPath, coverPath);
+                CoverPath = coverPath;
+            }
+
+            //copy background
+            if (!String.IsNullOrWhiteSpace(BackgroundPath))
+            {
+                string backgroundPath = dir + GameConstants.BackgroundFileName + Path.GetExtension(BackgroundPath);
+                File.Copy(BackgroundPath, backgroundPath);
+                BackgroundPath = backgroundPath;
+            }
+
+            //save object
+            using (var stream = File.Create(dir + GameConstants.SongObjectFileName))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, this);

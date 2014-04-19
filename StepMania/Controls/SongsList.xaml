@@ -31,7 +31,7 @@
                             <TextBlock Text="{Binding Title}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" FontFamily="Calibri" FontSize="20" 
                                        Foreground="{Binding IsSelected, Converter={StaticResource BoolToForegroundConverter}, UpdateSourceTrigger=PropertyChanged}"/>
                             <Border BorderBrush="White" BorderThickness="2" Width="150" Height="150" SnapsToDevicePixels="True">
-                                <Image Source="{Binding BackgroundPath}" VerticalAlignment="Top" Stretch="Fill" />
+                                <Image Source="{Binding CoverPath}" VerticalAlignment="Top" Stretch="Fill" />
                             </Border>
                         </StackPanel>
                     </DataTemplate>

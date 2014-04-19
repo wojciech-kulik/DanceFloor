@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameActionEvent>, IHandle<GameKeyEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -60,29 +60,24 @@ namespace StepMania.ViewModels
             _p1Animation = _view.Resources.Values.OfType<Storyboard>().First() as Storyboard;
             _p2Animation = _view.Resources.Values.OfType<Storyboard>().Skip(1).First() as Storyboard;
 
-            var song = DebugSongHelper.GenerateSong(270);
-            Game.Song.Duration = song.Duration;
-            Game.Song.Sequences = song.Sequences;
             PrepareUI();
         }
 
-        public void LoadSong(ISong song, IPlayer player)
+        protected override void OnActivate()
+        {
+            Game.Song.LoadSequences();
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            Game.Song.UnloadSequences();
+        }
+
+        public void LoadNotes(ISong song, IPlayer player)
         {
             var notes = player.PlayerID == PlayerID.Player1 ? _view.p1Notes.Children : _view.p2Notes.Children;
             var animation = player.PlayerID == PlayerID.Player1 ? _p1Animation : _p2Animation;
-
-            _game.Song = song;
             notes.Clear();
-
-            //set background
-            if (song.BackgroundPath != null && File.Exists(song.BackgroundPath))
-            {
-                _view.Background = new ImageBrush(new BitmapImage(new Uri(song.BackgroundPath)));
-            }
-            else
-            {
-                _view.Background = new ImageBrush(new BitmapImage(new Uri(GameUIConstants.DefaultGameBackground)));
-            }
 
             //set animation
             animation.Children.First().Duration = song.Duration;
@@ -90,7 +85,7 @@ namespace StepMania.ViewModels
             (animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * song.Duration.TotalSeconds + GameUIConstants.ArrowWidthHeight);
 
             //create arrows for each sequence element
-            foreach(var seqElem in song.Sequences[player.Difficulty])
+            foreach (var seqElem in song.Sequences[player.Difficulty])
             {
                 //load and prepare image
                 string imagePath = player.PlayerID == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage;
@@ -104,7 +99,7 @@ namespace StepMania.ViewModels
                 Canvas.SetTop(img, top);
 
                 //rotate arrow and set in proper place
-                switch(seqElem.Type)
+                switch (seqElem.Type)
                 {
                     case SeqElemType.LeftArrow:
                         if (!seqElem.IsBomb)
@@ -124,25 +119,33 @@ namespace StepMania.ViewModels
                             img.RenderTransform = new RotateTransform(-90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
                         Canvas.SetLeft(img, GameUIConstants.RightArrowX);
                         break;
-                }                
+                }
 
                 //add image to the canvas
                 notes.Add(img);
 
-                DebugSongHelper.AddTimeToNotes(notes, seqElem.Type, top);                
-            }            
+                DebugSongHelper.AddTimeToNotes(notes, seqElem.Type, top);
+            }  
         }
 
         public void PrepareUI()
         {            
-            LoadSong(Game.Song, Game.Player1);                
-            DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);  
+            //load notes
+            LoadNotes(Game.Song, Game.Player1);
+            DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);
 
+            //set background
+            if (Game.Song.BackgroundPath != null && File.Exists(Game.Song.BackgroundPath))
+                _view.Background = new ImageBrush(new BitmapImage(new Uri(Game.Song.BackgroundPath)));
+            else
+                _view.Background = new ImageBrush(new BitmapImage(new Uri(GameUIConstants.DefaultGameBackground)));
+
+            //set view according to number of players
             _view.mainGrid.ColumnDefinitions.Clear();
             _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
             if (_game.IsMultiplayer)
             {
-                LoadSong(Game.Song, Game.Player2);
+                LoadNotes(Game.Song, Game.Player2);
                 _view.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                 _view.p2Playboard.Visibility = System.Windows.Visibility.Visible;
@@ -237,25 +240,6 @@ namespace StepMania.ViewModels
             healthBar.SetLife(message.Life);
 
             //todo: play miss sound
-        }
-
-        public void Handle(GameActionEvent message)
-        {
-            if (!IsActive)
-                return;
-
-            switch(message.GameAction)
-            {
-                case GameAction.Pause:
-                    PauseGame();
-                    break;
-                case GameAction.Resume:
-                    ResumeGame();
-                    break;
-                case GameAction.Stop:
-                    StopGame();
-                    break;
-            }
         }
 
         public void Handle(GameKeyEvent message)

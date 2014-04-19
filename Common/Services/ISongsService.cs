@@ -9,5 +9,7 @@ namespace Common
     public interface ISongsService
     {
         IReadOnlyCollection<ISong> GetAllSongs();
+
+        void AddSong(ISong song);
     }
 }

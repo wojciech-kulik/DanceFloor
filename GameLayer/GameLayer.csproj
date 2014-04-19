@@ -56,8 +56,8 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Sequence\Sequence.cs" />
     <Compile Include="Sequence\SequenceElement.cs" />
-    <Compile Include="Song\Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Song\Song.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApplicationServices\ApplicationServices.csproj">

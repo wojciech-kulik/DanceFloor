@@ -20,6 +20,8 @@ namespace Common
 
         string BackgroundPath { get; set; }
 
+        string CoverPath { get; set; }
+
         TimeSpan Duration { get; set; }
 
         bool IsSelected { get; set; }
@@ -30,8 +32,12 @@ namespace Common
 
         ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit);
 
-        void LoadFromFile(string path);
+        void LoadSequences();
 
-        void SaveToFile(string path);
+        void UnloadSequences();
+
+        void LoadFromFile(string fileName, bool loadeSequences = false);        
+
+        void SaveToFile();
     }
 }

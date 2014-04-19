@@ -26,6 +26,8 @@ namespace StepMania.ViewModels
         protected override void OnActivate()
         {            
             ActivateItem(IoC.Get<MenuViewModel>());
+
+            //DebugHelpers.DebugSongHelper.GenerateRandomSongsDB();
         }
 
         protected override void OnViewAttached(object view, object context)

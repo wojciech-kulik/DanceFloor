@@ -25,5 +25,11 @@ namespace Common
         public const int WrongMomentOrActionLifePoints = 4;
 
         public const int FullLife = 100;
+
+        public const string SongsDir = "Songs\\";
+        public const string SongObjectFileName = "data.sm";
+        public const string SongFileName = "song";
+        public const string CoverFileName = "cover";
+        public const string BackgroundFileName = "background";
     }
 }

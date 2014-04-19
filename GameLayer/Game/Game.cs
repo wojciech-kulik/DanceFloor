@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace GameLayer
 {
-    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>, IHandle<GameActionEvent>
+    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>
     {
         List<ISequenceElement> _p1AlreadyHit = new List<ISequenceElement>();
         List<ISequenceElement> _p2AlreadyHit = new List<ISequenceElement>();
@@ -234,22 +234,6 @@ namespace GameLayer
                     Life = player.Life,
                     Reason = MissReason.WrongMomentOrAction
                 });
-            }
-        }
-
-        public void Handle(GameActionEvent message)
-        {
-            switch (message.GameAction)
-            {
-                case GameAction.Pause:
-                    Pause();
-                    break;
-                case GameAction.Resume:
-                    Resume();
-                    break;
-                case GameAction.Stop:
-                    Stop();
-                    break;
             }
         }
 

@@ -22,6 +22,21 @@ namespace StepMania.DebugHelpers
 {
     public class DebugSongHelper
     {
+        public static void GenerateRandomSongsDB(int count = 20)
+        {
+            if (Directory.Exists(GameConstants.SongsDir))
+                Directory.Delete(GameConstants.SongsDir, true);
+
+            var r = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                var song = GenerateSong(r.Next(120, 300));
+                song.Title = "Tytuł sadas";
+                song.Artist = "Artysta " + (i + 1).ToString();
+                song.SaveToFile();
+            }
+        }
+
         public static Song GenerateSong(int seconds = 300, Difficulty difficulty = Difficulty.Easy)
         {    
             Random r = new Random();
@@ -31,6 +46,7 @@ namespace StepMania.DebugHelpers
 
             Song result = new Song();
             result.FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3";
+            result.CoverPath = @"..\..\Images\game_background.jpg";
             //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
             result.Sequences.Add(difficulty, sequence);
