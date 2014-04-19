@@ -65,8 +65,9 @@ namespace StepMania.ViewModels
             {
                 _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
             }
-            else if (message.PlayerAction == PlayerAction.Enter)
+            else if (message.PlayerAction == PlayerAction.Enter && SelectedSong != null)
             {
+                SelectedSong.IsSelected = false;
                 _eventAggregator.Publish(new NavigationExEvent() { NavDestination = NavDestination.GameMode, PageSettings = (vm) => (vm as GameModeViewModel).Game.Song = SelectedSong });
             }
         }   
