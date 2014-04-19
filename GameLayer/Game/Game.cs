@@ -137,7 +137,7 @@ namespace GameLayer
             
             var missed = Song.Sequences[player.Difficulty]
                 .Except(copyOfAlreadyHit)
-                .Where(e => e.Time.TotalSeconds - currenTime < -GameConstants.WorstHitTime)
+                .Where(e => !e.IsBomb && e.Time.TotalSeconds - currenTime < -GameConstants.WorstHitTime)
                 .ToList();
 
             if (missed.Count == 0)
@@ -160,7 +160,7 @@ namespace GameLayer
 
         private void SetLifePoints(IPlayer player, int deltaLifePoints)
         {
-            player.Life = Math.Max(0, player.Life + deltaLifePoints);
+            player.Life = Math.Min(GameConstants.FullLife, Math.Max(0, player.Life + deltaLifePoints));
             if (player.Life == 0)
                 player.IsGameOver = true;
         }
@@ -189,7 +189,9 @@ namespace GameLayer
                 else if (diff <= GameConstants.MediumHitTime)
                     player.Points += GameConstants.MediumHitPoints;
                 else if (diff <= GameConstants.WorstHitTime)
-                    player.Points += GameConstants.WorstHitPoints; 
+                    player.Points += GameConstants.WorstHitPoints;
+
+                SetLifePoints(player, GameConstants.HitLifePoints);
             }
             else
             {

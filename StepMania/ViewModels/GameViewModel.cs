@@ -93,7 +93,10 @@ namespace StepMania.ViewModels
             foreach(var seqElem in song.Sequences[player.Difficulty])
             {
                 //load and prepare image
-                var bitmap = new BitmapImage(new Uri(player.PlayerID == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage));
+                string imagePath = player.PlayerID == PlayerID.Player1 ? GameUIConstants.P1ArrowImage : GameUIConstants.P2ArrowImage;
+                if (seqElem.IsBomb)
+                    imagePath = GameUIConstants.BombImage;
+                var bitmap = new BitmapImage(new Uri(imagePath));
                 Image img = new Image() { Width = GameUIConstants.ArrowWidthHeight, Height = GameUIConstants.ArrowWidthHeight, Source = bitmap, Tag = seqElem };
 
                 //set top position of arrow according to time
@@ -104,18 +107,21 @@ namespace StepMania.ViewModels
                 switch(seqElem.Type)
                 {
                     case SeqElemType.LeftArrow:
-                        img.RenderTransform = new RotateTransform(90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        if (!seqElem.IsBomb)
+                            img.RenderTransform = new RotateTransform(90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
                         Canvas.SetLeft(img, GameUIConstants.LeftArrowX);
                         break;
                     case SeqElemType.DownArrow:
                         Canvas.SetLeft(img, GameUIConstants.DownArrowX);
                         break;
                     case SeqElemType.UpArrow:
-                        img.RenderTransform = new RotateTransform(180, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        if (!seqElem.IsBomb)
+                            img.RenderTransform = new RotateTransform(180, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
                         Canvas.SetLeft(img, GameUIConstants.UpArrowX);
                         break;
                     case SeqElemType.RightArrow:
-                        img.RenderTransform = new RotateTransform(-90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
+                        if (!seqElem.IsBomb)
+                            img.RenderTransform = new RotateTransform(-90, GameUIConstants.ArrowWidthHeight / 2.0, GameUIConstants.ArrowWidthHeight / 2.0);
                         Canvas.SetLeft(img, GameUIConstants.RightArrowX);
                         break;
                 }                

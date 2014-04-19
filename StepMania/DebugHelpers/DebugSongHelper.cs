@@ -40,8 +40,8 @@ namespace StepMania.DebugHelpers
                 int count = r.Next(1, 3);
                 for (int j = 0; j < count; j++)
                 {
-                    SeqElemType elemType = (SeqElemType)r.Next(0, 4);
-                    sequence.AddElement(new SequenceElement() { Type = elemType, Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });
+                    SeqElemType elemType = (SeqElemType)r.Next(0, 4);                    
+                    sequence.AddElement(new SequenceElement() { Type = elemType, IsBomb = r.Next(0, 100) < 10 , Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });
                 }
             }
 

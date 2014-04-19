@@ -19,6 +19,7 @@ namespace Common
         public const double WorstHitTime = 0.2;
 
         //Life Points
+        public const int HitLifePoints = 1;
         public const int BombLifePoints = 20;
         public const int MissLifePoints = 8;
         public const int WrongMomentOrActionLifePoints = 4;
