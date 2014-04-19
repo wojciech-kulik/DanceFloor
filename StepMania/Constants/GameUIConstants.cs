@@ -34,5 +34,8 @@ namespace StepMania.Constants
         public static readonly LinearGradientBrush GameModeInactiveBtnGradient =
             new LinearGradientBrush(new Color() { A = 0xFF, R = 0x3E, G = 0x3E, B = 0x3E }, new Color() { A = 0xFF, R = 0x32, G = 0x32, B = 0x32 }, 90.0);
         public static readonly SolidColorBrush GameModeInactiveBtnForeground = new SolidColorBrush(Colors.Gray);
+
+        public static readonly SolidColorBrush PopupBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0x97, G = 0x97, B = 0x97 });
+        public static readonly SolidColorBrush PopupSelectedBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xEA, G = 0xEA, B = 0x8F });
     }
 }

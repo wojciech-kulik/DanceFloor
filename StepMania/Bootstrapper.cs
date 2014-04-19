@@ -28,12 +28,14 @@ namespace StepMania
             container.PerRequest<GameViewModel>();
             container.PerRequest<SongsListViewModel>();
             container.PerRequest<GameModeViewModel>();
+            container.PerRequest<RecordSequenceViewModel>();
+
+            container.PerRequest<ClosingPopupViewModel>();
 
             container.PerRequest<IGame, Game>();
 
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
-            container.PerRequest<ISequenceCreationService, SequenceCreationService>();
             container.PerRequest<IHighScoresService, HighScoresService>();
             container.Singleton<ISettingsService, SettingsService>();            
         }

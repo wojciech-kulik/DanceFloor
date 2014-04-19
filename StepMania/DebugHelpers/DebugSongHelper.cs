@@ -59,7 +59,7 @@ namespace StepMania.DebugHelpers
         public static void GenerateSequence(Random randomGenerator, ISong song, Difficulty difficulty)
         {
             var r = randomGenerator;
-            Sequence sequence = new Sequence() { Difficulty = difficulty };
+            Sequence sequence = new Sequence();
             song.Sequences.Add(difficulty, sequence);
 
             for (int i = 2; i < song.Duration.TotalSeconds; i++)

@@ -11,7 +11,7 @@ namespace Common
         MainMenu,
         SongsList,
         GameMode,
-        Game,        
-        CloseGame
+        Game, 
+        Record
     }
 }

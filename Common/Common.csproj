@@ -52,11 +52,14 @@
     <Compile Include="Enums\GameAction.cs" />
     <Compile Include="Enums\MissReason.cs" />
     <Compile Include="Enums\NavDestination.cs" />
+    <Compile Include="Enums\PopupType.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
     <Compile Include="Events\NavigationExEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Events\PlayerMissedEvent.cs" />
+    <Compile Include="Events\PopupClosedEvent.cs" />
+    <Compile Include="Events\ShowPopupEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\GameHelper.cs" />
     <Compile Include="Models\IBaseModel.cs" />
@@ -64,6 +67,7 @@
     <Compile Include="Models\IGame.cs" />
     <Compile Include="Models\IHighScore.cs" />
     <Compile Include="Models\IPlayer.cs" />
+    <Compile Include="Models\IPopup.cs" />
     <Compile Include="Services\IHighScoresService.cs" />
     <Compile Include="Models\IPlayable.cs" />
     <Compile Include="Services\IMusicPlayerService.cs" />

@@ -13,5 +13,9 @@ namespace Common
         TimeSpan Duration { get; }
 
         string FilePath { get; set; }
+
+        bool IsRunning { get; }
+
+        bool HasDuration { get; }
     }
 }

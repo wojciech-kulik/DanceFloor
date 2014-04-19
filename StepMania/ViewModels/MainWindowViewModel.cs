@@ -10,10 +10,31 @@ using System.Windows;
 
 namespace StepMania.ViewModels
 {
-    public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<NavigationEvent>, IHandle<NavigationExEvent>
+    public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<NavigationEvent>, IHandle<NavigationExEvent>, IHandle<PopupClosedEvent>, IHandle<ShowPopupEvent>
     {
         ISettingsService _settingsService;
         IEventAggregator _eventAggregator;
+
+        #region PopupItem
+
+        private IPopup _popupItem;
+
+        public IPopup PopupItem
+        {
+            get
+            {
+                return _popupItem;
+            }
+            set
+            {
+                if (_popupItem != value)
+                {
+                    _popupItem = value;
+                    NotifyOfPropertyChange(() => PopupItem);
+                }
+            }
+        }
+        #endregion
 
         public MainWindowViewModel(ISettingsService settingsService, IEventAggregator eventAggregator)
         {
@@ -25,7 +46,7 @@ namespace StepMania.ViewModels
 
         protected override void OnActivate()
         {            
-            ActivateItem(IoC.Get<MenuViewModel>());
+            ActivateItem(IoC.Get<MenuViewModel>());            
 
             //DebugHelpers.DebugSongHelper.GenerateRandomSongsDB();
         }
@@ -49,9 +70,6 @@ namespace StepMania.ViewModels
                 case NavDestination.Game:
                     ActivateItem(IoC.Get<GameViewModel>());
                     break;
-                case NavDestination.CloseGame:
-                    Application.Current.MainWindow.Close();
-                    break;
             }
         }
 
@@ -72,6 +90,10 @@ namespace StepMania.ViewModels
                 case NavDestination.SongsList:
                     vm = IoC.Get<SongsListViewModel>();
                     break;
+
+                case NavDestination.Record:
+                    vm = IoC.Get<RecordSequenceViewModel>();
+                    break;
             }
 
             if (vm != null)
@@ -79,6 +101,23 @@ namespace StepMania.ViewModels
                 if (message.PageSettings != null)
                     message.PageSettings(vm);
                 ActivateItem(vm);
+            }
+        }
+
+        public void Handle(PopupClosedEvent message)
+        {
+            PopupItem.IsShowing = false;
+            PopupItem = null;
+        }
+
+        public void Handle(ShowPopupEvent message)
+        {
+            switch (message.PopupType)
+            {
+                case PopupType.ClosingPopup:
+                    PopupItem = IoC.Get<ClosingPopupViewModel>();
+                    PopupItem.IsShowing = true;
+                    break;
             }
         }
     }

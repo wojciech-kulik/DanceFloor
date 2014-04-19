@@ -1,7 +1,11 @@
 ﻿<Window x:Class="StepMania.Views.MainWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
         Title="StepMania" Height="768" Width="1024" MinHeight="700" MinWidth="1024" 
         WindowState="Maximized" WindowStartupLocation="CenterScreen">
-    <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" Cursor="None" />
+    <Grid>
+        <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" Cursor="None" />
+        <ContentControl Name="PopupItem" SnapsToDevicePixels="True" Cursor="None" />
+    </Grid>
 </Window>

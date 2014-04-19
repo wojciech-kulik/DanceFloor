@@ -34,6 +34,17 @@ namespace ApplicationServices
         }
         #endregion
 
+        #region HasDuration
+
+        public bool HasDuration
+        {
+            get
+            {
+                return _mediaPlayer.NaturalDuration.HasTimeSpan;
+            }
+        }
+        #endregion
+
         #region FilePath
 
         private string _filePath;

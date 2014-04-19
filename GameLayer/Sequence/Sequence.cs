@@ -14,27 +14,6 @@ namespace GameLayer
     {
         private BindableCollection<ISequenceElement> SequenceElements = new BindableCollection<ISequenceElement>();
 
-        #region Difficulty
-
-        private Difficulty _difficulty;
-
-        public Difficulty Difficulty
-        {
-            get
-            {
-                return _difficulty;
-            }
-            set
-            {
-                if (_difficulty != value)
-                {
-                    _difficulty = value;
-                    NotifyPropertyChanged("Difficulty");
-                }
-            }
-        }
-        #endregion
-
         #region IReadOnlySequence
         public IEnumerator<ISequenceElement> GetEnumerator()
         {

@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public interface IPlayable : IBaseModel
+    public class ShowPopupEvent
     {
-        void Start();
-
-        void Resume();
-
-        void Pause();
-
-        void Stop();
+        public PopupType PopupType { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Common;
+using GameLayer;
 using StepMania.Controls;
 using StepMania.Views;
 using System;
@@ -13,7 +14,7 @@ using System.Windows.Media;
 
 namespace StepMania.ViewModels
 {
-    public class MenuViewModel : BaseViewModel, IHandle<GameKeyEvent>
+    public class MenuViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<PopupClosedEvent>
     {
         MenuView _view;
         int _activeButton = 0;
@@ -60,15 +61,31 @@ namespace StepMania.ViewModels
 
         public void Handle(GameKeyEvent message)
         {
-            if (!IsActive)
+            if (!IsActive || IsPopupShowing)
                 return;
             
             if (message.PlayerAction == PlayerAction.Enter)
             {
+                ISong song = new Song()
+                {
+                    FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3"
+                };
+
                 switch(_activeButton)
                 {
                     case 0:
                         _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.SongsList });
+                        break;
+                    case 3:
+                        _eventAggregator.Publish(new NavigationExEvent()
+                        {
+                            NavDestination = NavDestination.Record,
+                            PageSettings = (vm) =>
+                            {
+                                (vm as RecordSequenceViewModel).Song = song;
+                                (vm as RecordSequenceViewModel).Difficulty = Difficulty.Easy;
+                            }
+                        });
                         break;
                     case 4:
                         CloseGame();
@@ -97,7 +114,18 @@ namespace StepMania.ViewModels
 
         private void CloseGame()
         {
-            _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.CloseGame });
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup});
+        }
+
+        public void Handle(PopupClosedEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+            if (message.YesSelected)
+                Application.Current.MainWindow.Close();
         }
     }
 }

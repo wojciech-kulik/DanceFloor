@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>
+    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, IHandle<PopupClosedEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -73,7 +73,7 @@ namespace StepMania.ViewModels
             Game.Song.UnloadSequences();
         }
 
-        public void LoadNotes(ISong song, IPlayer player)
+        void LoadNotes(ISong song, IPlayer player)
         {
             var notes = player.PlayerID == PlayerID.Player1 ? _view.p1Notes.Children : _view.p2Notes.Children;
             var animation = player.PlayerID == PlayerID.Player1 ? _p1Animation : _p2Animation;
@@ -128,7 +128,7 @@ namespace StepMania.ViewModels
             }  
         }
 
-        public void PrepareUI()
+        void PrepareUI()
         {            
             //load notes
             LoadNotes(Game.Song, Game.Player1);
@@ -160,16 +160,12 @@ namespace StepMania.ViewModels
             }
         }
 
-        bool IsRunning { get; set; }
         public void StartGame()
         {
-            PrepareUI();
-
             _p1Animation.Begin();
             if (_game.IsMultiplayer)
                 _p2Animation.Begin();
             _game.Start();            
-            IsRunning = true;
         }
 
         public void ResumeGame()
@@ -187,7 +183,6 @@ namespace StepMania.ViewModels
             }
 
             _game.Resume();                        
-            IsRunning = true;
         }
 
         public void PauseGame()
@@ -196,7 +191,6 @@ namespace StepMania.ViewModels
             if (_game.IsMultiplayer)
                 _p2Animation.Pause();
             _game.Pause();
-            IsRunning = false;
         }
 
         public void StopGame()
@@ -205,7 +199,6 @@ namespace StepMania.ViewModels
             if (_game.IsMultiplayer)
                 _p2Animation.Stop();
             _game.Stop();
-            IsRunning = false;
         }
 
         public void Handle(PlayerHitEvent message)
@@ -244,7 +237,7 @@ namespace StepMania.ViewModels
 
         public void Handle(GameKeyEvent message)
         {
-            if (!IsActive)
+            if (!IsActive || IsPopupShowing)
                 return;
 
             if (DebugSongHelper.HandleKeyPressed(this, message))
@@ -252,12 +245,31 @@ namespace StepMania.ViewModels
 
             if (message.PlayerAction == PlayerAction.Back)
             {
-                StopGame();
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+                PauseGame();
+                IsPopupShowing = true;
+                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup });
             }
             else if (message.PlayerAction == PlayerAction.Enter) 
             {
                 StartGame();
+            }
+        }
+
+        public void Handle(PopupClosedEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+
+            if (message.YesSelected)
+            {
+                StopGame();
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            }
+            else
+            {
+                ResumeGame();
             }
         }
     }

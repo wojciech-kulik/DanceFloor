@@ -15,5 +15,7 @@ namespace StepMania.ViewModels
             _eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
         }
+
+        protected bool IsPopupShowing { get; set; }
     }
 }
