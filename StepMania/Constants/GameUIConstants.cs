@@ -23,5 +23,6 @@ namespace StepMania.Constants
         public const string DefaultGameBackground = ResourceImagesPath + "game_background.jpg";
 
         public const int SongItemWidth = 250;
+        public const double SongsListMovePixelsPerFrame = 10;
     }
 }

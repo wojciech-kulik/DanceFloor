@@ -25,10 +25,10 @@ namespace StepMania.Converters
             else
                 difficulty = Difficulty.Hard;
 
-            if (player.Difficulty == difficulty)
-                return new SolidColorBrush(new Color() { A = 0xDE, R = 0xF1, G = 0xD2, B = 0x69 });
+            if (player.Difficulty != difficulty)
+                return new LinearGradientBrush(new Color() { A = 0xFF, R = 0xF5, G = 0xBF, B = 0x2F }, new Color() { A = 0xFF, R = 0xAA, G = 0x7F, B = 0x0C }, 90.0);
             else
-                return new SolidColorBrush(new Color() { A = 0xDE, R = 0x2B, G = 0xAC, B = 0x47 });
+                return new LinearGradientBrush(Colors.White, new Color() { A = 0xFF, R = 0x85, G = 0x85, B = 0x85 }, 90.0);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

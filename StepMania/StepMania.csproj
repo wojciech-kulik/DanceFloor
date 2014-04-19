@@ -80,6 +80,7 @@
     <Compile Include="Controls\SongsList.xaml.cs">
       <DependentUpon>SongsList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BoolToForegroundConverter.cs" />
     <Compile Include="Converters\GameModeToVisibility.cs" />
     <Compile Include="Converters\GameModeToBtnBackgroundConverter.cs" />
     <Compile Include="Converters\DifficultyToBtnBackgroundConverter.cs" />

@@ -3,6 +3,7 @@ using GameLayer;
 using StepMania.Constants;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,8 +26,7 @@ namespace StepMania.Controls
     /// </summary>
     public partial class SongsList : UserControl
     {
-        Thread animation;
-        Key? holdKey, lastHoldKey;
+        Key? heldKey, releasedKey;
 
         public SongsList()
         {
@@ -44,7 +44,8 @@ namespace StepMania.Controls
 
         public void SongsList_HandleKeyUp(object sender, KeyEventArgs e)
         {
-            holdKey = null;        
+            if (e.Key == Key.Left || e.Key == Key.Right)
+                releasedKey = e.Key;
         }
 
         public void SongsList_HandleKeyDown(object sender, KeyEventArgs e)
@@ -52,66 +53,57 @@ namespace StepMania.Controls
             if (e.Key != Key.Left && e.Key != Key.Right)
                 return;
 
-            if (holdKey.HasValue || (animation != null && animation.IsAlive))
+            if (heldKey.HasValue)
                 return;
-            else
+
+            heldKey = e.Key;
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        //animation of moving list
+        void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            double max_offset = GameUIConstants.SongItemWidth * (ItemsSource.OfType<ISong>().Count() - 1);
+            var transform = (moveablePanel.RenderTransform as TranslateTransform);
+
+            //animation while holding key
+            if (heldKey.HasValue)
             {
-                holdKey = lastHoldKey = e.Key;
+                //move panel
+                if (heldKey.Value == Key.Left)
+                    transform.X = Math.Min(0, transform.X + GameUIConstants.SongsListMovePixelsPerFrame);
+                else
+                    transform.X = Math.Max(-max_offset, transform.X - GameUIConstants.SongsListMovePixelsPerFrame);
+
+                //modify SelectedSong
+                int index = (int)Math.Abs(transform.X / GameUIConstants.SongItemWidth);
+                index = heldKey.Value == Key.Left ? index : Math.Min(ItemsSource.OfType<ISong>().Count() - 1, index + 1);
+                SelectedSong = ItemsSource.OfType<ISong>().Skip(index).First();
             }
 
-            Action<Action> runInUI = (a) => Application.Current.Dispatcher.Invoke(a);
-                    
-            animation = new Thread(new ThreadStart(() => 
+            //animation after released key
+            if (releasedKey.HasValue)
             {
-                const int SleepTime = 5;
-                const int PixelSpeed = 4;
-                const int FullMoveLength = GameUIConstants.SongItemWidth;
-
-                TranslateTransform transform = null;
-                runInUI(() => transform = (moveablePanel.RenderTransform as TranslateTransform));
-
-                int offset;
-                int max_offset = 0;
-                runInUI(() => max_offset = ((moveablePanel.Children[0] as ItemsControl).Items.Count - 1) * FullMoveLength);
-
-                while (holdKey.HasValue)
+                double whatsLeft = Math.Abs(transform.X % GameUIConstants.SongItemWidth);
+                if (whatsLeft < GameUIConstants.SongsListMovePixelsPerFrame)
                 {
-                    runInUI(() => 
-                    {
-                        if (holdKey.HasValue)
-                        {
-                            offset = holdKey.Value == Key.Right ? -PixelSpeed : PixelSpeed;
-                            transform.X = Math.Max(-max_offset, Math.Min(0, transform.X + offset));
-                        }                            
-                    });
-                    Thread.Sleep(SleepTime);
+                    //align
+                    if (releasedKey.Value == Key.Left)
+                        transform.X = Math.Min(0, transform.X + whatsLeft);
+                    else
+                        transform.X = Math.Max(-max_offset, transform.X - whatsLeft);
+
+                    //modify SelectedSong
+                    int index = (int)Math.Abs(transform.X / GameUIConstants.SongItemWidth);
+                    SelectedSong = ItemsSource.OfType<ISong>().Skip(index).First();
+
+                    //stop animation
+                    heldKey = null;
+                    releasedKey = null;
+                    CompositionTarget.Rendering -= CompositionTarget_Rendering;
                 }
-
-                //calculate how many pixels has left
-                int diff = 0;
-                runInUI(() => diff = (int)transform.X % FullMoveLength);
-
-                //animate to proper place
-                while (Math.Abs(diff) > PixelSpeed)
-                {
-                    runInUI(() => 
-                    {
-                        transform.X += lastHoldKey.Value == Key.Right ? -PixelSpeed : PixelSpeed;
-                        diff = (int)transform.X % FullMoveLength;
-                    });
-                    Thread.Sleep(SleepTime);
-                }
-
-                //last alignment
-                runInUI(() => transform.X += (moveablePanel.RenderTransform as TranslateTransform).X % FullMoveLength);
-
-                runInUI(() => 
-                    {
-                        int index = (int)Math.Abs((moveablePanel.RenderTransform as TranslateTransform).X / GameUIConstants.SongItemWidth);
-                        SelectedSong = ItemsSource.OfType<ISong>().Skip(index).First(); 
-                    });
-            }));
-            animation.Start();
+            }
         }
 
 
@@ -119,12 +111,21 @@ namespace StepMania.Controls
 
         public static void OnSetSelectedSong(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (e.OldValue != null)
+                (e.OldValue as ISong).IsSelected = false;
+            if (e.NewValue != null)
+                (e.NewValue as ISong).IsSelected = true;
+
             var songsList = (d as SongsList);
-            int index = songsList.ItemsSource.OfType<ISong>().ToList().FindIndex(s => s.FilePath == ((ISong)e.NewValue).FilePath);
-            (songsList.moveablePanel.RenderTransform as TranslateTransform).X = -GameUIConstants.SongItemWidth * index;  
+            if (!songsList.heldKey.HasValue && !songsList.releasedKey.HasValue) //if animation is not running
+            {
+                //move list to selected song
+                int index = songsList.ItemsSource.OfType<ISong>().ToList().FindIndex(s => s.FilePath == ((ISong)e.NewValue).FilePath);
+                (songsList.moveablePanel.RenderTransform as TranslateTransform).X = -GameUIConstants.SongItemWidth * index;
+            }
         }
 
-
+        #region SelectedSong Property
         public ISong SelectedSong
         {
             get { return (ISong)GetValue(SelectedSongProperty); }
@@ -134,13 +135,9 @@ namespace StepMania.Controls
         // Using a DependencyProperty as the backing store for SelectedSong.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedSongProperty =
             DependencyProperty.Register("SelectedSong", typeof(ISong), typeof(SongsList), new PropertyMetadata(null, OnSetSelectedSong));
+        #endregion
 
-
-
-        
-
-
-
+        #region ItemsSource Property
         public System.Collections.IEnumerable ItemsSource
         {
             get { return (System.Collections.IEnumerable)GetValue(ItemsSourceProperty); }
@@ -150,7 +147,6 @@ namespace StepMania.Controls
         // Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(System.Collections.IEnumerable), typeof(SongsList), new PropertyMetadata(null));
-
-
+        #endregion
     }
 }

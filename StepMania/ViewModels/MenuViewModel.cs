@@ -54,8 +54,8 @@ namespace StepMania.ViewModels
             }
 
             var button = _view.menuPanel.Children.OfType<MenuButton>().Skip(index).First();
-            (button.ButtonBackground as LinearGradientBrush).GradientStops[0].Color = new Color() { A = 0xDD, R = 0x8B, G = 0x8B, B = 0x8B };
-            (button.ButtonBackground as LinearGradientBrush).GradientStops[1].Color = new Color() { A = 0xDD, R = 0xFF, G = 0xFF, B = 0xFF };
+            (button.ButtonBackground as LinearGradientBrush).GradientStops[0].Color = new Color() { A = 0xED, R = 0x8B, G = 0x8B, B = 0x8B };
+            (button.ButtonBackground as LinearGradientBrush).GradientStops[1].Color = new Color() { A = 0xED, R = 0xFF, G = 0xFF, B = 0xFF };
         }
 
         public void Handle(GameKeyEvent message)

@@ -20,7 +20,9 @@ namespace Common
 
         string BackgroundPath { get; set; }
 
-        TimeSpan Duration { get; set; }        
+        TimeSpan Duration { get; set; }
+
+        bool IsSelected { get; set; }
 
         Dictionary<Difficulty, IReadOnlySequence> Sequences { get; set; }
 

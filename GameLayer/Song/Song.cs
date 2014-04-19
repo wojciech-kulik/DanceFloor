@@ -167,6 +167,27 @@ namespace GameLayer
         }
         #endregion
 
+        #region IsSelected
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    NotifyPropertyChanged("IsSelected");
+                }
+            }
+        }
+        #endregion
+
         public ISequenceElement GetClosestTo(Difficulty difficulty, TimeSpan time, SeqElemType elementType, IList<ISequenceElement> alreadyHit)
         {
             return Sequences[difficulty].GetClosestTo(time, elementType, alreadyHit);

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="180">
     <Grid>
-        <Border x:Name="brd" CornerRadius="5" BorderBrush="#FF080808" BorderThickness="1">
+        <Border x:Name="border" CornerRadius="5" BorderBrush="#FF080808" BorderThickness="1">
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="Background" Value="{Binding ButtonBackground, ElementName=self}" />

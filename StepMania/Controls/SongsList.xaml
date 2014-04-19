@@ -3,8 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:StepMania.Converters"
              mc:Ignorable="d" x:Name="self"
              d:DesignHeight="1080" d:DesignWidth="1920">
+    
+    <UserControl.Resources>
+        <conv:BoolToForegroundConverter x:Key="BoolToForegroundConverter" />
+    </UserControl.Resources>
+    
     <Grid>
         <Canvas x:Name="moveablePanel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
             <Canvas.RenderTransform>
@@ -20,8 +26,10 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel VerticalAlignment="Center" Width="250">
-                            <TextBlock Text="{Binding Artist}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" Foreground="White" FontFamily="Calibri" FontSize="25" />
-                            <TextBlock Text="{Binding Title}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" Foreground="White" FontFamily="Calibri" FontSize="20" />
+                            <TextBlock Text="{Binding Artist}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" FontFamily="Calibri" FontSize="25" 
+                                       Foreground="{Binding IsSelected, Converter={StaticResource BoolToForegroundConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="{Binding Title}" Margin="48,0,0,0" TextTrimming="CharacterEllipsis" FontFamily="Calibri" FontSize="20" 
+                                       Foreground="{Binding IsSelected, Converter={StaticResource BoolToForegroundConverter}, UpdateSourceTrigger=PropertyChanged}"/>
                             <Border BorderBrush="White" BorderThickness="2" Width="150" Height="150" SnapsToDevicePixels="True">
                                 <Image Source="{Binding BackgroundPath}" VerticalAlignment="Top" Stretch="Fill" />
                             </Border>
