@@ -16,7 +16,7 @@
             <TextBlock Text="{Binding Message}" FontSize="25" HorizontalAlignment="Center" Margin="0,0,0,50" />
 
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <ctrls:MenuButton x:Name="btnPlayAgain" Width="220" Height="40" FontSize="20" Text="Zagraj jeszcze raz" ButtonBackground="#FFEAEA8F" Margin="0,0,0,20" />
+                <ctrls:MenuButton x:Name="btnPlayAgain" Width="220" Height="40" FontSize="20" Text="Zagraj jeszcze raz" ButtonBackground="#FFD3A35D" Margin="0,0,0,20" />
                 <ctrls:MenuButton x:Name="btnExit" Width="220" Height="40" FontSize="20" Text="Wyjdź" ButtonBackground="#FF979797" Margin="0,0,0,20" />
             </StackPanel>
         </StackPanel>       

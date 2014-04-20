@@ -12,6 +12,7 @@ namespace Common
         SongsList,
         GameMode,
         Game, 
-        Record
+        Record,
+        RecordOptions
     }
 }

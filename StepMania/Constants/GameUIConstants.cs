@@ -36,8 +36,8 @@ namespace StepMania.Constants
         public static readonly SolidColorBrush GameModeInactiveBtnForeground = new SolidColorBrush(Colors.Gray);
 
         public static readonly SolidColorBrush PopupBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0x97, G = 0x97, B = 0x97 });
-        public static readonly SolidColorBrush PopupSelectedBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xEA, G = 0xEA, B = 0x8F });
+        public static readonly SolidColorBrush PopupSelectedBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xD3, G = 0xA3, B = 0x5D });
 
-        public const int CountDownDuration = 5;
+        public const int CountDownDuration = 3;
     }
 }

@@ -20,6 +20,7 @@ namespace StepMania
         protected override void Configure()
         {
             container = new SimpleContainer();
+            //TODO: handle animation after resizing window
             
             //Caliburn.Micro
             container.PerRequest<IWindowManager, WindowManager>();
@@ -32,6 +33,7 @@ namespace StepMania
             container.PerRequest<SongsListViewModel>();
             container.PerRequest<GameModeViewModel>();
             container.PerRequest<RecordSequenceViewModel>();
+            container.PerRequest<RecordOptionsViewModel>();
 
             //Popups
             container.PerRequest<ClosingPopupViewModel>();

@@ -89,10 +89,14 @@
     <Compile Include="ViewModels\GameOverPopupViewModel.cs" />
     <Compile Include="ViewModels\GameModeViewModel.cs" />
     <Compile Include="ViewModels\ClosingPopupViewModel.cs" />
+    <Compile Include="ViewModels\RecordOptionsViewModel.cs" />
     <Compile Include="ViewModels\RecordSequenceViewModel.cs" />
     <Compile Include="ViewModels\SongsListViewModel.cs" />
     <Compile Include="Views\CountdownPopupView.xaml.cs">
       <DependentUpon>CountdownPopupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RecordOptionsView.xaml.cs">
+      <DependentUpon>RecordOptionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PausePopupView.xaml.cs">
       <DependentUpon>PausePopupView.xaml</DependentUpon>
@@ -133,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CountdownPopupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RecordOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

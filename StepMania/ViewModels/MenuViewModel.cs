@@ -77,15 +77,7 @@ namespace StepMania.ViewModels
                         _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.SongsList });
                         break;
                     case 3:
-                        _eventAggregator.Publish(new NavigationExEvent()
-                        {
-                            NavDestination = NavDestination.Record,
-                            PageSettings = (vm) =>
-                            {
-                                (vm as RecordSequenceViewModel).Song = song;
-                                (vm as RecordSequenceViewModel).Difficulty = Difficulty.Easy;
-                            }
-                        });
+                        _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.RecordOptions });
                         break;
                     case 4:
                         CloseGame();

@@ -70,6 +70,9 @@ namespace StepMania.ViewModels
                 case NavDestination.Game:
                     ActivateItem(IoC.Get<GameViewModel>());
                     break;
+                case NavDestination.RecordOptions:
+                    ActivateItem(IoC.Get<RecordOptionsViewModel>());
+                    break;
             }
         }
 

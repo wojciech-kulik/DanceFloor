@@ -13,7 +13,7 @@
             <TextBlock Text="Czy na pewno chcesz wyjść?" FontSize="28" HorizontalAlignment="Center" Margin="0,30,0,50" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ctrls:MenuButton x:Name="btnYes" Width="100" Height="30" FontSize="16" Text="TAK" ButtonBackground="#FFEAEA8F" Margin="0,0,50,0" />
+                <ctrls:MenuButton x:Name="btnYes" Width="100" Height="30" FontSize="16" Text="TAK" ButtonBackground="#FFD3A35D" Margin="0,0,50,0" />
                 <ctrls:MenuButton x:Name="btnNo" Width="100" Height="30" FontSize="16" Text="NIE" ButtonBackground="#FF979797" />
             </StackPanel>
         </StackPanel>       
