@@ -46,7 +46,7 @@ namespace StepMania.ViewModels
             }
             else if (message.PlayerAction == PlayerAction.Enter || message.PlayerAction == PlayerAction.Back)
             {
-                _eventAggregator.Publish(new PopupClosedEvent() { YesSelected = (message.PlayerAction == PlayerAction.Enter && _selectedBtn == _view.btnYes) });
+                _eventAggregator.Publish(new ClosingPopupEvent() { YesSelected = (message.PlayerAction == PlayerAction.Enter && _selectedBtn == _view.btnYes) });
             }
         }
     }

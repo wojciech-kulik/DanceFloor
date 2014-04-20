@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class PopupClosedEvent
+    public class GameOverEvent
     {
-        public bool YesSelected { get; set; }
+        public PlayerID PlayerWon { get; set; }
+
+        public bool IsTie { get; set; }
     }
 }

@@ -17,5 +17,7 @@ namespace Common
         bool IsRunning { get; }
 
         bool HasDuration { get; }
+
+        void Reset();
     }
 }

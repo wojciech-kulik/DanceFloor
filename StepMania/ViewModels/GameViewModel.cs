@@ -17,7 +17,9 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class GameViewModel : BaseViewModel, IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, IHandle<PopupClosedEvent>
+    public class GameViewModel : BaseViewModel, 
+        IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, 
+        IHandle<ClosingPopupEvent>, IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -129,7 +131,13 @@ namespace StepMania.ViewModels
         }
 
         void PrepareUI()
-        {            
+        {
+            //set points & life
+            _view.p1PointsBar.Points = "0";
+            _view.p1Health.SetLife(GameConstants.FullLife);
+            _view.p2PointsBar.Points = "0";
+            _view.p2Health.SetLife(GameConstants.FullLife);
+
             //load notes
             LoadNotes(Game.Song, Game.Player1);
             DebugSongHelper.ShowCurrentTimeInsteadPoints(_p1Animation, _game.MusicPlayerService, _view);
@@ -255,7 +263,7 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(PopupClosedEvent message)
+        public void Handle(ClosingPopupEvent message)
         {
             if (!IsActive)
                 return;
@@ -271,6 +279,68 @@ namespace StepMania.ViewModels
             {
                 ResumeGame();
             }
+        }
+
+        public void Handle(GameOverPopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+
+            if (message.PlayAgainSelected)
+            {
+                PrepareUI();
+                Game.Reset();
+                StartGame();
+            }
+            else
+            {
+                StopGame();
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            }
+        }
+
+        public void Handle(GameOverEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            PauseGame();
+
+            string msg;
+            if (Game.IsMultiplayer)
+            {
+                if (message.IsTie)
+                {
+                    msg = "Remis!";
+                }
+                else
+                {
+                    msg = "Wygrał gracz " + (message.PlayerWon == PlayerID.Player1 ? "1!" : "2!"); 
+                }
+            }
+            else
+            {
+                msg = "Zdobyłeś: " + Game.Player1.Points.ToString();
+
+                if (Game.Player1.Points == 0 || Game.Player1.Points >= 5)
+                    msg += " punktów";
+                else if (Game.Player1.Points == 1)
+                    msg += " punkt";
+                else if (Game.Player1.Points < 5)
+                    msg += " punkty";                
+            }
+
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() 
+            { 
+                PopupType = PopupType.GameOverPopup, 
+                PopupSettings = (vm) =>
+                {
+                    (vm as GameOverPopupViewModel).Message = msg;
+                }
+            });
         }
     }
 }

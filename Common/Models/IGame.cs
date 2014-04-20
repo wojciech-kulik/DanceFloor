@@ -21,5 +21,7 @@ namespace Common
         ISong Song { get; set; }
 
         IMusicPlayerService MusicPlayerService { get; }
+
+        void Reset();
     }
 }

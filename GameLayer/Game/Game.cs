@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace GameLayer
 {
-    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>
+    public class Game : NotificableObject, IGame, IHandle<GameKeyEvent>, IHandle<MusicEndedEvent>
     {
         List<ISequenceElement> _p1AlreadyHit = new List<ISequenceElement>();
         List<ISequenceElement> _p2AlreadyHit = new List<ISequenceElement>();
@@ -121,11 +121,21 @@ namespace GameLayer
         }
         #endregion
 
+        private void CheckIfGameOver()
+        {
+            if (Player1.IsGameOver || (IsMultiplayer && Player2.IsGameOver))
+            {
+                bool tie = IsMultiplayer && Player1.IsGameOver && Player2.IsGameOver && Player1.Points == Player2.Points;
+                _eventAggregator.Publish(new GameOverEvent() { IsTie = tie, PlayerWon = Player1.IsGameOver ? PlayerID.Player2 : PlayerID.Player1 });
+            }
+        }
+
         private void lookForMissedNotes_Tick(object sender, ElapsedEventArgs e)
         {
             LookForMissedNotes(Player1);
             if (IsMultiplayer)
                 LookForMissedNotes(Player2);
+            CheckIfGameOver();
         }
 
         private void LookForMissedNotes(IPlayer player)
@@ -162,7 +172,9 @@ namespace GameLayer
         {
             player.Life = Math.Min(GameConstants.FullLife, Math.Max(0, player.Life + deltaLifePoints));
             if (player.Life == 0)
-                player.IsGameOver = true;
+            {
+                player.IsGameOver = true;                
+            }
         }
 
         //returns null if nothing hit
@@ -235,6 +247,42 @@ namespace GameLayer
                     Reason = MissReason.WrongMomentOrAction
                 });
             }
+        }
+
+        public void Handle(MusicEndedEvent message)
+        {
+            if (!IsRunning)
+                return;
+
+            if (!IsMultiplayer)
+            {
+                _eventAggregator.Publish(new GameOverEvent() { IsTie = false, PlayerWon = PlayerID.Player1 });
+                return;
+            }
+
+            if (Player1.Points > Player2.Points)
+                _eventAggregator.Publish(new GameOverEvent() { IsTie = false, PlayerWon = PlayerID.Player1 });
+            else if (Player1.Points < Player2.Points)
+                _eventAggregator.Publish(new GameOverEvent() { IsTie = false, PlayerWon = PlayerID.Player2 });
+            else
+                _eventAggregator.Publish(new GameOverEvent() { IsTie = true });
+        }
+
+        public void Reset()
+        {
+            _p1AlreadyHit.Clear();
+            _p2AlreadyHit.Clear();
+
+            Player1.Life = GameConstants.FullLife;
+            Player2.Life = GameConstants.FullLife;
+
+            Player1.Points = 0;
+            Player2.Points = 0;
+
+            Player1.IsGameOver = false;
+            Player2.IsGameOver = false;
+
+            MusicPlayerService.Reset();
         }
 
         #region IPlayable

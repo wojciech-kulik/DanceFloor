@@ -8,6 +8,7 @@ namespace Common
 {
     public enum PopupType
     {
-        ClosingPopup
+        ClosingPopup,
+        GameOverPopup
     }
 }

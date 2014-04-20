@@ -20,9 +20,12 @@ namespace StepMania
         protected override void Configure()
         {
             container = new SimpleContainer();
+            
+            //Caliburn.Micro
             container.PerRequest<IWindowManager, WindowManager>();
             container.Singleton<IEventAggregator, EventAggregator>();
             
+            //ViewModels
             container.PerRequest<MainWindowViewModel>();
             container.PerRequest<MenuViewModel>();
             container.PerRequest<GameViewModel>();
@@ -30,11 +33,15 @@ namespace StepMania
             container.PerRequest<GameModeViewModel>();
             container.PerRequest<RecordSequenceViewModel>();
 
+            //Popups
             container.PerRequest<ClosingPopupViewModel>();
+            container.PerRequest<GameOverPopupViewModel>();
 
+            //Game models
             container.PerRequest<IGame, Game>();
             container.PerRequest<ISong, Song>();
-
+            
+            //Services
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
             container.PerRequest<IHighScoresService, HighScoresService>();

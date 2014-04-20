@@ -54,11 +54,15 @@
     <Compile Include="Enums\NavDestination.cs" />
     <Compile Include="Enums\PopupType.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
+    <Compile Include="Events\GameOverEvent.cs" />
+    <Compile Include="Events\GameOverPopupEvent.cs" />
+    <Compile Include="Events\MusicEndedEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
     <Compile Include="Events\NavigationExEvent.cs" />
     <Compile Include="Events\PlayerHitEvent.cs" />
     <Compile Include="Events\PlayerMissedEvent.cs" />
-    <Compile Include="Events\PopupClosedEvent.cs" />
+    <Compile Include="Events\ClosePopupEvent.cs" />
+    <Compile Include="Events\ClosingPopupEvent.cs" />
     <Compile Include="Events\ShowPopupEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\GameHelper.cs" />

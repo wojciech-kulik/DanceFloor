@@ -26,8 +26,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- P1 PLAYBOARD -->
-        <Grid x:Name="p1Playboard" Grid.Row="1" ClipToBounds="True">
+        <!-- PLAYBOARD -->
+        <Grid x:Name="playboard" Grid.Row="1" ClipToBounds="True">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />

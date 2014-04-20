@@ -14,7 +14,7 @@ using System.Windows.Media;
 
 namespace StepMania.ViewModels
 {
-    public class MenuViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<PopupClosedEvent>
+    public class MenuViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ClosingPopupEvent>
     {
         MenuView _view;
         int _activeButton = 0;
@@ -118,7 +118,7 @@ namespace StepMania.ViewModels
             _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup});
         }
 
-        public void Handle(PopupClosedEvent message)
+        public void Handle(ClosingPopupEvent message)
         {
             if (!IsActive)
                 return;

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class ShowPopupEvent
+    public class MusicEndedEvent
     {
-        public PopupType PopupType { get; set; }
-
-        public Action<object> PopupSettings { get; set; }
+        public string FilePath { get; set; }
     }
 }

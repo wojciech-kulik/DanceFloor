@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Caliburn.Micro;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,21 @@ namespace ApplicationServices
 {
     public class MusicPlayerService : NotificableObject, IMusicPlayerService
     {
+        IEventAggregator _eventAggregator;
+        MediaPlayer _mediaPlayer = new MediaPlayer();
+
+        public MusicPlayerService(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _mediaPlayer.MediaEnded += _mediaPlayer_MediaEnded;
+        }
+
+        void _mediaPlayer_MediaEnded(object sender, EventArgs e)
+        {
+            IsRunning = false;
+            _eventAggregator.Publish(new MusicEndedEvent() { FilePath = this.FilePath });
+        }
+
         #region CurrentTime
 
         public TimeSpan CurrentTime
@@ -96,8 +112,6 @@ namespace ApplicationServices
         }
         #endregion
 
-        private MediaPlayer _mediaPlayer = new MediaPlayer();
-
         public void Start()
         {
             _mediaPlayer.Play();
@@ -113,6 +127,12 @@ namespace ApplicationServices
         public void Pause()
         {
             _mediaPlayer.Pause();
+            IsRunning = false;
+        }
+
+        public void Reset()
+        {
+            _mediaPlayer.Stop();
             IsRunning = false;
         }
 

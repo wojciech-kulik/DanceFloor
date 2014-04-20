@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace StepMania.ViewModels
 {
-    public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<NavigationEvent>, IHandle<NavigationExEvent>, IHandle<PopupClosedEvent>, IHandle<ShowPopupEvent>
+    public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<NavigationEvent>, IHandle<NavigationExEvent>, IHandle<ClosePopupEvent>, IHandle<ShowPopupEvent>
     {
         ISettingsService _settingsService;
         IEventAggregator _eventAggregator;
@@ -104,7 +104,7 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(PopupClosedEvent message)
+        public void Handle(ClosePopupEvent message)
         {
             PopupItem.IsShowing = false;
             PopupItem = null;
@@ -112,12 +112,25 @@ namespace StepMania.ViewModels
 
         public void Handle(ShowPopupEvent message)
         {
+            object vm = null;
+
             switch (message.PopupType)
             {
                 case PopupType.ClosingPopup:
-                    PopupItem = IoC.Get<ClosingPopupViewModel>();
-                    PopupItem.IsShowing = true;
+                    vm = IoC.Get<ClosingPopupViewModel>();                    
                     break;
+                case PopupType.GameOverPopup:
+                    vm = IoC.Get<GameOverPopupViewModel>();
+                    break;
+            }        
+    
+            if (vm != null)
+            {
+                if (message.PopupSettings != null)
+                    message.PopupSettings(vm);
+
+                PopupItem = vm as IPopup;
+                PopupItem.IsShowing = true;
             }
         }
     }
