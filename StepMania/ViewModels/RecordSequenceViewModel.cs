@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>
+    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<PausePopupEvent>, IHandle<CountdownPopupEvent>
     {
         RecordSequenceView _view;
         Storyboard _animation;
@@ -81,6 +81,9 @@ namespace StepMania.ViewModels
                 Thread.Sleep(50);
             }
             Song.Duration = _musicPlayerService.Duration;
+
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Nagrywanie rozpocznie się za..." });
         }
 
         protected override void OnDeactivate(bool close)
@@ -106,8 +109,8 @@ namespace StepMania.ViewModels
         {
             //set animation
             _animation.Children.First().Duration = Song.Duration;
-            (_animation.Children.First() as DoubleAnimation).From = _view.notes.ActualHeight + GameUIConstants.ArrowWidthHeight / 2.0;
-            (_animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * Song.Duration.TotalSeconds - _view.notes.ActualHeight - GameUIConstants.ArrowWidthHeight / 2.0);
+            (_animation.Children.First() as DoubleAnimation).From = _view.notes.ActualHeight;
+            (_animation.Children.First() as DoubleAnimation).To = -(GameUIConstants.PixelsPerSecond * Song.Duration.TotalSeconds - _view.notes.ActualHeight);
         }
 
         void AddNote(ISequenceElement seqElem)
@@ -183,15 +186,34 @@ namespace StepMania.ViewModels
             _musicPlayerService.Stop();
         }
 
+        void RecordAgain()
+        {
+            (Song.Sequences[Difficulty] as IEditableSequence).Clear();
+            _view.notes.Children.Clear();
+            _animation.Seek(new TimeSpan(0));
+
+            _musicPlayerService.Reset();
+
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Nagrywanie rozpocznie się za..." });
+        }
+
+        void Exit()
+        {
+            StopRecord();
+            _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+        }
+
         public void Handle(GameKeyEvent message)
         {
-            if (!IsActive)
+            if (!IsActive || IsPopupShowing)
                 return;
 
             if (message.PlayerAction == PlayerAction.Back)
             {
-                StopRecord();
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+                PauseRecord();
+                IsPopupShowing = true;
+                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.PausePopup });
             }
             else if (message.PlayerAction == PlayerAction.Enter)
             {
@@ -207,6 +229,36 @@ namespace StepMania.ViewModels
                 };
                 AddNote(seqElem);
             }
+        }
+
+        public void Handle(PausePopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+
+            if (message.Resume)
+            {
+                ResumeRecord();
+            }
+            else if (message.PlayAgain)
+            {
+                RecordAgain();
+            }
+            else if (message.Exit)
+            {
+                Exit();
+            }
+        }
+
+        public void Handle(CountdownPopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+            StartRecord();
         }
     }
 }

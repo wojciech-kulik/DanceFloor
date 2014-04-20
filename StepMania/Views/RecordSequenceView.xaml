@@ -44,7 +44,6 @@
             <!-- HITPANEL -->
             <ctrls:HitPanel Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,50"/>
 
-            <TextBlock Grid.Row="1" Text="R - zacznij jeszcze raz" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="25" Margin="10,10,10,80" Padding="10" Background="#7FFFFFFF"/>
             <TextBlock Grid.Row="1" Text="Klawisze gracza 2. - bomby" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="25" Margin="10" Padding="10" Background="#7FFFFFFF"/>
         </Grid>
     </Grid>
