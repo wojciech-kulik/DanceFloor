@@ -34,6 +34,12 @@ namespace ApplicationServices
         }
 
         private List<ISong> songs = null;
+        Func<ISong> _songsFactory;
+
+        public SongsService(Func<ISong> songsFactory)
+        {
+            _songsFactory = songsFactory;
+        }
 
         public IReadOnlyCollection<ISong> GetAllSongs()
         {
@@ -44,7 +50,7 @@ namespace ApplicationServices
 
                 foreach (var s in songsList)
                 {
-                    var song = new Song();
+                    var song = _songsFactory();
                     song.LoadFromFile(s);
                     songs.Add(song);
                 }

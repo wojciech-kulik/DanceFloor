@@ -33,6 +33,7 @@ namespace StepMania
             container.PerRequest<ClosingPopupViewModel>();
 
             container.PerRequest<IGame, Game>();
+            container.PerRequest<ISong, Song>();
 
             container.Singleton<ISongsService, SongsService>();
             container.PerRequest<IMusicPlayerService, MusicPlayerService>();
