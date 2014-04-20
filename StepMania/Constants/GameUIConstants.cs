@@ -37,5 +37,7 @@ namespace StepMania.Constants
 
         public static readonly SolidColorBrush PopupBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0x97, G = 0x97, B = 0x97 });
         public static readonly SolidColorBrush PopupSelectedBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xEA, G = 0xEA, B = 0x8F });
+
+        public const int CountDownDuration = 5;
     }
 }

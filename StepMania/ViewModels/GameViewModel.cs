@@ -19,7 +19,8 @@ namespace StepMania.ViewModels
 {
     public class GameViewModel : BaseViewModel, 
         IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, 
-        IHandle<ClosingPopupEvent>, IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>
+        IHandle<ClosingPopupEvent>, IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>,
+        IHandle<CountdownPopupEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -68,6 +69,8 @@ namespace StepMania.ViewModels
         protected override void OnActivate()
         {
             Game.Song.LoadSequences();
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Gra rozpocznie się za..." });
         }
 
         protected override void OnDeactivate(bool close)
@@ -257,10 +260,6 @@ namespace StepMania.ViewModels
                 IsPopupShowing = true;
                 _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup });
             }
-            else if (message.PlayerAction == PlayerAction.Enter) 
-            {
-                StartGame();
-            }
         }
 
         public void Handle(ClosingPopupEvent message)
@@ -292,7 +291,11 @@ namespace StepMania.ViewModels
             {
                 PrepareUI();
                 Game.Reset();
-                StartGame();
+                _p1Animation.Seek(new TimeSpan(0));
+                _p2Animation.Seek(new TimeSpan(0));
+
+                IsPopupShowing = true;
+                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Gra rozpocznie się za..." });
             }
             else
             {
@@ -341,6 +344,15 @@ namespace StepMania.ViewModels
                     (vm as GameOverPopupViewModel).Message = msg;
                 }
             });
+        }
+
+        public void Handle(CountdownPopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+            StartGame();
         }
     }
 }

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public enum PopupType
+    public class CountdownPopupEvent : ClosePopupEvent
     {
-        ClosingPopup,
-        GameOverPopup,
-        CountdownPopup
     }
 }

@@ -122,6 +122,9 @@ namespace StepMania.ViewModels
                 case PopupType.GameOverPopup:
                     vm = IoC.Get<GameOverPopupViewModel>();
                     break;
+                case PopupType.CountdownPopup:
+                    vm = IoC.Get<CountdownPopupViewModel>();
+                    break;
             }        
     
             if (vm != null)
