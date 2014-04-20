@@ -19,8 +19,8 @@ namespace StepMania.ViewModels
 {
     public class GameViewModel : BaseViewModel, 
         IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, 
-        IHandle<ClosingPopupEvent>, IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>,
-        IHandle<CountdownPopupEvent>
+        IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>,
+        IHandle<CountdownPopupEvent>, IHandle<PausePopupEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -212,6 +212,27 @@ namespace StepMania.ViewModels
             _game.Stop();
         }
 
+        void PlayAgain()
+        {
+            PrepareUI();
+            Game.Reset();
+            _p1Animation.Seek(new TimeSpan(0));
+            _p2Animation.Seek(new TimeSpan(0));
+
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Gra rozpocznie się za..." });
+        }
+
+        void ExitGame()
+        {
+            StopGame();
+            _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+        }
+
+
+
+
+
         public void Handle(PlayerHitEvent message)
         {
             if (!IsActive)
@@ -258,25 +279,28 @@ namespace StepMania.ViewModels
             {
                 PauseGame();
                 IsPopupShowing = true;
-                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup });
+                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.PausePopup });
             }
         }
 
-        public void Handle(ClosingPopupEvent message)
+        public void Handle(PausePopupEvent message)
         {
             if (!IsActive)
                 return;
 
             IsPopupShowing = false;
 
-            if (message.YesSelected)
+            if (message.Exit)
             {
-                StopGame();
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+                ExitGame();
             }
-            else
+            else if (message.Resume)
             {
                 ResumeGame();
+            }
+            else if (message.PlayAgain)
+            {
+                PlayAgain();
             }
         }
 
@@ -289,18 +313,11 @@ namespace StepMania.ViewModels
 
             if (message.PlayAgainSelected)
             {
-                PrepareUI();
-                Game.Reset();
-                _p1Animation.Seek(new TimeSpan(0));
-                _p2Animation.Seek(new TimeSpan(0));
-
-                IsPopupShowing = true;
-                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.CountdownPopup, PopupSettings = (vm) => (vm as CountdownPopupViewModel).Message = "Gra rozpocznie się za..." });
+                PlayAgain();
             }
             else
             {
-                StopGame();
-                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+                ExitGame();
             }
         }
 

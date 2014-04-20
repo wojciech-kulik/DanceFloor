@@ -10,6 +10,7 @@ namespace Common
     {
         ClosingPopup,
         GameOverPopup,
-        CountdownPopup
+        CountdownPopup,
+        PausePopup
     }
 }

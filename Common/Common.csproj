@@ -56,6 +56,7 @@
     <Compile Include="Events\CountdownPopupEvent.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\GameOverEvent.cs" />
+    <Compile Include="Events\PausePopupEvent.cs" />
     <Compile Include="Events\GameOverPopupEvent.cs" />
     <Compile Include="Events\MusicEndedEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
