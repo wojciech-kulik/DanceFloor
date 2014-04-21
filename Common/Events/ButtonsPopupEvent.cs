@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public enum PopupType
+    public class ButtonsPopupEvent : ClosePopupEvent
     {
-        ClosingPopup,
-        GameOverPopup,
-        CountdownPopup,
-        ButtonsPopup
+        public int SelectedButton { get; set; }
+
+        public bool IsCanceled { get; set; }
     }
 }

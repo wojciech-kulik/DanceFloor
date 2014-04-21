@@ -5,6 +5,7 @@ using StepMania.Constants;
 using StepMania.DebugHelpers;
 using StepMania.Views;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<PausePopupEvent>, IHandle<CountdownPopupEvent>
+    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ButtonsPopupEvent>, IHandle<CountdownPopupEvent>
     {
         RecordSequenceView _view;
         Storyboard _animation;
@@ -201,7 +202,8 @@ namespace StepMania.ViewModels
         void Exit()
         {
             StopRecord();
-            _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            _eventAggregator.Publish(new NavigationExEvent() { NavDestination = NavDestination.RecordOptions, PageSettings = (vm) => (vm as RecordOptionsViewModel).Song = Song });
+            Song = null; // to avoid memory leak
         }
 
         public void Handle(GameKeyEvent message)
@@ -213,7 +215,15 @@ namespace StepMania.ViewModels
             {
                 PauseRecord();
                 IsPopupShowing = true;
-                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.PausePopup });
+                _eventAggregator.Publish(new ShowPopupEvent()
+                {
+                    PopupType = PopupType.ButtonsPopup,
+                    PopupSettings = (vm) =>
+                    {
+                        (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Wznów", "Zagraj jeszcze raz", "Powróć do utworu" });
+                        (vm as ButtonsPopupViewModel).Message = "Pauza";
+                    }
+                });
             }
             else if (message.PlayerAction == PlayerAction.Enter)
             {
@@ -231,24 +241,32 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(PausePopupEvent message)
+        public void Handle(ButtonsPopupEvent message)
         {
             if (!IsActive)
                 return;
 
             IsPopupShowing = false;
 
-            if (message.Resume)
+            if (message.IsCanceled)
             {
                 ResumeRecord();
+                return;
             }
-            else if (message.PlayAgain)
+
+            switch (message.SelectedButton)
             {
-                RecordAgain();
-            }
-            else if (message.Exit)
-            {
-                Exit();
+                case 1:
+                    ResumeRecord();
+                    break;
+
+                case 2:
+                    RecordAgain();
+                    break;
+
+                case 3:
+                    Exit();
+                    break;
             }
         }
 

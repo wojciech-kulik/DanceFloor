@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Common;
 using GameLayer;
+using Microsoft.Win32;
 using StepMania.Constants;
 using StepMania.Views;
 using System;
@@ -14,7 +15,7 @@ using System.Windows.Input;
 
 namespace StepMania.ViewModels
 {
-    public class RecordOptionsViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ClosingPopupEvent>
+    public class RecordOptionsViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ButtonsPopupEvent>
     {
         #region Song
 
@@ -58,17 +59,25 @@ namespace StepMania.ViewModels
         }
         #endregion
 
+        ISongsService _songsService;
         RecordOptionsView _view;
 
         bool _difficultySelection = false;
         int _selectedIndex = 0;
         List<UIElement> _selectableControls = new List<UIElement>();        
 
-        public RecordOptionsViewModel(IEventAggregator eventAggregator)
+        public RecordOptionsViewModel(IEventAggregator eventAggregator, ISongsService songsService)
             : base(eventAggregator)
         {
             Song = new Song();
             Difficulty = Difficulty.Easy;
+
+            _songsService = songsService;
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            Song = null; //to avoid memory leak
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -79,9 +88,9 @@ namespace StepMania.ViewModels
             _view.btnBackground.ButtonBackground = GameUIConstants.PopupBtnBackground;
             _view.btnCover.ButtonBackground = GameUIConstants.PopupBtnBackground;
 
-            _view.btnEasy.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
-            _view.btnMedium.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
-            _view.btnHard.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+            _view.btnEasy.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Easy) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
+            _view.btnMedium.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Medium) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
+            _view.btnHard.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Hard) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
 
             _selectableControls.Add(_view.btnSong);
             _selectableControls.Add(_view.btnBackground);
@@ -137,13 +146,13 @@ namespace StepMania.ViewModels
             switch (difficulty)
             {
                 case Common.Difficulty.Easy:
-                    _view.btnEasy.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+                    _view.btnEasy.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Easy) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
                     break;
                 case Common.Difficulty.Medium:
-                    _view.btnMedium.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+                    _view.btnMedium.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Medium) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
                     break;
                 case Common.Difficulty.Hard:
-                    _view.btnHard.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+                    _view.btnHard.ButtonBackground = Song.Sequences.ContainsKey(Difficulty.Hard) ? GameUIConstants.RecordCreatedBtnGradient : GameUIConstants.GameModeInactiveBtnGradient;
                     break;
             }   
         }
@@ -248,6 +257,44 @@ namespace StepMania.ViewModels
             }
         }
 
+        void InvokeAction()
+        {
+            if (_difficultySelection)
+            {
+                TryNavigateToRecordView();
+            }
+            else if (_selectableControls[_selectedIndex] is Controls.MenuButton)
+            {
+                var ofd = new OpenFileDialog();                
+                switch (_selectedIndex)
+                {
+                    case 0:
+                        ofd.Filter = "Pliki muzyczne (*.mp3, *.ogg)|*.mp3;*.ogg";
+                        break;
+                    case 1:
+                    case 2:
+                        ofd.Filter = "Pliki graficzne (*.png, *.jpg)|*.png;*.jpg;*.jpeg";
+                        break;
+                }
+
+                if (ofd.ShowDialog() == true)
+                {
+                    switch (_selectedIndex)
+                    {
+                        case 0:
+                            Song.FilePath = ofd.FileName;
+                            break;
+                        case 1:
+                            Song.BackgroundPath = ofd.FileName;
+                            break;
+                        case 2:
+                            Song.CoverPath = ofd.FileName;
+                            break;
+                    }
+                }
+            }
+        }
+
         public void Handle(GameKeyEvent message)
         {
             if (!IsActive || IsPopupShowing || message.PlayerId != PlayerID.Player1)
@@ -256,12 +303,20 @@ namespace StepMania.ViewModels
             switch (message.PlayerAction)
             {
                 case PlayerAction.Enter:
-                    TryNavigateToRecordView();
+                    InvokeAction();
                     break;
 
                 case PlayerAction.Back:
                     IsPopupShowing = true;
-                    _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.ClosingPopup });
+                    _eventAggregator.Publish(new ShowPopupEvent() 
+                    { 
+                        PopupType = PopupType.ButtonsPopup, 
+                        PopupSettings = (vm) =>
+                        {
+                            (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Kontynuuj", "Zapisz utwór", "Powróć do menu" });
+                            (vm as ButtonsPopupViewModel).Message = "Co chcesz zrobić?";
+                        }
+                    });
                     break;
 
                 case PlayerAction.Right:
@@ -282,15 +337,45 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(ClosingPopupEvent message)
+        public void Handle(ButtonsPopupEvent message)
         {
             if (!IsActive)
                 return;
 
             IsPopupShowing = false;
-            if (message.YesSelected)
+
+            if (message.IsCanceled)
+                return;
+
+            if (message.SelectedButton == 2)
             {
+                Song song = new Song();
+                song.Artist = Song.Artist;
+                song.Author = Song.Author;
+                song.Title = Song.Title;
+                song.Sequences = Song.Sequences;
+                song.FilePath = Song.FilePath;
+                song.BackgroundPath = Song.BackgroundPath;
+                song.CoverPath = Song.CoverPath;
+                song.CreateDate = DateTime.Now;
+                song.Duration = Song.Duration;
+
+                song.SaveToFile();
+                _songsService.AddSong(song);
+            }
+
+            if (message.SelectedButton == 2 || message.SelectedButton == 3)
+            {        
                 _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            }
+        }
+
+        public void TextBoxKeyUp(KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+            {
+                e.Handled = true;
+                DownNavigation();
             }
         }
     }

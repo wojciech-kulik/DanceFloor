@@ -5,7 +5,7 @@
         Title="StepMania" Height="768" Width="1024" MinHeight="700" MinWidth="1024" 
         WindowState="Maximized" WindowStartupLocation="CenterScreen">
     <Grid>
-        <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" Cursor="None" />
-        <ContentControl Name="PopupItem" SnapsToDevicePixels="True" Cursor="None" />
+        <ContentControl Name="ActiveItem" SnapsToDevicePixels="True" Cursor="None" Focusable="False" />
+        <ContentControl Name="PopupItem" SnapsToDevicePixels="True" Cursor="None" Focusable="False" />
     </Grid>
 </Window>

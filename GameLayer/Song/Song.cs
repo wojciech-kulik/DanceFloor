@@ -217,6 +217,9 @@ namespace GameLayer
         private string _fileName;
         public void LoadSequences()
         {
+            if (Sequences.Count > 0)
+                return;
+
             using (var stream = File.OpenRead(_fileName + "\\" + GameConstants.SongObjectFileName))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -305,6 +308,8 @@ namespace GameLayer
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, this);
             }
+
+            LoadFromFile(GameConstants.SongsDir + Artist + " - " + Title); //to set paths correctly
         }
     }
 }

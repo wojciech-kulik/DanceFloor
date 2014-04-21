@@ -56,7 +56,6 @@
     <Compile Include="Events\CountdownPopupEvent.cs" />
     <Compile Include="Events\GameKeyEvent.cs" />
     <Compile Include="Events\GameOverEvent.cs" />
-    <Compile Include="Events\PausePopupEvent.cs" />
     <Compile Include="Events\GameOverPopupEvent.cs" />
     <Compile Include="Events\MusicEndedEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
@@ -66,6 +65,7 @@
     <Compile Include="Events\ClosePopupEvent.cs" />
     <Compile Include="Events\ClosingPopupEvent.cs" />
     <Compile Include="Events\ShowPopupEvent.cs" />
+    <Compile Include="Events\ButtonsPopupEvent.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\GameHelper.cs" />
     <Compile Include="Models\IBaseModel.cs" />

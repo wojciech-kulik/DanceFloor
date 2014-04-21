@@ -38,6 +38,9 @@ namespace StepMania.Constants
         public static readonly SolidColorBrush PopupBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0x97, G = 0x97, B = 0x97 });
         public static readonly SolidColorBrush PopupSelectedBtnBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xD3, G = 0xA3, B = 0x5D });
 
+        public static readonly LinearGradientBrush RecordCreatedBtnGradient =
+            new LinearGradientBrush(new Color() { A = 0xFF, R = 0x71, G = 0xFD, B = 0x2F }, new Color() { A = 0xFF, R = 0x4E, G = 0xA4, B = 0x25 }, 90.0);
+
         public const int CountDownDuration = 3;
     }
 }

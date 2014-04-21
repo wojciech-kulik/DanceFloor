@@ -33,7 +33,7 @@ namespace ApplicationServices
             }
         }
 
-        private List<ISong> songs = null;
+        private List<ISong> _songs = null;
         Func<ISong> _songsFactory;
 
         public SongsService(Func<ISong> songsFactory)
@@ -43,29 +43,32 @@ namespace ApplicationServices
 
         public IReadOnlyCollection<ISong> GetAllSongs()
         {
-            if (songs == null)
+            if (_songs == null)
             {
-                songs = new List<ISong>();
+                _songs = new List<ISong>();
                 var songsList = Directory.GetDirectories(GameConstants.SongsDir).OrderBy(s => s, new StrComparer());
 
                 foreach (var s in songsList)
                 {
                     var song = _songsFactory();
                     song.LoadFromFile(s);
-                    songs.Add(song);
+                    _songs.Add(song);
                 }
             }
 
-            return songs;
+            return _songs;
         }
 
         public void AddSong(ISong song)
         {
-            if (songs == null)
+            if (_songs == null)
                 GetAllSongs();
 
-            songs.Add(song);
-            songs = songs.OrderBy(s => s.Artist, new StrComparer()).ToList();
+            if (_songs.FirstOrDefault(s => s.FilePath == song.FilePath) != null)
+                return;
+
+            _songs.Add(song);
+            _songs = _songs.OrderBy(s => s.Artist, new StrComparer()).ToList();
         }
     }
 }

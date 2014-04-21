@@ -15,11 +15,11 @@ using System.Windows.Media;
 
 namespace StepMania.ViewModels
 {
-    public class PausePopupViewModel : BaseViewModel, IPopup, IHandle<GameKeyEvent>
+    public class ButtonsPopupViewModel : BaseViewModel, IPopup, IHandle<GameKeyEvent>
     {
-        PausePopupView _view;
+        ButtonsPopupView _view;
         int _selectedIndex = 0;
-        List<MenuButton> buttons = new List<MenuButton>();
+        List<MenuButton> controls = new List<MenuButton>();
 
         public bool IsShowing { get; set; }
 
@@ -44,18 +44,48 @@ namespace StepMania.ViewModels
         }
         #endregion
 
-        public PausePopupViewModel(IEventAggregator eventAggregator)
+        #region Buttons
+
+        private List<string> _buttons;
+
+        public List<string> Buttons
+        {
+            get
+            {
+                return _buttons;
+            }
+            set
+            {
+                if (_buttons != value)
+                {
+                    _buttons = value;
+                    NotifyOfPropertyChange(() => Buttons);
+                }
+            }
+        }
+        #endregion
+
+        public ButtonsPopupViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
+            Buttons = new List<string>();
         }
 
         protected override void OnViewAttached(object view, object context)
         {
-            _view = view as PausePopupView;
+            _view = view as ButtonsPopupView;
 
-            buttons.Add(_view.btnResume);
-            buttons.Add(_view.btnPlayAgain);
-            buttons.Add(_view.btnExit);
+            for (int i = 0; i < Buttons.Count; i++)
+            {
+                var btn = new Controls.MenuButton() { Text = Buttons[i] };
+                _view.btnsContainer.Children.Add(btn);
+                controls.Add(btn);
+            }
+
+            if (controls.Count > 0)
+                controls.First().ButtonBackground = GameUIConstants.PopupSelectedBtnBackground;
+
+            _view.Height = 120 + Buttons.Count * 70;
         }
 
         public void Handle(GameKeyEvent message)
@@ -65,33 +95,31 @@ namespace StepMania.ViewModels
 
             if (message.PlayerAction == PlayerAction.Up || message.PlayerAction == PlayerAction.Down)
             {
-                buttons[_selectedIndex].ButtonBackground = GameUIConstants.PopupBtnBackground;
+                controls[_selectedIndex].ButtonBackground = GameUIConstants.PopupBtnBackground;
 
                 if (message.PlayerAction == PlayerAction.Up)
                 {
                     _selectedIndex--;
                     if (_selectedIndex < 0)
-                        _selectedIndex = 2;
+                        _selectedIndex = controls.Count - 1;
                 }
                 else
                 {
-                    _selectedIndex = (_selectedIndex + 1) % 3;
+                    _selectedIndex = (_selectedIndex + 1) % controls.Count;
                 }
 
-                buttons[_selectedIndex].ButtonBackground = GameUIConstants.PopupSelectedBtnBackground;
+                controls[_selectedIndex].ButtonBackground = GameUIConstants.PopupSelectedBtnBackground;
             }
             else if (message.PlayerAction == PlayerAction.Enter)
             {
-                _eventAggregator.Publish(new PausePopupEvent() 
+                _eventAggregator.Publish(new ButtonsPopupEvent() 
                 {
-                    Resume = _selectedIndex == 0,
-                    PlayAgain = _selectedIndex == 1,
-                    Exit = _selectedIndex == 2 
+                    SelectedButton = _selectedIndex + 1
                 });
             }
             else if (message.PlayerAction == PlayerAction.Back)
             {
-                _eventAggregator.Publish(new PausePopupEvent() { Resume = true });
+                _eventAggregator.Publish(new ButtonsPopupEvent() { IsCanceled = true });
             }
         }
     }

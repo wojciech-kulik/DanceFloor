@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace StepMania.Views
 {
     /// <summary>
-    /// Interaction logic for PausePopupView.xaml
+    /// Interaction logic for ButtonsPopupView.xaml
     /// </summary>
-    public partial class PausePopupView : UserControl
+    public partial class ButtonsPopupView : UserControl
     {
-        public PausePopupView()
+        public ButtonsPopupView()
         {
             InitializeComponent();
         }

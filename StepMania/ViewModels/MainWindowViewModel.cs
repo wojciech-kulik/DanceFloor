@@ -97,6 +97,10 @@ namespace StepMania.ViewModels
                 case NavDestination.Record:
                     vm = IoC.Get<RecordSequenceViewModel>();
                     break;
+
+                case NavDestination.RecordOptions:
+                    vm = IoC.Get<RecordOptionsViewModel>();
+                    break;
             }
 
             if (vm != null)
@@ -128,9 +132,9 @@ namespace StepMania.ViewModels
                 case PopupType.CountdownPopup:
                     vm = IoC.Get<CountdownPopupViewModel>();
                     break;
-                case PopupType.PausePopup:
-                    vm = IoC.Get<PausePopupViewModel>();
-                    break;
+                case PopupType.ButtonsPopup:
+                    vm = IoC.Get<ButtonsPopupViewModel>();
+                    break;                
             }        
     
             if (vm != null)

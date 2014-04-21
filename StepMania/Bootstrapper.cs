@@ -39,7 +39,7 @@ namespace StepMania
             container.PerRequest<ClosingPopupViewModel>();
             container.PerRequest<GameOverPopupViewModel>();
             container.PerRequest<CountdownPopupViewModel>();
-            container.PerRequest<PausePopupViewModel>();
+            container.PerRequest<ButtonsPopupViewModel>();
 
             //Game models
             container.PerRequest<IGame, Game>();

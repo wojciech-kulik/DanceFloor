@@ -5,6 +5,7 @@ using StepMania.Constants;
 using StepMania.DebugHelpers;
 using StepMania.Views;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace StepMania.ViewModels
     public class GameViewModel : BaseViewModel, 
         IHandle<PlayerHitEvent>, IHandle<PlayerMissedEvent>, IHandle<GameKeyEvent>, 
         IHandle<GameOverPopupEvent>, IHandle<GameOverEvent>,
-        IHandle<CountdownPopupEvent>, IHandle<PausePopupEvent>
+        IHandle<CountdownPopupEvent>, IHandle<ButtonsPopupEvent>
     {
         GameView _view;
         Storyboard _p1Animation, _p2Animation;
@@ -279,28 +280,44 @@ namespace StepMania.ViewModels
             {
                 PauseGame();
                 IsPopupShowing = true;
-                _eventAggregator.Publish(new ShowPopupEvent() { PopupType = PopupType.PausePopup });
+                _eventAggregator.Publish(new ShowPopupEvent()
+                {
+                    PopupType = PopupType.ButtonsPopup,
+                    PopupSettings = (vm) =>
+                    {
+                        (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Wznów", "Zagraj jeszcze raz", "Powróć do menu" });
+                        (vm as ButtonsPopupViewModel).Message = "Pauza";
+                    }
+                });
             }
         }
 
-        public void Handle(PausePopupEvent message)
+        public void Handle(ButtonsPopupEvent message)
         {
             if (!IsActive)
                 return;
 
             IsPopupShowing = false;
 
-            if (message.Exit)
-            {
-                ExitGame();
-            }
-            else if (message.Resume)
+            if (message.IsCanceled)
             {
                 ResumeGame();
+                return;
             }
-            else if (message.PlayAgain)
+
+            switch (message.SelectedButton)
             {
-                PlayAgain();
+                case 1:
+                    ResumeGame();
+                    break;
+
+                case 2:
+                    PlayAgain();
+                    break;
+
+                case 3:
+                    ExitGame();
+                    break;
             }
         }
 

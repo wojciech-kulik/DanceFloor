@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ctrls="clr-namespace:StepMania.Controls"
              xmlns:conv="clr-namespace:StepMania.Converters"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
@@ -23,7 +24,7 @@
             <ImageBrush ImageSource="../Images/abstract-glowing-waves-2332.png" />
         </Grid.Background>
 
-        <TextBlock Text="Dane utworu" Foreground="White" FontFamily="Calibri" FontSize="60" HorizontalAlignment="Center" Margin="0,20,0,100">
+        <TextBlock Text="Szczegóły utworu" Foreground="White" FontFamily="Calibri" FontSize="60" HorizontalAlignment="Center" Margin="0,20,0,80">
             <TextBlock.Effect>
                 <DropShadowEffect Color="Yellow" BlurRadius="10" Opacity="0.5" />
             </TextBlock.Effect>
@@ -97,13 +98,13 @@
                 </StackPanel>
 
                 <TextBlock Grid.Row="3" Text="Tytuł:" />
-                <TextBox x:Name="tbTitle" Text="{Binding Song.Title, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="2"/>
+                <TextBox x:Name="tbTitle" Text="{Binding Song.Title, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="2" cal:Message.Attach="[Event KeyDown]=[Action TextBoxKeyUp($eventArgs)]" />
 
                 <TextBlock Grid.Row="4" Text="Artysta:" />
-                <TextBox x:Name="tbArtist" Text="{Binding Song.Artist, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="2"/>
+                <TextBox x:Name="tbArtist" Text="{Binding Song.Artist, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="2" cal:Message.Attach="[Event KeyDown]=[Action TextBoxKeyUp($eventArgs)]"/>
 
                 <TextBlock Grid.Row="5" Text="Autor sekwencji:" />
-                <TextBox x:Name="tbAuthor" Text="{Binding Song.Author, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.Column="2"/>
+                <TextBox x:Name="tbAuthor" Text="{Binding Song.Author, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.Column="2" cal:Message.Attach="[Event KeyDown]=[Action TextBoxKeyUp($eventArgs)]"/>
             </Grid>
         </Border>
 

@@ -85,7 +85,7 @@
     <Compile Include="Converters\GameModeToBtnBackgroundConverter.cs" />
     <Compile Include="Converters\DifficultyToBtnBackgroundConverter.cs" />
     <Compile Include="ViewModels\CountdownPopupViewModel.cs" />
-    <Compile Include="ViewModels\PausePopupViewModel.cs" />
+    <Compile Include="ViewModels\ButtonsPopupViewModel.cs" />
     <Compile Include="ViewModels\GameOverPopupViewModel.cs" />
     <Compile Include="ViewModels\GameModeViewModel.cs" />
     <Compile Include="ViewModels\ClosingPopupViewModel.cs" />
@@ -95,11 +95,11 @@
     <Compile Include="Views\CountdownPopupView.xaml.cs">
       <DependentUpon>CountdownPopupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ButtonsPopupView.xaml.cs">
+      <DependentUpon>ButtonsPopupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RecordOptionsView.xaml.cs">
       <DependentUpon>RecordOptionsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PausePopupView.xaml.cs">
-      <DependentUpon>PausePopupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GameOverPopupView.xaml.cs">
       <DependentUpon>GameOverPopupView.xaml</DependentUpon>
@@ -140,11 +140,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RecordOptionsView.xaml">
+    <Page Include="Views\ButtonsPopupView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PausePopupView.xaml">
+    <Page Include="Views\RecordOptionsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
