@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 
 namespace StepMania.ViewModels
 {
-    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ButtonsPopupEvent>, IHandle<CountdownPopupEvent>
+    public class RecordSequenceViewModel : BaseViewModel, IHandle<GameKeyEvent>, IHandle<ButtonsPopupEvent>, IHandle<CountdownPopupEvent>, IHandle<MusicEndedEvent>
     {
         RecordSequenceView _view;
         Storyboard _animation;
@@ -220,8 +220,9 @@ namespace StepMania.ViewModels
                     PopupType = PopupType.ButtonsPopup,
                     PopupSettings = (vm) =>
                     {
-                        (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Wznów", "Zagraj jeszcze raz", "Powróć do utworu" });
+                        (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Wznów", "Zagraj jeszcze raz", "Zapisz sekwencje", "Powróć do utworu" });
                         (vm as ButtonsPopupViewModel).Message = "Pauza";
+                        (vm as ButtonsPopupViewModel).PopupId = 1;
                     }
                 });
             }
@@ -241,13 +242,8 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(ButtonsPopupEvent message)
+        void HandleExitPopup(ButtonsPopupEvent message)
         {
-            if (!IsActive)
-                return;
-
-            IsPopupShowing = false;
-
             if (message.IsCanceled)
             {
                 ResumeRecord();
@@ -267,7 +263,44 @@ namespace StepMania.ViewModels
                 case 3:
                     Exit();
                     break;
+
+                case 4:
+                    Song.Sequences.Remove(Difficulty);
+                    Exit();
+                    break;
             }
+        }
+
+        void HandleMusicEndPopup(ButtonsPopupEvent message)
+        {
+            switch (message.SelectedButton)
+            {
+                case 1:
+                    Exit();
+                    break;
+
+                case 2:
+                    RecordAgain();
+                    break;                
+
+                case 3:
+                    Song.Sequences.Remove(Difficulty);
+                    Exit();
+                    break;
+            }          
+        }
+
+        public void Handle(ButtonsPopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+
+            if (message.PopupId == 1)
+                HandleExitPopup(message);
+            else if (message.PopupId == 2)
+                HandleMusicEndPopup(message);            
         }
 
         public void Handle(CountdownPopupEvent message)
@@ -277,6 +310,25 @@ namespace StepMania.ViewModels
 
             IsPopupShowing = false;
             StartRecord();
+        }
+
+        public void Handle(MusicEndedEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = true;
+            _eventAggregator.Publish(new ShowPopupEvent()
+            {
+                PopupType = PopupType.ButtonsPopup,
+                PopupSettings = (vm) =>
+                {
+                    (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Zapisz sekwencje", "Zagraj jeszcze raz", "Powróć do utworu" });
+                    (vm as ButtonsPopupViewModel).Message = "Koniec";
+                    (vm as ButtonsPopupViewModel).PopupId = 2;
+                    (vm as ButtonsPopupViewModel).CanCancel = false;
+                }
+            });
         }
     }
 }

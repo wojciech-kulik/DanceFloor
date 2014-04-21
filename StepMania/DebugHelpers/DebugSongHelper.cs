@@ -60,6 +60,8 @@ namespace StepMania.DebugHelpers
         {
             var r = randomGenerator;
             Sequence sequence = new Sequence();
+            if (song.Sequences.ContainsKey(difficulty))
+                song.Sequences.Remove(difficulty);
             song.Sequences.Add(difficulty, sequence);
 
             for (int i = 2; i < song.Duration.TotalSeconds; i++)

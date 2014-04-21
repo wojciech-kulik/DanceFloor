@@ -11,5 +11,7 @@ namespace Common
         public int SelectedButton { get; set; }
 
         public bool IsCanceled { get; set; }
+
+        public int PopupId { get; set; }
     }
 }

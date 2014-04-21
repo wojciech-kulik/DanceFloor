@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,6 +60,7 @@ namespace StepMania.ViewModels
         }
         #endregion
 
+        IMusicPlayerService _musicPlayerService;
         ISongsService _songsService;
         RecordOptionsView _view;
 
@@ -66,13 +68,14 @@ namespace StepMania.ViewModels
         int _selectedIndex = 0;
         List<UIElement> _selectableControls = new List<UIElement>();        
 
-        public RecordOptionsViewModel(IEventAggregator eventAggregator, ISongsService songsService)
+        public RecordOptionsViewModel(IEventAggregator eventAggregator, ISongsService songsService, IMusicPlayerService musicPlayerService)
             : base(eventAggregator)
         {
             Song = new Song();
             Difficulty = Difficulty.Easy;
 
             _songsService = songsService;
+            _musicPlayerService = musicPlayerService;
         }
 
         protected override void OnDeactivate(bool close)
@@ -100,6 +103,47 @@ namespace StepMania.ViewModels
             _selectableControls.Add(_view.tbAuthor);
         }
 
+        bool ValidateFields(bool saving = false)
+        {
+            if (String.IsNullOrWhiteSpace(Song.FilePath))
+            {
+                IsPopupShowing = true;
+                _eventAggregator.Publish(new ShowPopupEvent()
+                {
+                    PopupType = PopupType.ButtonsPopup,
+                    PopupSettings = (vm) => (vm as ButtonsPopupViewModel).Message = "Wybierz plik muzyczny."
+                });
+                return false;
+            }
+
+            if (saving)
+            {
+                if (String.IsNullOrWhiteSpace(Song.Artist) || String.IsNullOrWhiteSpace(Song.Title))
+                {
+                    IsPopupShowing = true;
+                    _eventAggregator.Publish(new ShowPopupEvent()
+                    {
+                        PopupType = PopupType.ButtonsPopup,
+                        PopupSettings = (vm) => (vm as ButtonsPopupViewModel).Message = "Wprowadź tytuł oraz artystę."
+                    });
+                    return false;
+                }
+
+                if (Song.Sequences.Count == 0)
+                {
+                    IsPopupShowing = true;
+                    _eventAggregator.Publish(new ShowPopupEvent()
+                    {
+                        PopupType = PopupType.ButtonsPopup,
+                        PopupSettings = (vm) => (vm as ButtonsPopupViewModel).Message = "Nagraj sekwencje."
+                    });
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         void SetFocusOn(int index)
         {
             if (_selectableControls[index] is Controls.MenuButton)
@@ -108,7 +152,6 @@ namespace StepMania.ViewModels
             }
             else
             {
-                _selectableControls[_selectedIndex].Focusable = true;
                 _selectableControls[index].Focus();
             }
         }
@@ -137,7 +180,7 @@ namespace StepMania.ViewModels
             }
             else
             {
-                _selectableControls[_selectedIndex].Focusable = false;
+                _view.toLoseFocus.Focus();
             }
         }
 
@@ -161,13 +204,18 @@ namespace StepMania.ViewModels
         {
             if (_difficultySelection)
             {
-                _eventAggregator.Publish(new NavigationExEvent()
-                {
-                    NavDestination = NavDestination.Record,
-                    PageSettings = (vm) =>
+                if (!ValidateFields())
+                    return;
+
+                IsPopupShowing = true;
+                _eventAggregator.Publish(new ShowPopupEvent() 
+                { 
+                    PopupType = PopupType.ButtonsPopup, 
+                    PopupSettings = (vm) => 
                     {
-                        (vm as RecordSequenceViewModel).Song = Song;
-                        (vm as RecordSequenceViewModel).Difficulty = Difficulty;
+                        (vm as ButtonsPopupViewModel).Message = "Czy wygenerować losowo?";
+                        (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "NIE", "TAK" });
+                        (vm as ButtonsPopupViewModel).PopupId = 2;
                     }
                 });
             }
@@ -283,6 +331,12 @@ namespace StepMania.ViewModels
                     {
                         case 0:
                             Song.FilePath = ofd.FileName;
+                            _musicPlayerService.FilePath = Song.FilePath;
+                            while (!_musicPlayerService.HasDuration)
+                            {                
+                                Thread.Sleep(50);
+                            }
+                            Song.Duration = _musicPlayerService.Duration;
                             break;
                         case 1:
                             Song.BackgroundPath = ofd.FileName;
@@ -315,6 +369,7 @@ namespace StepMania.ViewModels
                         {
                             (vm as ButtonsPopupViewModel).Buttons.AddRange(new List<string>() { "Kontynuuj", "Zapisz utwór", "Powróć do menu" });
                             (vm as ButtonsPopupViewModel).Message = "Co chcesz zrobić?";
+                            (vm as ButtonsPopupViewModel).PopupId = 1;
                         }
                     });
                     break;
@@ -337,17 +392,36 @@ namespace StepMania.ViewModels
             }
         }
 
-        public void Handle(ButtonsPopupEvent message)
+        void HandleSequencePopup(ButtonsPopupEvent message)
         {
-            if (!IsActive)
-                return;
-
-            IsPopupShowing = false;
-
             if (message.IsCanceled)
                 return;
 
-            if (message.SelectedButton == 2)
+            if (message.SelectedButton == 1)
+            {
+                _eventAggregator.Publish(new NavigationExEvent()
+                {
+                    NavDestination = NavDestination.Record,
+                    PageSettings = (vm) =>
+                    {
+                        (vm as RecordSequenceViewModel).Song = Song;
+                        (vm as RecordSequenceViewModel).Difficulty = Difficulty;
+                    }
+                });
+            }
+            else
+            {
+                DebugHelpers.DebugSongHelper.GenerateSequence(new Random(), Song, Difficulty);
+                NotifyOfPropertyChange(() => Song);
+            }
+        }
+
+        void HandleExitPopup(ButtonsPopupEvent message)
+        {
+            if (message.IsCanceled)
+                return;
+
+            if (message.SelectedButton == 2 && ValidateFields(true))
             {
                 Song song = new Song();
                 song.Artist = Song.Artist;
@@ -362,12 +436,27 @@ namespace StepMania.ViewModels
 
                 song.SaveToFile();
                 _songsService.AddSong(song);
-            }
 
-            if (message.SelectedButton == 2 || message.SelectedButton == 3)
-            {        
                 _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
             }
+
+            if (message.SelectedButton == 3)
+            {
+                _eventAggregator.Publish(new NavigationEvent() { NavDestination = NavDestination.MainMenu });
+            }
+        }
+
+        public void Handle(ButtonsPopupEvent message)
+        {
+            if (!IsActive)
+                return;
+
+            IsPopupShowing = false;
+
+            if (message.PopupId == 1)
+                HandleExitPopup(message);
+            else if (message.PopupId == 2)
+                HandleSequencePopup(message);
         }
 
         public void TextBoxKeyUp(KeyEventArgs e)

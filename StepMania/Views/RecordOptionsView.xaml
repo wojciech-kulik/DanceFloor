@@ -24,6 +24,7 @@
             <ImageBrush ImageSource="../Images/abstract-glowing-waves-2332.png" />
         </Grid.Background>
 
+        <TextBox x:Name="toLoseFocus" Background="Black" Width="1" Height="1" HorizontalAlignment="Left" Margin="-1000,0,0,0" />
         <TextBlock Text="Szczegóły utworu" Foreground="White" FontFamily="Calibri" FontSize="60" HorizontalAlignment="Center" Margin="0,20,0,80">
             <TextBlock.Effect>
                 <DropShadowEffect Color="Yellow" BlurRadius="10" Opacity="0.5" />
@@ -51,7 +52,7 @@
                         <Setter Property="FontSize" Value="20" />
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="HorizontalAlignment" Value="Right" />
-                        <Setter Property="Margin" Value="0,5,0,0" />
+                        <Setter Property="Margin" Value="0,3,0,0" />
                         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                     </Style>
 
@@ -67,7 +68,6 @@
                         <Setter Property="FontSize" Value="18" />
                         <Setter Property="Cursor" Value="None" />
                         <Setter Property="Padding" Value="2" />
-                        <Setter Property="Focusable" Value="False" />
                     </Style>
 
                     <Style TargetType="ctrls:MenuButton">

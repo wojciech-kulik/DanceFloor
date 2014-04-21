@@ -23,6 +23,10 @@ namespace StepMania.ViewModels
 
         public bool IsShowing { get; set; }
 
+        public int PopupId { get; set; }
+
+        public bool CanCancel { get; set; }
+
         #region Message
 
         private string _message;
@@ -63,12 +67,13 @@ namespace StepMania.ViewModels
                 }
             }
         }
-        #endregion
+        #endregion        
 
         public ButtonsPopupViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
             Buttons = new List<string>();
+            CanCancel = true;
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -93,7 +98,7 @@ namespace StepMania.ViewModels
             if (!IsShowing)
                 return;
 
-            if (message.PlayerAction == PlayerAction.Up || message.PlayerAction == PlayerAction.Down)
+            if ((message.PlayerAction == PlayerAction.Up || message.PlayerAction == PlayerAction.Down) && controls.Count > 0)
             {
                 controls[_selectedIndex].ButtonBackground = GameUIConstants.PopupBtnBackground;
 
@@ -114,12 +119,13 @@ namespace StepMania.ViewModels
             {
                 _eventAggregator.Publish(new ButtonsPopupEvent() 
                 {
-                    SelectedButton = _selectedIndex + 1
+                    SelectedButton = _selectedIndex + 1,
+                    PopupId = this.PopupId
                 });
             }
-            else if (message.PlayerAction == PlayerAction.Back)
+            else if (message.PlayerAction == PlayerAction.Back && CanCancel)
             {
-                _eventAggregator.Publish(new ButtonsPopupEvent() { IsCanceled = true });
+                _eventAggregator.Publish(new ButtonsPopupEvent() { IsCanceled = true, PopupId = this.PopupId });
             }
         }
     }
