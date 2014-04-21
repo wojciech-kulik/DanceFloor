@@ -330,6 +330,11 @@ namespace StepMania.ViewModels
                     switch (_selectedIndex)
                     {
                         case 0:
+                            Song.Sequences = new Dictionary<Common.Difficulty, IReadOnlySequence>();
+                            _view.btnEasy.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+                            _view.btnMedium.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+                            _view.btnHard.ButtonBackground = GameUIConstants.GameModeInactiveBtnGradient;
+
                             Song.FilePath = ofd.FileName;
                             _musicPlayerService.FilePath = Song.FilePath;
                             while (!_musicPlayerService.HasDuration)
