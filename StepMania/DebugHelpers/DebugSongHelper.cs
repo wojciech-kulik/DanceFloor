@@ -64,10 +64,26 @@ namespace StepMania.DebugHelpers
                 song.Sequences.Remove(difficulty);
             song.Sequences.Add(difficulty, sequence);
 
-            for (int i = 2; i < song.Duration.TotalSeconds; i++)
+            int notesCount = 3;
+            switch(difficulty)
             {
-                int count = r.Next(1, 3);
-                for (int j = 0; j < count; j++)
+                case Difficulty.Easy:
+                    notesCount = 2;
+                    break;
+                case Difficulty.Medium:
+                    notesCount = 2;
+                    break;
+                case Difficulty.Hard:
+                    notesCount = 3;
+                    break;
+            }
+
+            for (int i = 2; i < song.Duration.TotalSeconds - 2; i++)
+            {
+                if (difficulty == Difficulty.Medium)
+                    notesCount = r.Next(2, 4);
+
+                for (int j = 0; j < notesCount ; j++)
                 {
                     SeqElemType elemType = (SeqElemType)r.Next(0, 4);
                     sequence.AddElement(new SequenceElement() { Type = elemType, IsBomb = r.Next(0, 100) < 10, Time = new TimeSpan(0, 0, 0, i, r.Next(200, 1000)) });

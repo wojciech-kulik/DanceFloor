@@ -9,7 +9,7 @@ namespace StepMania.Constants
 {
     public class GameUIConstants
     {
-        public const int PixelsPerSecond = 200;
+        public const int PixelsPerSecond = 260;
         public const int ArrowWidthHeight = 65;
         public const int MarginBetweenArrows = 50;
 
