@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Common;
 using GameLayer;
+using StepMania.Constants;
 using StepMania.Controls;
 using StepMania.Views;
 using System;
@@ -30,33 +31,20 @@ namespace StepMania.ViewModels
         {
             _view = view as MenuView;
 
-            SetupButtons();
             _buttonsCount = _view.menuPanel.Children.OfType<MenuButton>().Count();
             _activeButton = 0;
             ActivateButton(_activeButton);
-        }
-
-        private void SetupButtons()
-        {
-            foreach (var b in _view.menuPanel.Children.OfType<MenuButton>())
-            {
-                b.ButtonBackground = new LinearGradientBrush() { EndPoint = new Point(0.5, 1), StartPoint = new Point(0.5, 0) };
-                (b.ButtonBackground as LinearGradientBrush).GradientStops.Add(new GradientStop() { Offset = 1 });
-                (b.ButtonBackground as LinearGradientBrush).GradientStops.Add(new GradientStop());
-            }
         }
 
         private void ActivateButton(int index)
         {
             foreach (var b in _view.menuPanel.Children.OfType<MenuButton>())
             {
-                (b.ButtonBackground as LinearGradientBrush).GradientStops[0].Color = new Color() { A = 0xDE, R = 0x2B, G = 0xAC, B = 0x1F };
-                (b.ButtonBackground as LinearGradientBrush).GradientStops[1].Color = new Color() { A = 0xDE, R = 0x73, G = 0xF0, B = 0x64 };
+                b.ButtonBackground = GameUIConstants.MainMenuBtnGradient;
             }
 
             var button = _view.menuPanel.Children.OfType<MenuButton>().Skip(index).First();
-            (button.ButtonBackground as LinearGradientBrush).GradientStops[0].Color = new Color() { A = 0xED, R = 0x8B, G = 0x8B, B = 0x8B };
-            (button.ButtonBackground as LinearGradientBrush).GradientStops[1].Color = new Color() { A = 0xED, R = 0xFF, G = 0xFF, B = 0xFF };
+            button.ButtonBackground = GameUIConstants.MainMenuSelectedBtnGradient;
         }
 
         public void Handle(GameKeyEvent message)
@@ -66,11 +54,6 @@ namespace StepMania.ViewModels
             
             if (message.PlayerAction == PlayerAction.Enter)
             {
-                ISong song = new Song()
-                {
-                    FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3"
-                };
-
                 switch(_activeButton)
                 {
                     case 0:

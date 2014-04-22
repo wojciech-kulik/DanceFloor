@@ -13,16 +13,10 @@
                     <Setter Property="Background" Value="{Binding ButtonBackground, ElementName=self}" />
                 </Style>
             </Border.Style>
-            
-            <Border.Effect>
-                <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="50" ShadowDepth="7" Direction="270"  />
-            </Border.Effect>
 
-            <TextBlock x:Name="TextBlock" Text="{Binding Text, ElementName=self}" FontFamily="Calibri" Foreground="White" FontSize="{Binding FontSize, ElementName=self}" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="1" Opacity="0.6" />
-                </TextBlock.Effect>
-            </TextBlock>
+            <TextBlock x:Name="TextBlock" Text="{Binding Text, ElementName=self}" 
+                       FontFamily="Calibri" Foreground="White" FontSize="{Binding FontSize, ElementName=self}" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
     </Grid>
 </UserControl>

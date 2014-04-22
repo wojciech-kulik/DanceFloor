@@ -25,8 +25,7 @@
                     <Style TargetType="ctrls:MenuButton">
                         <Setter Property="Height" Value="55" />
                         <Setter Property="Margin" Value="0,0,0,40" />
-                        <Setter Property="FontSize" Value="35" />
-                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                        <Setter Property="FontSize" Value="33" />
                         <Setter Property="ButtonBackground" Value="#DE2BAC47" />
                     </Style>
                 </StackPanel.Resources>

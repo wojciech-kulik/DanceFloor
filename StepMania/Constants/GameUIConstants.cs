@@ -25,7 +25,12 @@ namespace StepMania.Constants
         public const string DefaultGameBackground = ResourceImagesPath + "game_background.jpg";
 
         public const int SongItemWidth = 250;
-        public const double SongsListMovePixelsPerFrame = 10; 
+        public const double SongsListMovePixelsPerFrame = 10;
+
+        public static readonly LinearGradientBrush MainMenuBtnGradient =
+            new LinearGradientBrush(new Color() { A = 0xFF, R = 0x58, G = 0x66, B = 0xBB }, new Color() { A = 0xFF, R = 0x2C, G = 0x2C, B = 0x93 }, 90.0);
+        public static readonly LinearGradientBrush MainMenuSelectedBtnGradient =
+            new LinearGradientBrush(new Color() { A = 0xFF, R = 0x80, G = 0x92, B = 0xFF }, new Color() { A = 0xFF, R = 0x49, G = 0x49, B = 0xB2 }, 90.0);
 
         public static readonly LinearGradientBrush GameModeSelectedBtnGradient = 
             new LinearGradientBrush(new Color() { A = 0xFF, R = 0xF5, G = 0xBF, B = 0x2F }, new Color() { A = 0xFF, R = 0xAA, G = 0x7F, B = 0x0C }, 90.0);
