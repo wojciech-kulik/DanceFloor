@@ -31,8 +31,8 @@ namespace DanceFloor.DebugHelpers
             for (int i = 0; i < count; i++)
             {
                 var song = GenerateSong(r.Next(120, 300));
-                song.Title = "Tytuł sadas";
-                song.Artist = "Artysta " + (i + 1).ToString();
+                song.Title = "Title";
+                song.Artist = "Artist " + (i + 1).ToString();
                 song.SaveToFile();
             }
         }
@@ -40,9 +40,8 @@ namespace DanceFloor.DebugHelpers
         public static Song GenerateSong(int seconds = 300, Difficulty difficulty = Difficulty.Easy)
         {    
             Song result = new Song();
-            result.FilePath = @"Utwory\Billy Talent - Diamond on a Landmine.mp3";
+            result.FilePath = @"Songs\song.mp3";
             result.CoverPath = @"..\..\Images\game_background.jpg";
-            //result.BackgroundPath = @"C:\Users\Wojciech\Documents\Tapety\crestock-499633-1440x900.jpg";
             result.Duration = new TimeSpan(0, 0, seconds);
 
             var r = new Random();
@@ -146,7 +145,7 @@ namespace DanceFloor.DebugHelpers
             var currentTime = animation.GetCurrentTime();
             var note = view.p1Notes.Children.OfType<Image>().ToList().FirstOrDefault(n => Math.Abs(((ISequenceElement)n.Tag).Time.TotalSeconds - currentTime.TotalSeconds) < 0.2);
 
-            string hitInfo = note != null ? "TAK" : "NIE";
+            string hitInfo = note != null ? "YES" : "NO";
 
             if (note != null)
                 hitInfo += " " + (((ISequenceElement)note.Tag).Time.TotalSeconds - currentTime.TotalSeconds).ToString("N2");

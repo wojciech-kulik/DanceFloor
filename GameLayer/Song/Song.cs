@@ -238,7 +238,7 @@ namespace GameLayer
         public void LoadFromFile(string fileName, bool loadeSequences = false)
         {
             if (!File.Exists(fileName + "\\" + GameConstants.SongObjectFileName))
-                throw new ArgumentException("Podany utwór nie istnieje.");
+                throw new ArgumentException("File doesn't exist.");
 
             _fileName = fileName;
             
@@ -270,10 +270,10 @@ namespace GameLayer
         public void SaveToFile()
         {
             if (String.IsNullOrWhiteSpace(Title) || String.IsNullOrWhiteSpace(Artist))
-                throw new InvalidOperationException("Tytuł lub artysta nie został uzupełniony.");
+                throw new InvalidOperationException("Title or artist wasn't filled.");
 
             if (!File.Exists(FilePath))
-                throw new InvalidOperationException("Podany utwór nie istnieje.");
+                throw new InvalidOperationException("File doesn't exist.");
 
 
             //create dir

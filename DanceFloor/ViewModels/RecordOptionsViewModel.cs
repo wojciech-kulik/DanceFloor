@@ -124,7 +124,7 @@ namespace DanceFloor.ViewModels
                     _eventAggregator.Publish(new ShowPopupEvent()
                     {
                         PopupType = PopupType.ButtonsPopup,
-                        PopupSettings = (vm) => (vm as ButtonsPopupViewModel).Message = "Enter a title or artist."
+                        PopupSettings = (vm) => (vm as ButtonsPopupViewModel).Message = "Fill a title and artist."
                     });
                     return false;
                 }
