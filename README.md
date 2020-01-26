@@ -1,3 +1,5 @@
+[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg)](https://www.buymeacoffee.com/WojciechKulik)
+
 # Dance Floor
 
 This game has been created to practice C# WPF.  
